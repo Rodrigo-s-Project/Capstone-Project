@@ -24,19 +24,19 @@
 - Production supervisors
 
 ## 3. User stories
-- As an **admin** I want to create a portal of my company, so that I can register all my employees.
-- As an **admin** I want to join clients to the portal of my company, so that we can interact with each other.
-- As an **admin** I want to group all my employees in different teams when needed, so that different teams can work with different clients.
-- As an **admin** I want to join my clients easily, so that they don't waste too much time joining our portal.
-- As an **employee** I want to share documents to our clients, so that we will not need to create multiple accounts of Drive providers.
-- As an **employee** I want to schedule video meetings with our clients, so that we stay consistent with our communication.
-- As an **employee** I want to communicate with our clients via chat, so that I don't need to register all the contacts in my phone.
-- As an **employee** I want to create shortcuts in the app, so that I can work faster.
-- As an **employee** I want to see a calendar with all our tasks, so that I don't miss anything.
-- As an **employee** I want to have bots, so that if I miss to do something, they will remind me.
-- As an **employee** I want to hide some information to our clients, so that we can share data only with other employees.
-- As a **client** I want to log in to a company's portal, so that we can share everything that is business related.
-- As a **client** I want to contact the company's work hours, so that I can schedule meetings in a better hour.
+1. As an **admin** I want to create a portal of my company, so that I can register all my employees.
+1. As an **admin** I want to join clients to the portal of my company, so that we can interact with each other.
+1. As an **admin** I want to group all my employees in different teams when needed, so that different teams can work with different clients.
+1. As an **admin** I want to join my clients easily, so that they don't waste too much time joining our portal.
+1. As an **employee** I want to share documents to our clients, so that we will not need to create multiple accounts of Drive providers.
+1. As an **employee** I want to schedule video meetings with our clients, so that we stay consistent with our communication.
+1. As an **employee** I want to communicate with our clients via chat, so that I don't need to register all the contacts in my phone.
+1. As an **employee** I want to create shortcuts in the app, so that I can work faster.
+1. As an **employee** I want to see a calendar with all our tasks, so that I don't miss anything.
+1. As an **employee** I want to have bots, so that if I miss to do something, they will remind me.
+1. As an **employee** I want to hide some information to our clients, so that we can share data only with other employees.
+1. As a **client** I want to log in to a company's portal, so that we can share everything that is business related.
+1. As a **client** I want to contact the company's work hours, so that I can schedule meetings in a better hour.
 
 ## Wireframes
 [Link to Figma Designs](https://www.figma.com/file/1WdXW2DYnYd29OQK5lui80/Capstone?node-id=12%3A2)
