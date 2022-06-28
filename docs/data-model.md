@@ -16,8 +16,15 @@
 | typesOfUserInCompany  |  Object[]  |             A descriptor of the user role in each company        |
 | typesOfUserInTeam     |  Object[]  |              A descriptor of the user role in each team          |
 
-typesOfUserInCompany: {type, company, username}
-typesOfUserInTeam: {type, team, username}
+typesOfUserInCompany:
+* type: "Employee" || "Admin" || "Client"
+* company: company id
+* username: string
+
+typesOfUserInTeam
+* type: "Employee" || "Admin" || "Client"
+* team: team id
+* username: string
 
 ## Company
 |      Column name      |    Type    |               Description                  |
