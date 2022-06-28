@@ -21,7 +21,7 @@ typesOfUserInCompany:
 * company: company id
 * username: string
 
-typesOfUserInTeam
+typesOfUserInTeam:
 * type: "Employee" || "Admin" || "Client"
 * team: team id
 * username: string
