@@ -42,6 +42,6 @@
 [Link to Figma Designs](https://www.figma.com/file/1WdXW2DYnYd29OQK5lui80/Capstone?node-id=12%3A2)
 
 ### Some Pages
-<img src="media/logIn.png" alt="Log In" width="300px">
-<img src="media/documents.png" alt="Documents" width="300px">
-<img src="media/chat.png" alt="Chat" width="300px">
+<img src="media/logIn.png" alt="Log In" width="100%">
+<img src="media/documents.png" alt="Documents" width="100%">
+<img src="media/chat.png" alt="Chat" width="100%">
