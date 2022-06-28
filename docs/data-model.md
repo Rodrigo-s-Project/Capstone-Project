@@ -6,8 +6,8 @@
 | email                 |  string    |                     Email of the user                            |
 | password              |  string    |                    Password of the user                          |
 | globalUsername        |  string    |               Permanent Username of the user                     |
-| typeAccount           |  string    |        Type of account "free" || "basic" || "enterprise"         |
-| status                |  string    |                  "available" || "unavailable"                    |
+| typeAccount           |  string    |        Type of account "free" or "basic" or "enterprise"         |
+| status                |  string    |                  "available" or "unavailable"                    |
 | companies             |  string[]  |              Array of id's of joined companies                   |
 | profilePictureURL     |  string    |                    URL of the profile picture                    |
 | isDarkModeOn          |  boolean   |                       Is dark mode on                            |
@@ -17,12 +17,12 @@
 | typesOfUserInTeam     |  Object[]  |              A descriptor of the user role in each team          |
 
 typesOfUserInCompany:
-* type: "Employee" || "Admin" || "Client"
+* type: "Employee" or "Admin" or "Client"
 * company: company id
 * username: string
 
 typesOfUserInTeam:
-* type: "Employee" || "Admin" || "Client"
+* type: "Employee" or "Admin" or "Client"
 * team: team id
 * username: string
 
@@ -42,7 +42,7 @@ typesOfUserInTeam:
 |      Column name      |    Type    |               Description                  |
 |:---------------------:|:----------:|:------------------------------------------:|
 | user                  |   string   |             Id of the user                 |
-| type                  |   string   |          "basic" || "enterprise"           |
+| type                  |   string   |          "basic" or "enterprise"           |
 | name                  |   string   |         Name of the user that paid         |
 | email                 |   string   |        Email of the user that paid         |
 | phoneNumber           |   string   |    Phone Number of the user that paid      |
@@ -73,7 +73,7 @@ typesOfUserInTeam:
 |:---------------------:|:----------:|:--------------------------------------------------------------------------------------:|
 | name                  |   string   |                                     Name of the file                                   |
 | isProtected           |   boolean  |                                   Is the file protected                                |
-| parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) || "b:idFile" (bucket)       |
+| parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) or "b:idFile" (bucket)       |
 | type                  |   string   |                               Document type (.pdf, .doc, .etc)                         |
 | bucket                |   string   |                                Id of the related bucket                                |
 | usersRead             |  string[]  |                       Array of id's of users that have read the  file                  |
@@ -83,7 +83,7 @@ typesOfUserInTeam:
 |:---------------------:|:----------:|:-------------------------------------------------------------------------------------------:|
 | name                  |   string   |                                  Name of the bucket                                         |
 | team                  |   string   |                            Id of the owner team of this bucket                              |
-| documents             |  string[]  |   Array of id's of the files or folders "d:ObjectID" (document) || "f:ObjectID" (folder)    |
+| documents             |  string[]  |   Array of id's of the files or folders "d:ObjectID" (document) or "f:ObjectID" (folder)    |
 | users                 |  string[]  |               Array of id's of the users that have access to this bucket                    |
 
 ## Message
@@ -101,8 +101,8 @@ typesOfUserInTeam:
 |:---------------------:|:----------:|:--------------------------------------------------------------------------------------:|
 | name                  |   string   |                                Name of the folder                                      |
 | isProtected           |   boolean  |                                Is the folder protected                                 |
-| parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) || "b:idFile" (bucket)       |
-| documents             |  string[]  | Array of id's of the files or folders "d:ObjectID" (document) || "f:ObjectID" (folder) |
+| parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) or "b:idFile" (bucket)       |
+| documents             |  string[]  | Array of id's of the files or folders "d:ObjectID" (document) or "f:ObjectID" (folder) |
 | bucket                |   string   |                        Id of the bucket that has this folder                           |
 
 ## Connection
