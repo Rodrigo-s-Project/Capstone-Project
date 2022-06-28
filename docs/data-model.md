@@ -2,7 +2,7 @@
 
 ## User
 |      Column name      |    Type    |                          Description                             |
-| --------------------- |:-----------------------------------------------------------------------------:|
+| --------------------- |:-----------|-----------------------------------------------------------------:|
 | email                 |  string    |                     Email of the user                            |
 | password              |  string    |                    Password of the user                          |
 | globalUsername        |  string    |               Permanent Username of the user                     |
@@ -21,7 +21,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Company
 |      Column name      |    Type    |               Description                  |
-| --------------------- |:-------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------:|
 | name                  |  string    |          Name of the company               |
 | companyPictureURL     |  string    |        URL of the company's picture        |
 | numberUsers           |  int       |        Number of users in company          |
@@ -33,7 +33,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Payment
 |      Column name      |    Type    |               Description                  |
-| --------------------- |:-------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------:|
 | user                  |   string   |             Id of the user                 |
 | type                  |   string   |          "basic" || "enterprise"           |
 | name                  |   string   |         Name of the user that paid         |
@@ -42,7 +42,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Team
 |      Column name      |    Type    |               Description                  |
-| --------------------- |:-------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------:|
 | name                  |  string    |           Name of the team                 |
 | teamPictureURL        |  string    |         URL of the team's picture          |
 | numberUsers           |    int     |        Number of users in team             |
@@ -55,7 +55,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Notification
 |      Column name      |    Type    |               Description                  |
-| --------------------- |:-------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------:|
 | user                  |   string   |            Id of the user                  |
 | unreadMessages        |  string[]  |          Array of id's of messages         |
 | unreadFiles           |  string[]  |           Array of id's of files           |
@@ -63,7 +63,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## File
 |      Column name      |    Type    |                                     Description                                        |
-| --------------------- |:---------------------------------------------------------------------------------------------------:|
+| --------------------- |:-----------|---------------------------------------------------------------------------------------:|
 | name                  |   string   |                                     Name of the file                                   |
 | isProtected           |   boolean  |                                   Is the file protected                                |
 | parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) || "b:idFile" (bucket)       |
@@ -73,7 +73,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Bucket
 |      Column name      |    Type    |                                       Description                                           |
-| --------------------- |:--------------------------------------------------------------------------------------------------------:|
+| --------------------- |:-----------|--------------------------------------------------------------------------------------------:|
 | name                  |   string   |                                  Name of the bucket                                         |
 | team                  |   string   |                            Id of the owner team of this bucket                              |
 | documents             |  string[]  |   Array of id's of the files or folders "d:ObjectID" (document) || "f:ObjectID" (folder)    |
@@ -81,7 +81,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Message
 |      Column name      |    Type    |                                 Description                                   |
-| --------------------- |:------------------------------------------------------------------------------------------:|
+| --------------------- |:-----------|------------------------------------------------------------------------------:|
 | text                  |   string   |                                 Text of the message                           |
 | time                  |     int    |   The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC.      |
 | connection            |   string   |                    Id of the related connection between users                 |
@@ -91,7 +91,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Folder
 |      Column name      |    Type    |                                     Description                                        |
-| --------------------- |:---------------------------------------------------------------------------------------------------:|
+| --------------------- |:-----------|---------------------------------------------------------------------------------------:|
 | name                  |   string   |                                Name of the folder                                      |
 | isProtected           |   boolean  |                                Is the folder protected                                 |
 | parentDocument        |   string   |    String to identify parent document "f:idFile" (folder) || "b:idFile" (bucket)       |
@@ -100,21 +100,21 @@ typesOfUserInTeam: {type, team, username}
 
 ## Connection
 |      Column name      |    Type    |                        Description                           |
-| --------------------- |:-------------------------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------------------------:|
 | users                 |  string[]  |     Array of id's of the users in this connection (chat)     |
 | messages              |  string[]  | Array of id's of the messages sent in this connection (chat) |
 | team                  |   string   |             Id of the team that owns this chat               |
 
 ## Calendar
 |      Column name      |    Type    |                  Description                     |
-| --------------------- |:-------------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------------:|
 | team                  |   string   |     Id of the team that owns this calendar       |
 | tasks                 |  string[]  |      Array of id's of the related tasks          |
 | tags                  |  string[]  |      Array of id's of the related tags           |
 
 ## Tag
 |      Column name      |    Type    |               Description                  |
-| --------------------- |:-------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------:|
 | calendar              |   string   |        Id of the related calendar          |
 | color                 |   string   |              Color of the tag              |
 | text                  |   string   |              Text of the tag               |
@@ -122,7 +122,7 @@ typesOfUserInTeam: {type, team, username}
 
 ## Task
 |      Column name      |    Type    |                        Description                           |
-| --------------------- |:-------------------------------------------------------------------------:|
+| --------------------- |:-----------|-------------------------------------------------------------:|
 | calendar              |   string   |                  Id of the related calendar                  |
 | name                  |   string   |                    Name of the task                          |
 | singleDate            |   boolean  |              Is it programmed for a single date              |
