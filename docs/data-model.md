@@ -2,7 +2,7 @@
 
 ## User
 |      Column name      |    Type    |                          Description                             |
-| --------------------- |:----------:|:----------------------------------------------------------------:|
+|:---------------------:|:----------:|:----------------------------------------------------------------:|
 | email                 |  string    |                     Email of the user                            |
 | password              |  string    |                    Password of the user                          |
 | globalUsername        |  string    |               Permanent Username of the user                     |
