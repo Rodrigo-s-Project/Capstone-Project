@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [ main, stagging ]
+    branches: [ main, staging ]
 
 jobs:
   build:
@@ -35,4 +35,11 @@ jobs:
         run: |
           npm ci
           npm run lint
+          npm run build
+
+      - name: Run server "build"
+        if: contains(steps.file_changes.outputs.files , '"server/')
+        working-directory: ./server
+        run: |
+          npm ci
           npm run build
