@@ -6,7 +6,7 @@ import LandingPage from '../components/Landing/Landing';
 const Home: NextPage = () => {
   return (
     <div>
-      <LandingPage />
+      {/* <LandingPage /> */}
     </div>
   )
 }

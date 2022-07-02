@@ -1,0 +1,37 @@
+.nav {
+    height: 111px;
+    width: 100vw;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 100px;
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    &_links {
+        display: flex;
+        gap: 50px;
+        font-weight: 700;
+
+        a {
+            color: var(--lavender-100);
+            @media (hover: hover) and (pointer: fine) {
+                &:hover {
+                    color: var(--lavender-300)
+                }
+            }
+        }
+    }
+
+    &_btns {
+        display: flex;
+        gap: 50px;
+    }
+
+    a[extra-css='log-in'] {
+        font-size: .8rem;
+        padding: 4px 24px;
+    }
+}
