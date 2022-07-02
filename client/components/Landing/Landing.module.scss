@@ -8,6 +8,11 @@
     text-align: center;
 }
 
+.landing a {
+    display: grid;
+    place-content: center;
+}
+
 .landing span {
     font-weight: bold;
     color: var(--lavender-100);
