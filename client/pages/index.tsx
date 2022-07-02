@@ -1,9 +1,12 @@
 import { NextPage } from 'next';
 
+// Components
+import LandingPage from '../components/Landing/Landing';
+
 const Home: NextPage = () => {
   return (
     <div>
-      Index Page
+      <LandingPage />
     </div>
   )
 }

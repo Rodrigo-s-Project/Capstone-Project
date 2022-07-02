@@ -1,0 +1,15 @@
+.landing {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-content: center;
+    color: var(--gray-800);
+    white-space: nowrap;
+    text-align: center;
+}
+
+.landing span {
+    font-weight: bold;
+    color: var(--lavender-100);
+    font-size: 2rem;
+}
