@@ -13,6 +13,7 @@ a {
 
 * {
   box-sizing: border-box;
+  transition: background-color ease-out 300ms, color ease-out 300ms;
 }
 
 :root {

@@ -1,3 +1,29 @@
+export type COLOR_MODE = 'DAY' | 'NIGHT';
+
+export type KEY_COLOR =
+    '--white' |
+    '--black' |
+    '--red-100' |
+    '--red-200' |
+    '--red-300' |
+    '--red-400' |
+    '--green-100' |
+    '--green-200' |
+    '--lavender-100' |
+    '--lavender-200' |
+    '--lavender-300' |
+    '--lavender-400' |
+    '--gray-100' |
+    '--gray-200' |
+    '--gray-300' |
+    '--gray-400' |
+    '--gray-500' |
+    '--gray-600' |
+    '--gray-700' |
+    '--gray-800' |
+    '--gray-900' |
+    '--primary';
+
 export const COLORS = {
     '--white': {
         DAY: '#FFF',
