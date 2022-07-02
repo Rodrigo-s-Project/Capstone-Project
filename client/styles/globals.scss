@@ -1,0 +1,94 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #FFF;
+  --black: #000;
+  --red-100: #E9ADAD;
+  --red-200: #FC5858;
+  --red-300: #D12828;
+  --red-400: #5C1D05;
+  --green-100: #A6D6AA;
+  --green-200: #26572A;
+  --lavender-100: #490FEE;
+  --lavender-200: #4542F7;
+  --lavender-300: #6562FA;
+  --lavender-400: #908EFD;
+  --gray-100: #FFFFFF;
+  --gray-200: #F8FAFC;
+  --gray-300: #E3E8EF;
+  --gray-400: #E2E8F0;
+  --gray-500: #CBD5E0;
+  --gray-600: #A0AEC0;
+  --gray-700: #A2AEBE;
+  --gray-800: #748094;
+  --gray-900: #4C5566;
+  --primary: #FFFFFF;
+}
+
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--gray-400);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-500);
+    }
+    &:active {
+      background-color: var(--gray-600);
+    }
+  }
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: var(--gray-300);
+}
+
+::selection {
+  background-color: var(--lavender-100);
+  color: var(--white);
+}
+
+html {
+  min-height: 100%;
+  width: 100vw;
+  position: relative;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  font-size: 16px;
+  background-color: var(--primary);
+  color: var(--black);
+}
+
+input,
+button {
+  outline: none;
+  border-style: none;
+}
+
+button  {
+  cursor: pointer;
+}
