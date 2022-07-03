@@ -1,15 +1,15 @@
 .nav {
   height: 111px;
   width: 100%;
+  max-width: 1420px;
   background-color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 100px;
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
-  position: relative;
   z-index: 100;
 
   &_links {
@@ -35,6 +35,7 @@
   a[extra-css="log-in"] {
     font-size: 0.8rem;
     padding: 4px 24px;
+    height: 27.5px;
   }
 
   &_links,
@@ -107,6 +108,12 @@
         }
       }
     }
+  }
+}
+
+@media screen and (min-width: 1420px) {
+  .nav {
+    left: calc(50% - 710px);
   }
 }
 

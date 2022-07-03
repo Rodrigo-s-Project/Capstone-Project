@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <LandingNav />
-      <main>
+      <main className="main-content">
         <Component {...pageProps} />
       </main>
     </GlobalContext.Provider>

@@ -1,14 +1,18 @@
-import { NextPage } from 'next';
+import { NextPage } from "next";
+import Head from "next/head";
 
 // Components
-// import LandingPage from '../components/Landing/Landing';
+import Header from "../components/Landing/Header/Header";
 
 const Home: NextPage = () => {
   return (
-    <div>
-      {/* <LandingPage /> */}
-    </div>
-  )
-}
+    <>
+      <Head>
+        <title>Teamplace</title>
+      </Head>
+      <Header />
+    </>
+  );
+};
 
 export default Home;
