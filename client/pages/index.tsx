@@ -3,6 +3,7 @@ import Head from "next/head";
 
 // Components
 import Header from "../components/Landing/Header/Header";
+import Product from "../components/Landing/Product/Product";
 
 const Home: NextPage = () => {
   return (
@@ -11,6 +12,7 @@ const Home: NextPage = () => {
         <title>Teamplace</title>
       </Head>
       <Header />
+      <Product />
     </>
   );
 };

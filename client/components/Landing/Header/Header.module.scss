@@ -2,7 +2,7 @@
   width: 100%;
   height: calc(100vh - 111px);
   min-height: 430px;
-  padding: 0 100px;
+  max-height: 700px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -64,18 +64,8 @@
   }
 }
 
-// Walls
-@media screen and (max-width: 800px) {
-  .header {
-    padding: 0 40px;
-  }
-}
-
 @media screen and (max-width: 360px) {
-  .header {
-    padding: 0 15px;
-    h1 {
-      font-size: 17vw;
-    }
+  .header h1 {
+    font-size: 17vw;
   }
 }

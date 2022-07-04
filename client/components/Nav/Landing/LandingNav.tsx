@@ -62,6 +62,7 @@ const LandingNav = () => {
           }}
           className={`${styles.nav_responsive_top_hamburger} ${isNavOpen &&
             styles.nav_responsive_top_hamburger_open}`}
+          title="Toggle menu"
         >
           <div></div>
           <div></div>

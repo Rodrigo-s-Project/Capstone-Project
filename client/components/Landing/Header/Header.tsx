@@ -1,10 +1,11 @@
 import styles from "./Header.module.scss";
+import stylesLanding from "../Landing.module.scss";
 import BtnLink from "../../Buttons/BtnLink/BtnLink";
-import WorkSvg from "./svgs/work";
+import WorkSvg from "../../Svgs/Work";
 
 const Header = () => {
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${stylesLanding.section}`}>
       <div className={styles.header_left}>
         <h1>Teamplace</h1>
         <p>

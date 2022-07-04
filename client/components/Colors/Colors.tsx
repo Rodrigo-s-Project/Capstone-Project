@@ -34,12 +34,15 @@ const Colors = ({ callback }: Props) => {
   };
 
   return (
-    <div className={styles.color} onClick={callback}>
-      <div
-        onClick={handleColorChange}
-        className={styles.color_pill}
-        title="Toggle mode"
-      >
+    <div
+      className={styles.color}
+      onClick={() => {
+        if (callback) callback();
+        handleColorChange();
+      }}
+      title="Toggle mode"
+    >
+      <div className={styles.color_pill}>
         <div
           className={`${styles.color_pill_circle} ${
             isDarkMode ? styles.dark : styles.light
