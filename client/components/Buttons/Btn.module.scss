@@ -1,6 +1,8 @@
 .btn {
   padding: 12px 24px;
   text-align: center;
+  height: 45px;
+  display: inline-block;
 }
 .lavender-200 {
   background-color: var(--lavender-200);
@@ -23,6 +25,11 @@
 .gray {
   background-color: var(--gray-400);
   color: var(--black);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-500);
+    }
+  }
 }
 .complete_rounded {
   border-radius: 1000px; // Just a max value
