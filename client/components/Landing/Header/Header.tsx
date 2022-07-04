@@ -13,14 +13,24 @@ const Header = () => {
           platform that allows companies to manage their teams and clients into
           one same working environment.
         </p>
-        <BtnLink
-          text="Contact us"
-          url="/#contact-us"
-          color="gray"
-          border="round_5"
-          additionalClass="contact-us"
-          title="Contact Us"
-        />
+        <div className={styles.header_left_btns}>
+          <BtnLink
+            text="Buy Teamplace"
+            url="/#pay"
+            color="lavender-300"
+            border="round_5"
+            additionalClass="pay-header"
+            title="Buy Teamplace"
+          />
+          <BtnLink
+            text="Contact us"
+            url="/#contact-us"
+            color="gray"
+            border="round_5"
+            additionalClass="contact-us"
+            title="Contact Us"
+          />
+        </div>
       </div>
       <div className={styles.header_img}>
         <WorkSvg />
