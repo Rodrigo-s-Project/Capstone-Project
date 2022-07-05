@@ -7,23 +7,31 @@ import { SetStateAction, Dispatch, useState, createContext } from "react";
 // Components
 import LandingNav from "../components/Nav/Landing/LandingNav";
 
+// Modals
+import Messages, { Message } from "../components/Modals/Messages/Messages";
+
 // Context
 export const GlobalContext = createContext<Partial<ValueAppProvider>>({});
 
 interface ValueAppProvider {
   isDarkMode: boolean;
   setIsDarkMode: Dispatch<SetStateAction<boolean>>;
+  setArrayMsgs: Dispatch<SetStateAction<Array<Message>>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
   // Dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Modal Msgs
+  const [arrayMsgs, setArrayMsgs] = useState<Array<Message>>([]);
+
   return (
     <GlobalContext.Provider
       value={{
         isDarkMode,
-        setIsDarkMode
+        setIsDarkMode,
+        setArrayMsgs
       }}
     >
       <AnimatePresence
@@ -33,6 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <>
           <LandingNav />
+          <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
           <main className="main-content">
             <Component {...pageProps} />
           </main>

@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+
+// Contexts
+import { GlobalContext } from "../../../pages/_app";
+
+// Routes
+import { logInEndpoint, BODY_LOG_IN } from "../../../routes/auth.routes";
+import { RESPONSE } from "../../../routes/index.routes";
 
 // Componnets
 import LogInCard from "./LogInCard/LogInCard";
@@ -8,6 +15,8 @@ import LogInCard from "./LogInCard/LogInCard";
 const LogIn = () => {
   // Router
   const router = useRouter();
+
+  const { setArrayMsgs } = useContext(GlobalContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,18 +26,27 @@ const LogIn = () => {
   const logIn = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.put("http://localhost:2000/auth/log-in", {
+      const body: BODY_LOG_IN = {
         email,
         password
-      });
+      };
+      const response = await axios.put(logInEndpoint.url, body);
       setIsLoading(false);
-      const data = response.data;
+
+      const data: RESPONSE = response.data;
       if (data.isAuth) {
         // Good
         // TODO: create dashboard page
         router.replace("/dashboard");
       } else {
-        // TODO: not success :/
+        if (setArrayMsgs && data.readMsg)
+          setArrayMsgs(prev => [
+            {
+              type: data.typeMsg,
+              text: data.message
+            },
+            ...prev
+          ]);
       }
     } catch (error) {
       console.error(error);

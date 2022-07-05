@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styles from "./SignUp.module.scss";
 import axios from "axios";
 import { useRouter } from "next/router";
+
+// Contexts
+import { GlobalContext } from "../../../pages/_app";
+
+// Routes
+import { RESPONSE } from "../../../routes/index.routes";
+import { BODY_SIGN_UP, signUpEndpoint } from "../../../routes/auth.routes";
 
 // Componnets
 import SignUpCard from "./SignUpCard/SignUpCard";
@@ -9,6 +16,8 @@ import Info from "./Info/Info";
 
 const SignUp = () => {
   const router = useRouter();
+
+  const { setArrayMsgs } = useContext(GlobalContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -20,19 +29,28 @@ const SignUp = () => {
   const signUp = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post("http://localhost:2000/auth/sign-up", {
+      const body: BODY_SIGN_UP = {
         username,
         email,
         password,
         confirmPassword
-      });
+      };
+      const response = await axios.post(signUpEndpoint.url, body);
       setIsLoading(false);
-      const data = response.data;
+
+      const data: RESPONSE = response.data;
       if (data.isAuth) {
         // Good
         router.replace("/log-in");
       } else {
-        // TODO: not success :/
+        if (setArrayMsgs && data.readMsg)
+          setArrayMsgs(prev => [
+            {
+              type: data.typeMsg,
+              text: data.message
+            },
+            ...prev
+          ]);
       }
     } catch (error) {
       console.error(error);
