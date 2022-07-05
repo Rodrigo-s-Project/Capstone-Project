@@ -31,10 +31,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         initial={false}
         onExitComplete={() => window.scrollTo(0, 0)}
       >
-        <LandingNav />
-        <main className="main-content">
-          <Component {...pageProps} />
-        </main>
+        <>
+          <LandingNav />
+          <main className="main-content">
+            <Component {...pageProps} />
+          </main>
+        </>
       </AnimatePresence>
     </GlobalContext.Provider>
   );

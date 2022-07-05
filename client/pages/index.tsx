@@ -20,6 +20,7 @@ const Home: NextPage = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
+        key="index-page"
       >
         <Header />
         <Product />

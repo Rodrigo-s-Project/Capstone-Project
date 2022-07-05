@@ -5,6 +5,7 @@ import styles from "./LogInCard.module.scss";
 import Card from "../../Card/Card";
 import InputText from "../../Input/Text/InputText";
 import BtnClick from "../../Buttons/BtnClick/BtnClick";
+import BtnLink from "../../Buttons/BtnLink/BtnLink";
 
 const LogInCard = () => {
   const [username, setUsername] = useState("");
@@ -47,9 +48,9 @@ const LogInCard = () => {
           <div className={styles.card_login_or_line}></div>
         </div>
         <div>
-          <BtnClick
-            text="Enter"
-            callback={logIn}
+          <BtnLink
+            text="Create Account"
+            url="/sign-up"
             color="lavender-300"
             border="round_5"
             additionalClass="btn-enter-signup"

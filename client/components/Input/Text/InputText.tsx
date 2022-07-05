@@ -27,7 +27,7 @@ const InputText = ({
     if (value != "" && !hasClicked) {
       setOpen(true);
     }
-  }, [value]);
+  }, [value, hasClicked]);
 
   return (
     <div

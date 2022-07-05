@@ -19,6 +19,7 @@ const LogIn: NextPage = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
+        key="log-in-page"
       >
         <LogInCard />
       </motion.div>

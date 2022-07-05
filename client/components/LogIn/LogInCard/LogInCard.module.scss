@@ -11,6 +11,7 @@
     font-size: 3rem;
     font-weight: normal;
     text-align: center;
+    color: var(--black)
   }
   &_inputs {
     display: flex;
@@ -21,7 +22,7 @@
     margin-top: 20px;
     width: 100%;
   }
-  button[extra-css="btn-enter-signup"] {
+  a[extra-css="btn-enter-signup"] {
     width: 100%;
   }
   &_or {
