@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./SignUp.module.scss";
+import axios from "axios";
 
 // Componnets
 import SignUpCard from "./SignUpCard/SignUpCard";
@@ -11,7 +12,17 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const signUp = () => {};
+  const signUp = async () => {
+    console.log("sign up...");
+    const response = await axios.post("http://localhost:2000/auth/sign-up", {
+      username,
+      email,
+      password,
+      confirmPassword
+    });
+
+    console.log(response);
+  };
 
   return (
     <div className={styles.signup}>
