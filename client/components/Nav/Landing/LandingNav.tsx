@@ -28,7 +28,7 @@ const BtnsComponent = ({ click }: Props) => {
       <BtnLink
         additionalClass="log-in"
         text="Log in"
-        url="/"
+        url="/log-in"
         callback={click}
         color="lavender-200"
         border="complete_rounded"

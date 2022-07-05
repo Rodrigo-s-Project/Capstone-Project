@@ -1,5 +1,6 @@
 import "../styles/globals.scss";
 import { AppProps } from "next/app";
+import { AnimatePresence } from "framer-motion";
 
 import { SetStateAction, Dispatch, useState, createContext } from "react";
 
@@ -25,10 +26,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         setIsDarkMode
       }}
     >
-      <LandingNav />
-      <main className="main-content">
-        <Component {...pageProps} />
-      </main>
+      <AnimatePresence
+        exitBeforeEnter
+        initial={false}
+        onExitComplete={() => window.scrollTo(0, 0)}
+      >
+        <LandingNav />
+        <main className="main-content">
+          <Component {...pageProps} />
+        </main>
+      </AnimatePresence>
     </GlobalContext.Provider>
   );
 }

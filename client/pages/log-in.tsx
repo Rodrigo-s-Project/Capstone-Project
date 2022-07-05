@@ -6,14 +6,13 @@ import { motion } from "framer-motion";
 import { fadeVariants } from "../animations/fade";
 
 // Components
-import Header from "../components/Landing/Header/Header";
-import Product from "../components/Landing/Product/Product";
+import LogInCard from "../components/LogIn/LogInCard/LogInCard";
 
-const Home: NextPage = () => {
+const LogIn: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Teamplace</title>
+        <title>Teamplace | Log In</title>
       </Head>
       <motion.div
         variants={fadeVariants}
@@ -21,11 +20,10 @@ const Home: NextPage = () => {
         animate="visible"
         exit="exit"
       >
-        <Header />
-        <Product />
+        <LogInCard />
       </motion.div>
     </>
   );
 };
 
-export default Home;
+export default LogIn;
