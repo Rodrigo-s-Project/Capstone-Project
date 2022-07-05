@@ -1,13 +1,13 @@
 .header {
   width: 100%;
-  height: calc(100vh - 111px);
+  height: calc(100vh - 222px);
   min-height: 430px;
-  padding: 0 100px;
+  max-height: 700px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 111px;
   gap: 50px;
+  margin-bottom: 111px;
   &_left {
     h1 {
       font-size: 4rem;
@@ -20,8 +20,15 @@
       margin-top: 110px;
       max-width: 578px;
     }
-    a[extra-css="contact-us"] {
+    a[extra-css="contact-us"],
+    a[extra-css="pay-header"] {
       width: 210px;
+    }
+    &_btns {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 45px;
     }
   }
   &_img {
@@ -47,6 +54,11 @@
     justify-content: flex-start;
     height: fit-content;
     margin-bottom: 100px;
+    max-height: none;
+    &_left_btns {
+      flex-direction: column;
+      gap: 20px;
+    }
     h1,
     p {
       text-align: center;
@@ -64,18 +76,8 @@
   }
 }
 
-// Walls
-@media screen and (max-width: 800px) {
-  .header {
-    padding: 0 40px;
-  }
-}
-
 @media screen and (max-width: 360px) {
-  .header {
-    padding: 0 15px;
-    h1 {
-      font-size: 17vw;
-    }
+  .header h1 {
+    font-size: 17vw;
   }
 }

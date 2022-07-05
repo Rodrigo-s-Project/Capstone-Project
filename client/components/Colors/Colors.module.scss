@@ -3,9 +3,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
   &_pill {
     width: 30px;
-    cursor: pointer;
     height: 14px;
     background-color: var(--lavender-200);
     border-radius: 100px; // Just a max
