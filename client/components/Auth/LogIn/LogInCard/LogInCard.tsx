@@ -1,18 +1,27 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styles from "./LogInCard.module.scss";
 
 // Componnets
-import Card from "../../Card/Card";
-import InputText from "../../Input/Text/InputText";
-import BtnClick from "../../Buttons/BtnClick/BtnClick";
-import BtnLink from "../../Buttons/BtnLink/BtnLink";
+import Card from "../../../Card/Card";
+import InputText from "../../../Input/Text/InputText";
+import BtnClick from "../../../Buttons/BtnClick/BtnClick";
+import BtnLink from "../../../Buttons/BtnLink/BtnLink";
 
-const LogInCard = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+type Props = {
+  username: string;
+  setUsername: Dispatch<SetStateAction<string>>;
+  password: string;
+  setPassword: Dispatch<SetStateAction<string>>;
+  logIn: () => any;
+};
 
-  const logIn = () => {};
-
+const LogInCard = ({
+  username,
+  setUsername,
+  password,
+  setPassword,
+  logIn
+}: Props) => {
   return (
     <section className={styles.card_login}>
       <Card>

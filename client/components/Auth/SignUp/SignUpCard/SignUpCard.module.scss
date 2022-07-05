@@ -1,0 +1,27 @@
+.card_signup {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 55px;
+  h1 {
+    margin-bottom: 33px;
+    font-size: 3rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--black);
+  }
+  &_inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  button[extra-css="btn-create-signup"] {
+    margin-top: 20px;
+    width: 100%;
+  }
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
+}

@@ -6,25 +6,25 @@ import { motion } from "framer-motion";
 import { fadeVariants } from "../animations/fade";
 
 // Components
-import LogInComponent from "../components/Auth/LogIn/LogIn";
+import SignUpComponent from "../components/Auth/SignUp/SignUp";
 
-const LogIn: NextPage = () => {
+const SignUp: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Teamplace | Log In</title>
+        <title>Teamplace | Sign up</title>
       </Head>
       <motion.div
         variants={fadeVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        key="log-in-page"
+        key="sign-up-page"
       >
-        <LogInComponent />
+        <SignUpComponent />
       </motion.div>
     </>
   );
 };
 
-export default LogIn;
+export default SignUp;
