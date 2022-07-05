@@ -13,6 +13,7 @@ type Props = {
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
   logIn: () => any;
+  isLoading: boolean;
 };
 
 const LogInCard = ({
@@ -20,7 +21,8 @@ const LogInCard = ({
   setEmail,
   password,
   setPassword,
-  logIn
+  logIn,
+  isLoading
 }: Props) => {
   return (
     <section className={styles.card_login}>
@@ -49,6 +51,7 @@ const LogInCard = ({
             color="lavender-300"
             border="round_5"
             additionalClass="btn-enter-login"
+            isLoading={isLoading}
           />
         </div>
         <div className={styles.card_login_or}>

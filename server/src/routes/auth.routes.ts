@@ -5,6 +5,6 @@ import { createAccount } from "../controllers/auth/signUp";
 import { logIn } from "../controllers/auth/logIn";
 
 router.post("/sign-up", createAccount);
-router.get("/log-in", logIn);
+router.put("/log-in", logIn);
 
 export default router;

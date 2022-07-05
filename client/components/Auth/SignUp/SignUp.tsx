@@ -1,27 +1,43 @@
 import { useState } from "react";
 import styles from "./SignUp.module.scss";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 // Componnets
 import SignUpCard from "./SignUpCard/SignUpCard";
 import Info from "./Info/Info";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const signUp = async () => {
-    console.log("sign up...");
-    const response = await axios.post("http://localhost:2000/auth/sign-up", {
-      username,
-      email,
-      password,
-      confirmPassword
-    });
+  const [isLoading, setIsLoading] = useState(false);
 
-    console.log(response);
+  const signUp = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post("http://localhost:2000/auth/sign-up", {
+        username,
+        email,
+        password,
+        confirmPassword
+      });
+      setIsLoading(false);
+      const data = response.data;
+      if (data.isAuth) {
+        // Good
+        router.replace("/log-in");
+      } else {
+        // TODO: not success :/
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,6 +53,7 @@ const SignUp = () => {
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
         signUp={signUp}
+        isLoading={isLoading}
       />
     </div>
   );

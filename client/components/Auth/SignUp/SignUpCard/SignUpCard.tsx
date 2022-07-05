@@ -16,6 +16,7 @@ type Props = {
   confirmPassword: string;
   setConfirmPassword: Dispatch<SetStateAction<string>>;
   signUp: () => any;
+  isLoading: boolean;
 };
 
 const SignUpCard = ({
@@ -27,7 +28,8 @@ const SignUpCard = ({
   setPassword,
   confirmPassword,
   setConfirmPassword,
-  signUp
+  signUp,
+  isLoading
 }: Props) => {
   return (
     <section className={styles.card_signup}>
@@ -70,6 +72,7 @@ const SignUpCard = ({
             color="lavender-300"
             border="round_5"
             additionalClass="btn-create-signup"
+            isLoading={isLoading}
           />
         </div>
       </Card>
