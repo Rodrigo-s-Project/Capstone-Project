@@ -68,5 +68,7 @@ export const logIn = async (req, res) => {
 
     response.data = userData;
     res.json(response);
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 };

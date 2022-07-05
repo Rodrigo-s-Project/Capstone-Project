@@ -72,5 +72,7 @@ export const createAccount = async (req, res) => {
     response.isAuth = true;
     response.typeMsg = "success";
     res.json(response);
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 };
