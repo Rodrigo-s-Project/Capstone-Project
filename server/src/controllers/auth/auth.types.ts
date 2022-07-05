@@ -4,3 +4,8 @@ export type BODY_SIGN_UP = {
   password: string;
   confirmPassword: string;
 };
+
+export type BODY_LOG_IN = {
+  email: string;
+  password: string;
+};

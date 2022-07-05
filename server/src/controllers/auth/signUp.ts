@@ -22,6 +22,12 @@ export const createAccount = async (req, res) => {
       data: {}
     };
 
+    if (!username || !email || !password || !confirmPassword) {
+      response.message = "The information is incomplete";
+      res.json(response);
+      return;
+    }
+
     if (
       username.trim() == "" ||
       email.trim() == "" ||

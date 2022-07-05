@@ -4,7 +4,7 @@ import { useState } from "react";
 import LogInCard from "./LogInCard/LogInCard";
 
 const LogIn = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const logIn = () => {};
@@ -12,8 +12,8 @@ const LogIn = () => {
   return (
     <>
       <LogInCard
-        username={username}
-        setUsername={setUsername}
+        email={email}
+        setEmail={setEmail}
         password={password}
         setPassword={setPassword}
         logIn={logIn}

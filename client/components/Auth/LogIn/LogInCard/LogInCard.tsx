@@ -8,16 +8,16 @@ import BtnClick from "../../../Buttons/BtnClick/BtnClick";
 import BtnLink from "../../../Buttons/BtnLink/BtnLink";
 
 type Props = {
-  username: string;
-  setUsername: Dispatch<SetStateAction<string>>;
+  email: string;
+  setEmail: Dispatch<SetStateAction<string>>;
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
   logIn: () => any;
 };
 
 const LogInCard = ({
-  username,
-  setUsername,
+  email,
+  setEmail,
   password,
   setPassword,
   logIn
@@ -28,10 +28,10 @@ const LogInCard = ({
         <h1>Log In</h1>
         <div className={styles.card_login_inputs}>
           <InputText
-            text="Username"
-            value={username}
-            setValue={setUsername}
-            id="#username-log-in"
+            text="Email"
+            value={email}
+            setValue={setEmail}
+            id="#email-log-in"
             type="text"
           />
           <InputText
