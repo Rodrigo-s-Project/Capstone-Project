@@ -6,6 +6,14 @@ import bcrypt from "bcryptjs";
 import { User } from "../../models/User";
 
 export const createAccount = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: false,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
   try {
     const {
       username,
@@ -13,14 +21,6 @@ export const createAccount = async (req, res) => {
       password,
       confirmPassword
     }: BODY_SIGN_UP = req.body;
-
-    let response: RESPONSE = {
-      isAuth: false,
-      message: "",
-      readMsg: true,
-      typeMsg: "danger",
-      data: {}
-    };
 
     if (!username || !email || !password || !confirmPassword) {
       response.message = "The information is incomplete";
@@ -74,5 +74,13 @@ export const createAccount = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
   }
 };
