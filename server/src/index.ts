@@ -2,12 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { app } from "./server";
-// import { setAssociations } from "./associations/index";
+import { setAssociations } from "./associations/index";
 import { sequelize } from "./database/database";
 
 async function main() {
   try {
-    // setAssociations();
+    setAssociations();
     await sequelize.sync({ force: false });
     console.log(`Connection has been established successfully`);
 
