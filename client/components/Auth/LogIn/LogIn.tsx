@@ -16,7 +16,7 @@ const LogIn = () => {
   // Router
   const router = useRouter();
 
-  const { setArrayMsgs } = useContext(GlobalContext);
+  const { setArrayMsgs, refetchUser } = useContext(GlobalContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,13 +30,18 @@ const LogIn = () => {
         email,
         password
       };
-      const response = await axios.put(logInEndpoint.url, body);
+      const response = await axios.put(logInEndpoint.url, body, {
+        withCredentials: true
+      });
       setIsLoading(false);
 
       const data: RESPONSE = response.data;
       if (data.isAuth) {
         // Good
-        router.replace("/dashboard");
+        if (refetchUser)
+          refetchUser((dataCallback: RESPONSE) => {
+            if (dataCallback.isAuth) router.replace("/dashboard");
+          });
       } else {
         if (setArrayMsgs && data.readMsg)
           setArrayMsgs(prev => [

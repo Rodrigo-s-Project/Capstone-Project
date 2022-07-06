@@ -5,10 +5,6 @@ import { User } from "../../models/User";
 
 export const authenticate = async (req, res, next) => {
   try {
-    const cookie = req.cookies["jwt"];
-
-    const claims = jwt.verify(cookie, process.env.JWT_SECRET);
-
     let response: RESPONSE = {
       isAuth: false,
       message: "",
@@ -17,9 +13,20 @@ export const authenticate = async (req, res, next) => {
       data: {}
     };
 
+    const cookie = req.cookies["jwt"];
+
+    if (!cookie) {
+      response.message = "Unauthenticated";
+      res.json(response);
+      return;
+    }
+
+    const claims = jwt.verify(cookie, process.env.JWT_SECRET);
+
     if (!claims) {
       response.message = "Unauthenticated";
       res.json(response);
+      return;
     }
 
     // User auth

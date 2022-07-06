@@ -2,11 +2,9 @@ import express from "express";
 const router = express.Router();
 
 import { authenticate } from "../middlewares/auth/index";
+import { getUser } from "../controllers/main/index";
 
-router.get("/", authenticate, (req, res) => {
-  res.json({
-    msg: `Hi ${req.user.globalUsername}`
-  });
-});
+// Protected route
+router.get("/get-user", authenticate, getUser);
 
 export default router;

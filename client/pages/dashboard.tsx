@@ -1,11 +1,17 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import { useContext } from "react";
 import { motion } from "framer-motion";
 
 // Animations
 import { fadeVariants } from "../animations/fade";
 
+// Context
+import { GlobalContext } from "./_app";
+
 const Dashboard: NextPage = () => {
+  const { user } = useContext(GlobalContext);
+
   return (
     <>
       <Head>
@@ -18,7 +24,7 @@ const Dashboard: NextPage = () => {
         exit="exit"
         key="dashboard-page"
       >
-        Welcome to Dashboard
+        Welcome {user && user.globalUsername} to your Dashboard!
       </motion.div>
     </>
   );
