@@ -56,12 +56,12 @@ const SignUp = () => {
       console.error(error);
       setIsLoading(false);
 
-      // Put message
+      // Put a message
       if (setArrayMsgs)
         setArrayMsgs(prev => [
           {
             type: "danger",
-            text: error.message
+            text: "Server error"
           },
           ...prev
         ]);
