@@ -7,16 +7,16 @@ import jwt from "jsonwebtoken";
 import { User } from "../../models/User";
 
 export const logIn = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: false,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
   try {
     const { email, password }: BODY_LOG_IN = req.body;
-
-    let response: RESPONSE = {
-      isAuth: false,
-      message: "",
-      readMsg: true,
-      typeMsg: "danger",
-      data: {}
-    };
 
     if (!email || !password) {
       response.message = "The information is incomplete";
@@ -47,7 +47,7 @@ export const logIn = async (req, res) => {
     const comparison = await bcrypt.compare(password, user.password);
 
     if (!comparison) {
-      response.message = "Incorrect password";
+      response.message = "Incorrect email and password";
       res.json(response);
       return;
     }
@@ -56,7 +56,9 @@ export const logIn = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: true,
+      sameSite: "None"
     });
 
     response.isAuth = true;
@@ -70,5 +72,13 @@ export const logIn = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
   }
 };

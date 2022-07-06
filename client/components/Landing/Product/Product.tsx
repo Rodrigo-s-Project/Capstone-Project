@@ -33,6 +33,7 @@ const ProductCard = ({ title, children, Icon, _ref }: Props) => {
 };
 
 const Product = () => {
+  // Animations on scroll
   const h1 = useRef<any>(null);
   const card1 = useRef<any>(null);
   const card2 = useRef<any>(null);

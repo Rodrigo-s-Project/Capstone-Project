@@ -4,15 +4,15 @@ import { RESPONSE } from "../../controllers/controllers.types";
 import { User } from "../../models/User";
 
 export const authenticate = async (req, res, next) => {
-  try {
-    let response: RESPONSE = {
-      isAuth: false,
-      message: "",
-      readMsg: true,
-      typeMsg: "danger",
-      data: {}
-    };
+  let response: RESPONSE = {
+    isAuth: false,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
 
+  try {
     const cookie = req.cookies["jwt"];
 
     if (!cookie) {
@@ -39,5 +39,13 @@ export const authenticate = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
   }
 };

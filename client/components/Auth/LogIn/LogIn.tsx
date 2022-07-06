@@ -23,6 +23,11 @@ const LogIn = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const successLogIn = (dataCallback: RESPONSE) => {
+    // Go to dashboard
+    if (dataCallback.isAuth) router.replace("/dashboard");
+  };
+
   const logIn = async () => {
     try {
       setIsLoading(true);
@@ -38,37 +43,41 @@ const LogIn = () => {
       const data: RESPONSE = response.data;
       if (data.isAuth) {
         // Good
-        if (refetchUser)
-          refetchUser((dataCallback: RESPONSE) => {
-            if (dataCallback.isAuth) router.replace("/dashboard");
-          });
-      } else {
-        if (setArrayMsgs && data.readMsg)
-          setArrayMsgs(prev => [
-            {
-              type: data.typeMsg,
-              text: data.message
-            },
-            ...prev
-          ]);
+        if (refetchUser) refetchUser(successLogIn);
+      } else if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
       }
     } catch (error) {
       console.error(error);
       setIsLoading(false);
+
+      // Put message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: error.message
+          },
+          ...prev
+        ]);
     }
   };
 
   return (
-    <>
-      <LogInCard
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        logIn={logIn}
-        isLoading={isLoading}
-      />
-    </>
+    <LogInCard
+      email={email}
+      setEmail={setEmail}
+      password={password}
+      setPassword={setPassword}
+      logIn={logIn}
+      isLoading={isLoading}
+    />
   );
 };
 

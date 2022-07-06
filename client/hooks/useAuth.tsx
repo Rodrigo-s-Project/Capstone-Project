@@ -32,7 +32,6 @@ export const useAuth = ({ setUser, setIsAuth }: Params) => {
 
     setIsLoading(true);
     const response = await axios.get(getUser.url, config);
-    console.log(response);
     setIsLoading(false);
 
     const data: RESPONSE = response.data;
