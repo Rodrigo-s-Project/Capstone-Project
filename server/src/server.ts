@@ -1,17 +1,25 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
-app.set('port', process.env.PORT);
+app.set("port", process.env.PORT);
 
+app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    credentials: true
   })
 );
 
-app.use(express.json());
+// Routes
+import mainRoutes from "./routes/main.routes";
+import authRoutes from "./routes/auth.routes";
+app.use("/", mainRoutes);
+app.use("/auth", authRoutes);
 
+app.use(express.json());
