@@ -6,27 +6,25 @@ import { motion } from "framer-motion";
 import { fadeVariants } from "../animations/fade";
 
 // Components
-import Header from "../components/Landing/Header/Header";
-import Product from "../components/Landing/Product/Product";
+import SignUpComponent from "../components/Auth/SignUp/SignUp";
 
-const Home: NextPage = () => {
+const SignUp: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Teamplace</title>
+        <title>Teamplace | Sign up</title>
       </Head>
       <motion.div
         variants={fadeVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        key="index-page"
+        key="sign-up-page"
       >
-        <Header />
-        <Product />
+        <SignUpComponent />
       </motion.div>
     </>
   );
 };
 
-export default Home;
+export default SignUp;

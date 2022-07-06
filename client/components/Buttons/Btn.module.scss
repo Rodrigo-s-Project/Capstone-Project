@@ -3,6 +3,12 @@
   text-align: center;
   height: 45px;
   display: inline-block;
+
+  div[extra-css="spinner-btn"] {
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+  }
 }
 .lavender-200 {
   background-color: var(--lavender-200);

@@ -1,0 +1,43 @@
+.card_login {
+  width: 100%;
+  height: calc(100vh - 222px);
+  min-height: 500px;
+  max-height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    margin-bottom: 55px;
+    font-size: 3rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--black)
+  }
+  &_inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  button[extra-css="btn-enter-login"] {
+    margin-top: 20px;
+    width: 100%;
+  }
+  a[extra-css="btn-enter-signup"] {
+    width: 100%;
+  }
+  &_or {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    &_line {
+      width: 40%;
+      height: 1px;
+      background-color: var(--gray-700);
+    }
+    &_letter {
+      color: var(--gray-700);
+      font-size: 1.125rem;
+    }
+  }
+}

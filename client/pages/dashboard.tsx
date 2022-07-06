@@ -5,28 +5,23 @@ import { motion } from "framer-motion";
 // Animations
 import { fadeVariants } from "../animations/fade";
 
-// Components
-import Header from "../components/Landing/Header/Header";
-import Product from "../components/Landing/Product/Product";
-
-const Home: NextPage = () => {
+const Dashboard: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Teamplace</title>
+        <title>Teamplace | Dashboard</title>
       </Head>
       <motion.div
         variants={fadeVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
-        key="index-page"
+        key="dashboard-page"
       >
-        <Header />
-        <Product />
+        Welcome to Dashboard
       </motion.div>
     </>
   );
 };
 
-export default Home;
+export default Dashboard;
