@@ -27,6 +27,7 @@ interface ValueAppProvider {
   setArrayMsgs: Dispatch<SetStateAction<Array<Message>>>;
   user: DATA_GET_USER;
   refetchUser: (_callback?: any) => any;
+  isAuth: boolean;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -48,7 +49,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         setIsDarkMode,
         setArrayMsgs,
         user,
-        refetchUser
+        refetchUser,
+        isAuth
       }}
     >
       <AnimatePresence

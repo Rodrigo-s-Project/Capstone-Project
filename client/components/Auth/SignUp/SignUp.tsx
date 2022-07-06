@@ -55,6 +55,16 @@ const SignUp = () => {
     } catch (error) {
       console.error(error);
       setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
     }
   };
 
