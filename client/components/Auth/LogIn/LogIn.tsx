@@ -36,7 +36,6 @@ const LogIn = () => {
       const data: RESPONSE = response.data;
       if (data.isAuth) {
         // Good
-        // TODO: create dashboard page
         router.replace("/dashboard");
       } else {
         if (setArrayMsgs && data.readMsg)

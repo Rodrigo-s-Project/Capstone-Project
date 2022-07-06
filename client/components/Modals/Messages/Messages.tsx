@@ -47,7 +47,7 @@ const Messages = ({ arrayMsgs, setArrayMsgs }: Props) => {
               onClick={() => {
                 deleteMsg(index);
               }}
-              title="Close msg"
+              title="Close message"
             >
               <TimesIcon />
             </button>

@@ -39,7 +39,7 @@ export const logIn = async (req, res) => {
 
     if (!user) {
       response.message = "User not found";
-      res.status(404).json(response);
+      res.json(response);
       return;
     }
 
@@ -48,7 +48,7 @@ export const logIn = async (req, res) => {
 
     if (!comparison) {
       response.message = "Incorrect password";
-      res.status(400).json(response);
+      res.json(response);
       return;
     }
 
