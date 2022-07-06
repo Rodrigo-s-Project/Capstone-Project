@@ -12,20 +12,116 @@
   z-index: 100;
   &_logo {
     text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--lavender-200);
     width: 230px;
+    a {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--lavender-200);
+      width: 100%;
+    }
   }
   &_controls {
     padding: 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: calc(100% - 230px);
+    &_cmd {
+      width: 100%;
+    }
+    &_info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      &_bell {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 100px; // Just a max
+        svg {
+          width: 17.5px;
+          height: 17.5px;
+          fill: var(--gray-700);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--gray-300);
+          }
+        }
+      }
+      &_types {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        div {
+          border-radius: 100px; // Just a max
+          background-color: var(--gray-300);
+          color: var(--gray-900);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 0 15px;
+          font-size: 0.8rem;
+        }
+      }
+      &_user {
+        display: flex;
+        align-items: center;
+        gap: 2.5px;
+        &_profile {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          cursor: pointer;
+          padding: 5px 10px;
+          border-radius: 100px; // Just a max
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background-color: var(--gray-300);
+            }
+          }
+          &_img {
+            width: 32px;
+            height: 32px;
+            background-color: var(--gray-500);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg {
+              fill: var(--gray-100);
+              width: 40%;
+              height: 40%;
+            }
+          }
+          &_name {
+            color: var(--gray-800);
+            font-size: 0.9rem;
+          }
+        }
+        &_drop {
+          cursor: pointer;
+          padding: 5px 15px;
+          border-radius: 100px; // Just a max
+          position: relative;
+          svg {
+            fill: var(--gray-700);
+            width: 12.5px;
+            height: 12.5px;
+          }
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background-color: var(--gray-300);
+            }
+          }
+        }
+      }
+    }
   }
 }
 @media screen and (min-width: 1420px) {
-    .nav {
-      left: calc(50% - 710px);
-    }
+  .nav {
+    left: calc(50% - 710px);
   }
+}
