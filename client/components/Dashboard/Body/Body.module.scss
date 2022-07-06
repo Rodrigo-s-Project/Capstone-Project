@@ -1,0 +1,12 @@
+.dashboard {
+    margin-left: 230px;
+    padding: 50px 30px;
+    transition: margin-left ease-out 300ms, padding ease-out 300ms;
+}
+@media screen and (max-width: 1000px) {
+    .dashboard {
+      margin-left: 0;
+      padding: 30px;
+    }
+  }
+  

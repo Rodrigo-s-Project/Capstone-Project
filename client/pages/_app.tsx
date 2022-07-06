@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SetStateAction, Dispatch, useState, createContext } from "react";
 
 // Components
-import LandingNav from "../components/Nav/Landing/LandingNav";
+import Nav from "../components/Nav/Nav";
 import Loader from "../components/Loader/Spinner/Spinner";
 
 // Modals
@@ -71,7 +71,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </motion.div>
         ) : (
           <>
-            <LandingNav />
+            <Nav />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />
