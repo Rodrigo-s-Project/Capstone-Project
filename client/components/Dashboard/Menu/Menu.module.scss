@@ -1,0 +1,15 @@
+.menu {
+  background-color: var(--primary);
+  width: 230px;
+  height: calc(100vh - 65px);
+  position: fixed;
+  top: 65px;
+  left: 0;
+  z-index: 90;
+  padding: 30px;
+}
+@media screen and (min-width: 1420px) {
+  .menu {
+    left: calc(50% - 710px);
+  }
+}

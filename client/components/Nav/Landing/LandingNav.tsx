@@ -3,6 +3,10 @@ import Link from "next/link";
 import ColorSwitch from "../../Colors/Colors";
 import BtnLink from "../../Buttons/BtnLink/BtnLink";
 import { useState, useContext } from "react";
+import { motion } from "framer-motion";
+
+// Animations
+import { fadeVariants } from "../../../animations/fade";
 
 // Context
 import { GlobalContext } from "../../../pages/_app";
@@ -50,7 +54,13 @@ const LandingNav = () => {
   };
 
   return (
-    <nav className={styles.nav}>
+    <motion.nav
+      variants={fadeVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className={styles.nav}
+    >
       <div className={styles.nav_links}>
         <LinksComponent />
       </div>
@@ -81,7 +91,7 @@ const LandingNav = () => {
         <LinksComponent click={closeNav} />
         <BtnsComponent click={closeNav} />
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
