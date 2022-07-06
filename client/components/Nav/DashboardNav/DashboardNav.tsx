@@ -24,6 +24,9 @@ const DashboardNav = () => {
   // State dropdown
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
+  // Sate Open on Responsive
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   const callBackDropDown = () => {};
 
   return (
@@ -38,6 +41,18 @@ const DashboardNav = () => {
         <Link href="/">
           <a>Teamplace</a>
         </Link>
+        <div
+          onClick={() => {
+            setIsNavOpen(prev => !prev);
+          }}
+          className={`${styles.nav_responsive_top_hamburger} ${isNavOpen &&
+            styles.nav_responsive_top_hamburger_open}`}
+          title="Toggle menu"
+        >
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
       <div className={styles.nav_controls}>
         <div className={styles.nav_controls_cmd}>
@@ -59,7 +74,10 @@ const DashboardNav = () => {
                 <div className={styles.nav_controls_info_user_profile_img}>
                   <Camera />
                 </div>
-                <div className={styles.nav_controls_info_user_profile_name}>
+                <div
+                  title={user ? user.globalUsername : ""}
+                  className={styles.nav_controls_info_user_profile_name}
+                >
                   {user && user.globalUsername}
                 </div>
               </a>

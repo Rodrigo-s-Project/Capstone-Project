@@ -27,6 +27,7 @@
     align-items: center;
     justify-content: space-between;
     width: calc(100% - 230px);
+    transition: visibility ease-out 200ms, opacity ease-out 200ms;
     &_cmd {
       width: 100%;
     }
@@ -98,6 +99,10 @@
           &_name {
             color: var(--gray-800);
             font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100px;
           }
         }
         &_drop {
@@ -119,9 +124,77 @@
       }
     }
   }
+  &_responsive {
+    &_top_hamburger {
+      width: 27.5px;
+      height: 22.5px;
+      cursor: pointer;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility ease-out 200ms, opacity ease-out 200ms;
+      position: fixed;
+      right: 50px;
+      top: calc(65px / 2 - 11.25px);
+      z-index: 10;
+
+      div {
+        width: 100%;
+        height: 4px;
+        position: absolute;
+        background-color: var(--lavender-100);
+        left: 0;
+        border-radius: 5px;
+        transition: transform ease-out 300ms, top ease-out 300ms;
+        &:nth-child(1) {
+          top: 0;
+        }
+        &:nth-child(2) {
+          top: calc(50% - 2px);
+        }
+        &:nth-child(3) {
+          top: calc(100% - 4px);
+        }
+      }
+    }
+  }
 }
 @media screen and (min-width: 1420px) {
   .nav {
     left: calc(50% - 710px);
+  }
+}
+@media screen and (max-width: 1000px) {
+  .nav {
+    &_controls {
+      visibility: hidden;
+      opacity: 0;
+    }
+    &_logo {
+      text-align: left;
+      padding: 0 30px;
+    }
+    &_responsive {
+      &_top {
+        &_hamburger {
+          visibility: visible;
+          opacity: 1;
+          right: 30px;
+        }
+        &_hamburger_open {
+          div {
+            top: calc(50% - 2px) !important;
+            &:nth-child(1) {
+              transform: rotateZ(45deg);
+            }
+            &:nth-child(2) {
+              opacity: 0;
+            }
+            &:nth-child(3) {
+              transform: rotateZ(-45deg);
+            }
+          }
+        }
+      }
+    }
   }
 }
