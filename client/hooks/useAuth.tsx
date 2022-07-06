@@ -7,7 +7,10 @@ import { DATA_GET_USER, getUser } from "../routes/main.routes";
 import { RESPONSE } from "../routes/index.routes";
 
 // Config
-import { protectedRoutes } from "../config/protectedRoutes";
+import {
+  protectedRoutes,
+  nonAuthRestrictedRoutes
+} from "../config/protectedRoutes";
 
 type Params = {
   setUser: Dispatch<SetStateAction<DATA_GET_USER | undefined>>;
@@ -48,9 +51,18 @@ export const useAuth = ({ setUser, setIsAuth }: Params) => {
 
   const redirectInCaseOfProtectedRoute = (isAuth: boolean) => {
     if (!isAuth) {
+      // Redirect in case of no Auth
       for (let i = 0; i < protectedRoutes.length; i++) {
         if (protectedRoutes[i] == router.pathname) {
           router.replace("/");
+          return;
+        }
+      }
+    } else {
+      // Redirect in case of Auth
+      for (let i = 0; i < nonAuthRestrictedRoutes.length; i++) {
+        if (nonAuthRestrictedRoutes[i] == router.pathname) {
+          router.replace("/dashboard");
           return;
         }
       }

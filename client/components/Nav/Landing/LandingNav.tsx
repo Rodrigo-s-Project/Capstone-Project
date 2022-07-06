@@ -2,7 +2,10 @@ import styles from "./LandingNav.module.scss";
 import Link from "next/link";
 import ColorSwitch from "../../Colors/Colors";
 import BtnLink from "../../Buttons/BtnLink/BtnLink";
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+// Context
+import { GlobalContext } from "../../../pages/_app";
 
 type Props = {
   click?: () => any;
@@ -22,17 +25,18 @@ const LinksComponent = ({ click }: Props) => {
 };
 
 const BtnsComponent = ({ click }: Props) => {
+  const { isAuth } = useContext(GlobalContext);
   return (
     <>
       <ColorSwitch />
       <BtnLink
         additionalClass="log-in"
-        text="Log in"
-        url="/log-in"
+        text={isAuth ? "Dashboard" : "Log in"}
+        url={isAuth ? "/dashboard" : "/log-in"}
         callback={click}
         color="lavender-200"
         border="complete_rounded"
-        title="Go to Log In"
+        title={isAuth ? "Go to Dashboard" : "Go to Log In"}
       />
     </>
   );
