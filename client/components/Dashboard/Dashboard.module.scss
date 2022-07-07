@@ -4,4 +4,5 @@
   margin-top: calc(65px - 111px); // Contrast of main-content mt
   position: relative;
   height: calc(100vh - 65px);
+  z-index: 5;
 }

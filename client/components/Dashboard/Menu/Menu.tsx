@@ -1,7 +1,9 @@
 import styles from "./Menu.module.scss";
 import stylesNav from "../../Nav/DashboardNav/DashboardNav.module.scss";
-import { useContext } from "react";
+import { useContext, Fragment } from "react";
 import { useRouter } from "next/router";
+import { AnimatePresence, motion } from "framer-motion";
+import { fadeVariants } from "../../../animations/fade";
 
 // Context
 import { GlobalContext } from "../../../pages/_app";
@@ -39,7 +41,13 @@ const LinkMenu = ({ text, click, children, isActive }: Props) => {
 };
 
 const MenuDashboard = () => {
-  const { isMenuOpen } = useContext(GlobalContext);
+  const {
+    isMenuOpen,
+    selectedCompany,
+    setSelectedCompany,
+    selectedTeam,
+    setSelectedTeam
+  } = useContext(GlobalContext);
   const router = useRouter();
 
   return (
@@ -57,10 +65,73 @@ const MenuDashboard = () => {
         <LinkMenu
           isActive={router.pathname == "/dashboard"}
           text="Companies"
-          click={() => {}}
+          click={() => {
+            if (setSelectedCompany) setSelectedCompany(undefined);
+            if (setSelectedTeam) setSelectedTeam(undefined);
+            router.replace("/dashboard");
+          }}
         >
           <BriefcaseIcon />
         </LinkMenu>
+        <AnimatePresence>
+          {selectedCompany ? (
+            <Fragment key="menu-company">
+              <motion.div
+                variants={fadeVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className={styles.selected_company}
+                onClick={() => {
+                  router.replace(`/dashboard/${selectedCompany.id}`);
+                  if (setSelectedTeam) setSelectedTeam(undefined);
+                }}
+              >
+                {selectedCompany.name}
+              </motion.div>
+              <LinkMenu
+                isActive={router.pathname.includes("/dashboard")}
+                text="Teams"
+                click={() => {
+                  router.replace(`/dashboard/${selectedCompany.id}`);
+                  if (setSelectedTeam) setSelectedTeam(undefined);
+                }}
+              >
+                <BriefcaseIcon />
+              </LinkMenu>
+              {selectedTeam ? (
+                <motion.div
+                  variants={fadeVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className={styles.selected_company}
+                  onClick={() => {
+                    router.replace(
+                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
+                    );
+                  }}
+                >
+                  {selectedTeam.name}
+                </motion.div>
+              ) : null}
+              <LinkMenu
+                isActive={router.pathname == "/dashboard/messages"}
+                text="Messages"
+                click={() => {}}
+              >
+                <BriefcaseIcon />
+              </LinkMenu>
+              <LinkMenu
+                isActive={router.pathname == "/dashboard/calendar"}
+                text="Calendar"
+                click={() => {}}
+              >
+                <BriefcaseIcon />
+              </LinkMenu>
+            </Fragment>
+          ) : null}
+        </AnimatePresence>
         <LinkMenu
           isActive={router.pathname == "/settings"}
           text="Settings"

@@ -1,51 +1,57 @@
-import styles from "./Company.module.scss";
-import BtnSpinner from "../../../Buttons/BtnClick/BtnClick";
-import { GlobalContext } from "../../../../pages/_app";
+import styles from "./Teams.module.scss";
+import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
+import { GlobalContext } from "../../../../../pages/_app";
 import { useContext, useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
 // Icons
-import PlusIcon from "../../../Svgs/Plus";
+import PlusIcon from "../../../../Svgs/Plus";
 
 // Components
-import InputText from "../../../Input/Text/InputText";
-import BtnClick from "../../../Buttons/BtnClick/BtnClick";
+import InputText from "../../../../Input/Text/InputText";
+import BtnClick from "../../../../Buttons/BtnClick/BtnClick";
 
 // Icons
-import Camera from "../../../Svgs/Camera";
+import Camera from "../../../../Svgs/Camera";
 
 // Routes
 import {
-  getCompaniesEndpoint,
-  createCompanyEndpoint,
-  BODY_CREATE_COMPANY,
-  DATA_GET_COMPANIES,
-  COMPANY,
-  BODY_JOIN_COMPANY,
-  joinCompanyEndpoint
-} from "../../../../routes/dashboard.company.routes";
-import { RESPONSE } from "../../../../routes/index.routes";
+  getCompanyEndpoint,
+  DATA_GET_COMPANY
+} from "../../../../../routes/dashboard.company.routes";
+import {
+  getTeamsEndpoint,
+  DATA_GET_TEAMS,
+  TEAM,
+  joinTeamEndpoint,
+  BODY_JOIN_TEAM,
+  BODY_CREATE_TEAM,
+  createTeamEndpoint
+} from "../../../../../routes/dashboard.team.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
 
-const CreateCompanyModal = () => {
+const CreateTeamModal = () => {
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const [name, setName] = useState("");
   const {
     setArrayMsgs,
     refetchUser,
     setModalPopUp,
-    setRefetchCompanies
+    selectedCompany,
+    setRefetchTeams
   } = useContext(GlobalContext);
 
-  const createACompanyFetch = async () => {
+  const createATeamFetch = async () => {
     try {
       setIsLoadingCreate(true);
 
-      const body: BODY_CREATE_COMPANY = {
-        name
+      const body: BODY_CREATE_TEAM = {
+        name,
+        companyId: selectedCompany && selectedCompany.id
       };
 
-      const response = await axios.post(createCompanyEndpoint.url, body, {
+      const response = await axios.post(createTeamEndpoint.url, body, {
         withCredentials: true
       });
       setIsLoadingCreate(false);
@@ -68,8 +74,8 @@ const CreateCompanyModal = () => {
         }
 
         // Refetch
-        if (setRefetchCompanies) {
-          setRefetchCompanies(prev => !prev);
+        if (setRefetchTeams) {
+          setRefetchTeams(prev => !prev);
         }
       }
       if (setArrayMsgs && data.readMsg) {
@@ -98,24 +104,24 @@ const CreateCompanyModal = () => {
   };
 
   return (
-    <div className={styles.company_join_modal}>
-      <div className={styles.company_join_modal_title}>Enter Company Name</div>
+    <div className={styles.team_join_modal}>
+      <div className={styles.team_join_modal_title}>Enter Team Name</div>
       <form
         onSubmit={e => {
           e.preventDefault();
         }}
-        className={styles.company_join_modal_form}
+        className={styles.team_join_modal_form}
       >
         <InputText
-          text="Company name"
+          text="Team name"
           value={name}
           setValue={setName}
-          id="input-code-create-company"
+          id="input-code-create-team"
           type="text"
         />
         <BtnClick
-          text="Create company"
-          callback={createACompanyFetch}
+          text="Create team"
+          callback={createATeamFetch}
           color="lavender-300"
           border="round_5"
           isLoading={isLoadingCreate}
@@ -125,25 +131,27 @@ const CreateCompanyModal = () => {
   );
 };
 
-const JoinCompanyModal = () => {
+const JoinTeamModal = () => {
   const [code, setCode] = useState("");
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const {
     setArrayMsgs,
     refetchUser,
     setModalPopUp,
-    setRefetchCompanies
+    selectedCompany,
+    setRefetchTeams
   } = useContext(GlobalContext);
 
-  const joinCompanyFetch = async () => {
+  const joinTeamFetch = async () => {
     try {
       setIsLoadingJoin(true);
 
-      const body: BODY_JOIN_COMPANY = {
-        code
+      const body: BODY_JOIN_TEAM = {
+        code,
+        companyId: selectedCompany && selectedCompany.id
       };
 
-      const response = await axios.put(joinCompanyEndpoint.url, body, {
+      const response = await axios.put(joinTeamEndpoint.url, body, {
         withCredentials: true
       });
       setIsLoadingJoin(false);
@@ -166,8 +174,8 @@ const JoinCompanyModal = () => {
         }
 
         // Refetch
-        if (setRefetchCompanies) {
-          setRefetchCompanies(prev => !prev);
+        if (setRefetchTeams) {
+          setRefetchTeams(prev => !prev);
         }
       }
       if (setArrayMsgs && data.readMsg) {
@@ -196,24 +204,24 @@ const JoinCompanyModal = () => {
   };
 
   return (
-    <div className={styles.company_join_modal}>
-      <div className={styles.company_join_modal_title}>Enter Company Code</div>
+    <div className={styles.team_join_modal}>
+      <div className={styles.team_join_modal_title}>Enter Team Code</div>
       <form
         onSubmit={e => {
           e.preventDefault();
         }}
-        className={styles.company_join_modal_form}
+        className={styles.team_join_modal_form}
       >
         <InputText
           text="Code"
           value={code}
           setValue={setCode}
-          id="input-code-join-company"
+          id="input-code-join-team"
           type="text"
         />
         <BtnClick
-          text="Join to a company"
-          callback={joinCompanyFetch}
+          text="Join to a team"
+          callback={joinTeamFetch}
           color="lavender-300"
           border="round_5"
           isLoading={isLoadingJoin}
@@ -223,14 +231,14 @@ const JoinCompanyModal = () => {
   );
 };
 
-const JoinCompany = () => {
+const JoinTeam = () => {
   const { setModalPopUp } = useContext(GlobalContext);
 
   const joinToACompany = () => {
     if (setModalPopUp) {
       setModalPopUp({
         isModal: true,
-        ref: JoinCompanyModal
+        ref: JoinTeamModal
       });
     }
   };
@@ -238,11 +246,11 @@ const JoinCompany = () => {
   return (
     <div
       onClick={joinToACompany}
-      title="Join to a company"
-      className={styles.company_grid_join}
+      title="Join to a team"
+      className={styles.team_grid_join}
     >
-      Join to a company
-      <div className={styles.company_grid_join_btn}>
+      Join to a team
+      <div className={styles.team_grid_join_btn}>
         <PlusIcon />
       </div>
     </div>
@@ -250,24 +258,27 @@ const JoinCompany = () => {
 };
 
 type Props = {
-  company: COMPANY;
+  team: TEAM;
 };
 
-const CompanyCard = ({ company }: Props) => {
+const TeamCard = ({ team }: Props) => {
   const router = useRouter();
+  const { selectedCompany } = useContext(GlobalContext);
 
   return (
     <div
       onClick={() => {
-        router.replace(`/dashboard/${company.id}`);
+        router.replace(
+          `/dashboard/${selectedCompany && selectedCompany.id}/team/${team.id}`
+        );
       }}
-      title={company.name}
-      className={styles.company_grid_join}
+      title={team.name}
+      className={styles.team_grid_join}
     >
-      <div className={styles.company_grid_profile}>
+      <div className={styles.team_grid_profile}>
         <Camera />
       </div>
-      <div className={styles.company_grid_profile_name}>{company.name}</div>
+      <div className={styles.team_grid_profile_name}>{team.name}</div>
     </div>
   );
 };
@@ -276,16 +287,22 @@ const Company = () => {
   const {
     setArrayMsgs,
     setModalPopUp,
-    refetchCompanies,
-    setCompanies,
-    companies
+    refetchTeams,
+    teams,
+    setSelectedCompany,
+    selectedCompany,
+    user,
+    setTeams
   } = useContext(GlobalContext);
 
-  const createACompany = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const createATeam = () => {
     if (setModalPopUp) {
       setModalPopUp({
         isModal: true,
-        ref: CreateCompanyModal
+        ref: CreateTeamModal
       });
     }
   };
@@ -294,21 +311,27 @@ const Company = () => {
   // TODO: loader
 
   useEffect(() => {
-    getCompanies();
-  }, [refetchCompanies]);
+    if (selectedCompany) {
+      getAllTeams(selectedCompany.id);
+    }
+  }, [refetchTeams]);
 
-  const getCompanies = async () => {
+  useEffect(() => {
+    getCompanyData();
+  }, []);
+
+  const getAllTeams = async (companyId: number) => {
     try {
       setIsLoading(true);
-      const response = await axios.get(getCompaniesEndpoint.url, {
+      const response = await axios.get(getTeamsEndpoint.url(companyId), {
         withCredentials: true
       });
       setIsLoading(false);
 
       const data: RESPONSE = response.data;
-      const companiesData: DATA_GET_COMPANIES = data.data;
-      if (setCompanies) {
-        setCompanies(companiesData.companies);
+      const companiesData: DATA_GET_TEAMS = data.data;
+      if (setTeams) {
+        setTeams(companiesData.teams);
       }
       if (setArrayMsgs && data.readMsg) {
         setArrayMsgs(prev => [
@@ -335,28 +358,76 @@ const Company = () => {
     }
   };
 
+  const getCompanyData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(getCompanyEndpoint.url(id), {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      const companyData: DATA_GET_COMPANY = data.data;
+
+      if (!companyData.company.id) {
+        router.replace("/");
+        return;
+      }
+
+      if (setSelectedCompany) {
+        setSelectedCompany(companyData.company);
+      }
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+      // Now get teams...
+      getAllTeams(companyData.company.id);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
+
   return (
-    <div className={styles.company}>
-      <div className={styles.company_top}>
-        <h1>Companies</h1>
-        <BtnSpinner
-          text="Create a company"
-          callback={createACompany}
-          color="lavender-300"
-          border="round_5"
-          additionalClass="btn-add-company"
-        />
+    <div className={styles.team}>
+      <div className={styles.team_top}>
+        <h1>Teams</h1>
+        {selectedCompany && user && selectedCompany.adminId == user.id && (
+          <BtnSpinner
+            text="Create a team"
+            callback={createATeam}
+            color="lavender-300"
+            border="round_5"
+            additionalClass="btn-add-team"
+          />
+        )}
       </div>
-      <div className={styles.company_grid}>
-        {companies &&
-          companies.map((company: COMPANY, index: number) => {
+      <div className={styles.team_grid}>
+        {teams &&
+          teams.map((team: TEAM, index: number) => {
             return (
               <Fragment key={index}>
-                <CompanyCard company={company} />
+                <TeamCard team={team} />
               </Fragment>
             );
           })}
-        <JoinCompany />
+        <JoinTeam />
       </div>
     </div>
   );
