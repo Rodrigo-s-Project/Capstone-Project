@@ -1,0 +1,202 @@
+.nav {
+  height: 65px;
+  width: 100%;
+  max-width: 1420px;
+  background-color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  &_logo {
+    text-align: center;
+    width: 230px;
+    transition: padding ease-out 300ms;
+    a {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--lavender-200);
+      width: 100%;
+    }
+  }
+  &_controls {
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 230px);
+    transition: visibility ease-out 200ms, opacity ease-out 200ms;
+    &_cmd {
+      width: 100%;
+    }
+    &_info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      &_bell {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 100px; // Just a max
+        svg {
+          width: 17.5px;
+          height: 17.5px;
+          fill: var(--gray-700);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--gray-300);
+          }
+        }
+      }
+      &_types {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        div {
+          border-radius: 100px; // Just a max
+          background-color: var(--gray-300);
+          color: var(--gray-900);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 0.5px 15px;
+          font-size: 0.85rem;
+          cursor: default;
+        }
+      }
+      &_user {
+        display: flex;
+        align-items: center;
+        gap: 2.5px;
+        &_profile {
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          cursor: pointer;
+          padding: 5px 10px;
+          border-radius: 100px; // Just a max
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background-color: var(--gray-300);
+            }
+          }
+          &_img {
+            width: 32px;
+            height: 32px;
+            background-color: var(--gray-500);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg {
+              fill: var(--gray-100);
+              width: 40%;
+              height: 40%;
+            }
+          }
+          &_name {
+            color: var(--gray-800);
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100px;
+          }
+        }
+        &_drop {
+          cursor: pointer;
+          padding: 5px 15px;
+          border-radius: 100px; // Just a max
+          position: relative;
+          svg {
+            fill: var(--gray-700);
+            width: 12.5px;
+            height: 12.5px;
+          }
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background-color: var(--gray-300);
+            }
+          }
+        }
+      }
+    }
+  }
+  &_responsive {
+    &_top_hamburger {
+      width: 27.5px;
+      height: 22.5px;
+      cursor: pointer;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility ease-out 200ms, opacity ease-out 200ms;
+      position: fixed;
+      right: 50px;
+      top: calc(65px / 2 - 11.25px);
+      z-index: 10;
+
+      div {
+        width: 100%;
+        height: 4px;
+        position: absolute;
+        background-color: var(--lavender-100);
+        left: 0;
+        border-radius: 5px;
+        transition: transform ease-out 300ms, top ease-out 300ms;
+        &:nth-child(1) {
+          top: 0;
+        }
+        &:nth-child(2) {
+          top: calc(50% - 2px);
+        }
+        &:nth-child(3) {
+          top: calc(100% - 4px);
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 1420px) {
+  .nav {
+    left: calc(50% - 710px);
+  }
+}
+@media screen and (max-width: 1000px) {
+  .nav {
+    &_controls {
+      visibility: hidden;
+      opacity: 0;
+    }
+    &_logo {
+      text-align: left;
+      padding: 0 30px;
+    }
+    &_responsive {
+      &_top {
+        &_hamburger {
+          visibility: visible;
+          opacity: 1;
+          right: 30px;
+        }
+        &_hamburger_open {
+          div {
+            top: calc(50% - 2px) !important;
+            &:nth-child(1) {
+              transform: rotateZ(45deg);
+            }
+            &:nth-child(2) {
+              opacity: 0;
+            }
+            &:nth-child(3) {
+              transform: rotateZ(-45deg);
+            }
+          }
+        }
+      }
+    }
+  }
+}

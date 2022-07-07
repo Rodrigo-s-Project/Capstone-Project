@@ -1,12 +1,14 @@
 import "../styles/globals.scss";
 import { AppProps } from "next/app";
+import Head from "next/head";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { SetStateAction, Dispatch, useState, createContext } from "react";
 
 // Components
-import LandingNav from "../components/Nav/Landing/LandingNav";
+import Nav from "../components/Nav/Nav";
 import Loader from "../components/Loader/Spinner/Spinner";
+import PopUpModal, { ModalParams } from "../components/Modals/PopUp/PopUp";
 
 // Modals
 import Messages, { Message } from "../components/Modals/Messages/Messages";
@@ -28,6 +30,10 @@ interface ValueAppProvider {
   user: DATA_GET_USER;
   refetchUser: (_callback?: any) => any;
   isAuth: boolean;
+  isMenuOpen: boolean;
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
+  modalPopUp: Partial<ModalParams>;
+  setModalPopUp: Dispatch<SetStateAction<Partial<ModalParams>>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -42,6 +48,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Modal Msgs
   const [arrayMsgs, setArrayMsgs] = useState<Array<Message>>([]);
 
+  // Shared state Nav <---> Dashboard
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // State Modal Pop up
+  const [modalPopUp, setModalPopUp] = useState<Partial<ModalParams>>({});
+
   return (
     <GlobalContext.Provider
       value={{
@@ -50,9 +62,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         setArrayMsgs,
         user,
         refetchUser,
-        isAuth
+        isAuth,
+        isMenuOpen,
+        setIsMenuOpen,
+        modalPopUp,
+        setModalPopUp
       }}
     >
+      <Head>
+        <title>Teamplace</title>
+      </Head>
       <AnimatePresence
         exitBeforeEnter
         initial={false}
@@ -71,7 +90,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           </motion.div>
         ) : (
           <>
-            <LandingNav />
+            <Nav />
+            <PopUpModal />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />

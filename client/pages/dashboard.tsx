@@ -1,17 +1,15 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useContext } from "react";
 import { motion } from "framer-motion";
 
 // Animations
 import { fadeVariants } from "../animations/fade";
 
-// Context
-import { GlobalContext } from "./_app";
+// Componnets
+import DashboardWrapper from "../components/Dashboard/Dashboard";
+import Company from "../components/Dashboard/Body/Company/Company";
 
 const Dashboard: NextPage = () => {
-  const { user } = useContext(GlobalContext);
-
   return (
     <>
       <Head>
@@ -24,7 +22,9 @@ const Dashboard: NextPage = () => {
         exit="exit"
         key="dashboard-page"
       >
-        Welcome {user && user.globalUsername} to your Dashboard!
+        <DashboardWrapper>
+          <Company />
+        </DashboardWrapper>
       </motion.div>
     </>
   );

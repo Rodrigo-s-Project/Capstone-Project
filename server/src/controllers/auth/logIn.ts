@@ -62,7 +62,8 @@ export const logIn = async (req, res) => {
     });
 
     response.isAuth = true;
-    response.readMsg = false;
+    response.readMsg = true;
+    response.message = "Successful login!";
     response.typeMsg = "success";
 
     // So Password if not sent

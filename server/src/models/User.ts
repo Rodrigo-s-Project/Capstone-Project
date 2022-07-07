@@ -19,16 +19,19 @@ export const User = sequelize.define(
       type: DataType.STRING
     },
     typeAccount: {
-      type: DataType.STRING
+      type: DataType.STRING,
+      defaultValue: "free"
     },
     status: {
-      type: DataType.STRING
+      type: DataType.STRING,
+      defaultValue: "available"
     },
     profilePictureURL: {
       type: DataType.STRING
     },
     isDarkModeOn: {
-      type: DataType.BOOLEAN
+      type: DataType.BOOLEAN,
+      defaultValue: false
     }
   },
   {

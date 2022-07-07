@@ -1,0 +1,46 @@
+.cmd {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background-color: var(--gray-600);
+    transition: left ease-out 200ms, width ease-out 200ms;
+  }
+  &_icon {
+    svg {
+      width: 15px;
+      height: 15px;
+      fill: var(--gray-600);
+    }
+  }
+  &_input {
+    width: 100%;
+    padding: 5px 10px;
+    color: var(--black);
+    background-color: transparent;
+    &::placeholder {
+      color: var(--gray-600);
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      &::after {
+        width: 100%;
+        left: 0;
+      }
+    }
+  }
+  &_open {
+    &::after {
+      width: 100%;
+      left: 0;
+    }
+  }
+}
