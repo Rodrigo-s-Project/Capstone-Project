@@ -35,6 +35,7 @@
     height: calc(100vh - 270px);
     overflow-y: auto;
     overflow-x: hidden;
+    align-content: flex-start;
     @media (hover: hover) and (pointer: fine) {
       padding-right: 20px;
     }
