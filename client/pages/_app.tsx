@@ -29,6 +29,8 @@ interface ValueAppProvider {
   user: DATA_GET_USER;
   refetchUser: (_callback?: any) => any;
   isAuth: boolean;
+  isMenuOpen: boolean;
+  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -43,6 +45,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Modal Msgs
   const [arrayMsgs, setArrayMsgs] = useState<Array<Message>>([]);
 
+  // Shared state Nav <---> Dashboard
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -51,7 +56,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         setArrayMsgs,
         user,
         refetchUser,
-        isAuth
+        isAuth,
+        isMenuOpen,
+        setIsMenuOpen
       }}
     >
       <Head>

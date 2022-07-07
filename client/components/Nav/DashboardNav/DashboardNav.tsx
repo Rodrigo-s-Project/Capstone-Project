@@ -18,14 +18,66 @@ import Camera from "../../Svgs/Camera";
 import Cmd from "./Cmd/Cmd";
 import DropDown from "./DropDown/DropDown";
 
-const DashboardNav = () => {
-  const { user } = useContext(GlobalContext);
+type Props = {
+  rules: any;
+};
 
+export const DashBoardNavControls = ({ rules }: Props) => {
+  const { user } = useContext(GlobalContext);
   // State dropdown
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
-  // Sate Open on Responsive
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  return (
+    <div className={rules.nav_controls}>
+      <div className={rules.nav_controls_cmd}>
+        <Cmd />
+      </div>
+      <div className={rules.nav_controls_info}>
+        <div className={rules.nav_controls_info_bell}>
+          <Bell />
+        </div>
+        <div className={rules.nav_controls_info_types}>
+          <div>{user && user.typeAccount}</div>
+        </div>
+        <div className={rules.nav_controls_info_user}>
+          <Link href="/">
+            <a
+              title="Go to Profile"
+              className={rules.nav_controls_info_user_profile}
+            >
+              <div className={rules.nav_controls_info_user_profile_img}>
+                <Camera />
+              </div>
+              <div
+                title={user ? user.globalUsername : ""}
+                className={rules.nav_controls_info_user_profile_name}
+              >
+                {user && user.globalUsername}
+              </div>
+            </a>
+          </Link>
+          <div
+            title="Toggle dropdown"
+            tabIndex={-1}
+            onBlur={() => {
+              setIsDropDownOpen(false);
+            }}
+            className={rules.nav_controls_info_user_drop}
+            onClick={() => {
+              setIsDropDownOpen(true);
+            }}
+          >
+            <ChevronDown />
+            <DropDown isOpen={isDropDownOpen} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DashboardNav = () => {
+  const { isMenuOpen, setIsMenuOpen } = useContext(GlobalContext);
 
   return (
     <motion.nav
@@ -41,9 +93,9 @@ const DashboardNav = () => {
         </Link>
         <div
           onClick={() => {
-            setIsNavOpen(prev => !prev);
+            if (setIsMenuOpen) setIsMenuOpen(prev => !prev);
           }}
-          className={`${styles.nav_responsive_top_hamburger} ${isNavOpen &&
+          className={`${styles.nav_responsive_top_hamburger} ${isMenuOpen &&
             styles.nav_responsive_top_hamburger_open}`}
           title="Toggle menu"
         >
@@ -52,51 +104,7 @@ const DashboardNav = () => {
           <div></div>
         </div>
       </div>
-      <div className={styles.nav_controls}>
-        <div className={styles.nav_controls_cmd}>
-          <Cmd />
-        </div>
-        <div className={styles.nav_controls_info}>
-          <div className={styles.nav_controls_info_bell}>
-            <Bell />
-          </div>
-          <div className={styles.nav_controls_info_types}>
-            <div>{user && user.typeAccount}</div>
-          </div>
-          <div className={styles.nav_controls_info_user}>
-            <Link href="/">
-              <a
-                title="Go to Profile"
-                className={styles.nav_controls_info_user_profile}
-              >
-                <div className={styles.nav_controls_info_user_profile_img}>
-                  <Camera />
-                </div>
-                <div
-                  title={user ? user.globalUsername : ""}
-                  className={styles.nav_controls_info_user_profile_name}
-                >
-                  {user && user.globalUsername}
-                </div>
-              </a>
-            </Link>
-            <div
-              title="Toggle dropdown"
-              tabIndex={-1}
-              onBlur={() => {
-                setIsDropDownOpen(false);
-              }}
-              className={styles.nav_controls_info_user_drop}
-              onClick={() => {
-                setIsDropDownOpen(true);
-              }}
-            >
-              <ChevronDown />
-              <DropDown isOpen={isDropDownOpen} />
-            </div>
-          </div>
-        </div>
-      </div>
+      <DashBoardNavControls rules={styles} />
     </motion.nav>
   );
 };
