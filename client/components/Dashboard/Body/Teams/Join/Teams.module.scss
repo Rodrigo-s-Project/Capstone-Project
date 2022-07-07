@@ -1,0 +1,125 @@
+.team {
+  &_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    h1 {
+      font-size: 2.5rem;
+      color: var(--lavender-200);
+    }
+    button[extra-css="btn-add-team"] {
+      transform: scale(0.8);
+      padding: 0 40px;
+    }
+  }
+  &_join_modal {
+    margin-top: 10px;
+    &_title {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    &_form {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 32px;
+    }
+  }
+  &_grid {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 250px);
+    gap: 30px;
+    justify-content: space-between;
+    height: calc(100vh - 270px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    @media (hover: hover) and (pointer: fine) {
+      padding-right: 20px;
+    }
+    &_profile {
+      width: 32px;
+      height: 32px;
+      background-color: var(--gray-500);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: calc(50% - 17.5px);
+      left: 30px;
+      z-index: 1;
+      &_name {
+        max-width: 100px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      svg {
+        fill: var(--gray-100);
+        width: 40%;
+        height: 40%;
+      }
+    }
+    &_card,
+    &_join {
+      background-color: var(--primary);
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      padding: 25px 30px;
+      border-radius: 5px;
+      width: 250px;
+      position: relative;
+      color: var(--lavender-200);
+      transition: background-color ease-out 200ms;
+      cursor: pointer;
+      height: fit-content;
+    }
+    &_join {
+      &_btn {
+        position: absolute;
+        background-color: var(--gray-200);
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: calc(50% - 17.5px);
+        right: 15px;
+        z-index: 1;
+        transition: background-color ease-out 200ms;
+        svg {
+          width: 12px;
+          height: 12px;
+          fill: var(--gray-800);
+        }
+      }
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background-color: var(--gray-300);
+          .team_grid_join_btn {
+            background-color: var(--gray-300);
+          }
+        }
+      }
+    }
+    @media screen and (max-width: 589px) {
+      justify-content: center;
+      height: calc(100vh - 300px);
+      justify-items: center;
+    }
+  }
+}
+@media screen and (max-width: 589px) {
+  .team {
+    &_top {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+}

@@ -106,7 +106,7 @@ export const setAssociations = () => {
   const User_Team = sequelize.define(
     "User_Team",
     {
-      typeUser: DataType.STRING
+      username: DataType.STRING
     },
     { timestamps: false }
   );

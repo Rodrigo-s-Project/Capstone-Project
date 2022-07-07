@@ -1,6 +1,8 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { motion } from "framer-motion";
+import { useContext, useEffect } from "react";
+import { GlobalContext } from "./_app";
 
 // Animations
 import { fadeVariants } from "../animations/fade";
@@ -10,6 +12,12 @@ import Header from "../components/Landing/Header/Header";
 import Product from "../components/Landing/Product/Product";
 
 const Home: NextPage = () => {
+  const { setSelectedCompany } = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (setSelectedCompany) setSelectedCompany(undefined);
+  }, []);
+
   return (
     <>
       <Head>

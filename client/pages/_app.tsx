@@ -25,6 +25,7 @@ import { useAuth } from "../hooks/useAuth";
 
 // Routes
 import { COMPANY } from "../routes/dashboard.company.routes";
+import { TEAM } from "../routes/dashboard.team.routes";
 
 interface ValueAppProvider {
   isDarkMode: boolean;
@@ -42,8 +43,15 @@ interface ValueAppProvider {
   companies: Array<COMPANY>;
   refetchCompanies: boolean;
   setRefetchCompanies: Dispatch<SetStateAction<boolean>>;
-  selectedCompany: Partial<COMPANY>;
-  setSelectedCompany: Dispatch<SetStateAction<Partial<COMPANY>>>;
+  selectedCompany: COMPANY | undefined;
+  setSelectedCompany: Dispatch<SetStateAction<COMPANY | undefined>>;
+
+  teams: Array<TEAM>;
+  setTeams: Dispatch<SetStateAction<Array<TEAM>>>;
+  refetchTeams: boolean;
+  setRefetchTeams: Dispatch<SetStateAction<boolean>>;
+  selectedTeam: TEAM | undefined;
+  setSelectedTeam: Dispatch<SetStateAction<TEAM | undefined>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -66,8 +74,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // State Companies
   const [companies, setCompanies] = useState<Array<COMPANY>>([]);
+  const [teams, setTeams] = useState<Array<TEAM>>([]);
   const [refetchCompanies, setRefetchCompanies] = useState<boolean>(false);
-  const [selectedCompany, setSelectedCompany] = useState<Partial<COMPANY>>({});
+  const [refetchTeams, setRefetchTeams] = useState<boolean>(false);
+  const [selectedCompany, setSelectedCompany] = useState<COMPANY | undefined>(
+    undefined
+  );
+  const [selectedTeam, setSelectedTeam] = useState<TEAM | undefined>(undefined);
 
   return (
     <GlobalContext.Provider
@@ -87,7 +100,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         refetchCompanies,
         setRefetchCompanies,
         selectedCompany,
-        setSelectedCompany
+        setSelectedCompany,
+        teams,
+        setTeams,
+        refetchTeams,
+        setRefetchTeams,
+        selectedTeam,
+        setSelectedTeam
       }}
     >
       <Head>

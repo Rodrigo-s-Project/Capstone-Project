@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const DashBoardNavControls = ({ rules }: Props) => {
-  const { user } = useContext(GlobalContext);
+  const { user, selectedCompany } = useContext(GlobalContext);
   // State dropdown
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
@@ -38,6 +38,9 @@ export const DashBoardNavControls = ({ rules }: Props) => {
         </div>
         <div className={rules.nav_controls_info_types}>
           <div>{user && user.typeAccount}</div>
+          {selectedCompany && selectedCompany.User_Company && (
+            <div>{selectedCompany.User_Company.typeUser}</div>
+          )}
         </div>
         <div className={rules.nav_controls_info_user}>
           <Link href="/">

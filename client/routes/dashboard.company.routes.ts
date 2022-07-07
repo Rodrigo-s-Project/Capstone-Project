@@ -21,6 +21,16 @@ export const getCompaniesEndpoint = {
   method: "get"
 };
 
+export type DATA_GET_COMPANY = {
+  company: COMPANY;
+};
+
+export const getCompanyEndpoint = {
+  url: (id: string) =>
+    `${process.env.API_URL}/dashboard/company/get-company/${id}`,
+  method: "get"
+};
+
 export type BODY_CREATE_COMPANY = {
   name: string;
 };

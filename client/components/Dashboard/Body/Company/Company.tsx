@@ -3,6 +3,7 @@ import BtnSpinner from "../../../Buttons/BtnClick/BtnClick";
 import { GlobalContext } from "../../../../pages/_app";
 import { useContext, useState, useEffect, Fragment } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 // Icons
 import PlusIcon from "../../../Svgs/Plus";
@@ -253,9 +254,13 @@ type Props = {
 };
 
 const CompanyCard = ({ company }: Props) => {
+  const router = useRouter();
+
   return (
     <div
-      onClick={() => {}}
+      onClick={() => {
+        router.replace(`/dashboard/${company.id}`);
+      }}
       title={company.name}
       className={styles.company_grid_join}
     >

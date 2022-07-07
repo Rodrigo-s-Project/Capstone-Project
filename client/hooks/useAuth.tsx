@@ -53,7 +53,7 @@ export const useAuth = ({ setUser, setIsAuth }: Params) => {
     if (!isAuth) {
       // Redirect in case of no Auth
       for (let i = 0; i < protectedRoutes.length; i++) {
-        if (protectedRoutes[i] == router.pathname) {
+        if (router.pathname.includes(protectedRoutes[i])) {
           router.replace("/");
           return;
         }

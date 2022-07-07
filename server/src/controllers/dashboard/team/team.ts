@@ -1,8 +1,9 @@
 import { RESPONSE } from "../../controllers.types";
 import { Company } from "../../../models/Company";
+import { Team } from "../../../models/Team";
 
 // Types
-import { BODY_CREATE, BODY_JOIN } from "./company.types";
+import { BODY_CREATE, BODY_JOIN } from "./team.types";
 
 // Models
 import { User } from "../../../models/User";
@@ -10,7 +11,7 @@ import { User } from "../../../models/User";
 // Utils
 import { createToken } from "../../../utils/keys";
 
-export const getCompaniesFromUser = async (req, res) => {
+export const getTeamsFromUser = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
     message: "",
@@ -20,10 +21,22 @@ export const getCompaniesFromUser = async (req, res) => {
   };
 
   try {
-    const companies = await req.user.getCompanies();
+    const { companyId } = req.params;
+
+    if (!companyId) {
+      response.message = "Invalid company ID.";
+      res.json(response);
+      return;
+    }
+
+    const teams = await req.user.getTeams({
+      where: {
+        companyId
+      }
+    });
 
     response.data = {
-      companies
+      teams
     };
     response.readMsg = false;
 
@@ -41,7 +54,7 @@ export const getCompaniesFromUser = async (req, res) => {
   }
 };
 
-export const getCompanyFromUser = async (req, res) => {
+export const getTeamFromUser = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
     message: "",
@@ -53,14 +66,14 @@ export const getCompanyFromUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const company = await req.user.getCompanies({
+    const team = await req.user.getTeams({
       where: {
         id
       }
     });
 
     response.data = {
-      company: company.length > 0 ? company[0] : {}
+      team: team.length > 0 ? team[0] : {}
     };
     response.readMsg = false;
 
@@ -78,7 +91,7 @@ export const getCompanyFromUser = async (req, res) => {
   }
 };
 
-export const createCompany = async (req, res) => {
+export const createTeam = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
     message: "",
@@ -88,19 +101,38 @@ export const createCompany = async (req, res) => {
   };
 
   try {
-    const { name }: BODY_CREATE = req.body;
+    const { name, companyId }: BODY_CREATE = req.body;
 
-    if (name.trim() == "") {
+    if (name.trim() == "" || companyId.toString().trim() == "") {
       response.message = "Invalid information.";
       res.json(response);
       return;
     }
 
-    const newCompany = await Company.create({
+    // Get company
+    const company: any = await Company.findOne({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (!company) {
+      response.message = "Company doesn't exist.";
+      res.json(response);
+      return;
+    }
+
+    // Only admin can create
+    if (company.adminId != req.user.id) {
+      response.message = "You don't have access to this information.";
+      res.json(response);
+      return;
+    }
+
+    const newTeam = await Team.create({
       name,
-      accessCodeEmployee: `${name}_${createToken(5)}`,
-      accessCodeClient: `${name}_${createToken(6)}`,
-      adminId: req.user.id
+      accessCode: `${name}_${createToken(5)}`,
+      companyId
     });
 
     // Join itself
@@ -112,14 +144,14 @@ export const createCompany = async (req, res) => {
         id
       }
     });
-    await user.addCompany(newCompany, {
+
+    await user.addTeam(newTeam, {
       through: {
-        typeUser: "Admin",
         username: user.globalUsername
       }
     });
 
-    response.message = "Successful company creation!";
+    response.message = "Successful team creation!";
     response.readMsg = true;
     response.typeMsg = "success";
 
@@ -137,7 +169,7 @@ export const createCompany = async (req, res) => {
   }
 };
 
-export const joinCompany = async (req, res) => {
+export const joinTeam = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
     message: "",
@@ -147,43 +179,27 @@ export const joinCompany = async (req, res) => {
   };
 
   try {
-    const { code }: BODY_JOIN = req.body;
+    const { code, companyId }: BODY_JOIN = req.body;
 
-    const companyEmployee = await Company.findOne({
+    const teamRef: any = await Team.findOne({
       where: {
-        accessCodeEmployee: code
+        accessCode: code,
+        companyId
       }
     });
 
-    const companyClient = await Company.findOne({
-      where: {
-        accessCodeClient: code
-      }
-    });
-
-    if (!companyEmployee && !companyClient) {
-      response.message = "Company not found";
+    if (!teamRef) {
+      response.message = "Team not found.";
       res.json(response);
       return;
     }
 
-    let company;
-    let typeUser;
-    if (companyEmployee && !companyClient) {
-      company = companyEmployee;
-      typeUser = "Employee";
-    }
-    if (companyClient && !companyEmployee) {
-      company = companyClient;
-      typeUser = "Client";
-    }
-
     // Check if user already in company
-    const companies = await req.user.getCompanies();
+    const teams = await req.user.getTeams();
 
-    for (let i = 0; i < companies.length; i++) {
-      if (companies[i].id == company.id) {
-        response.message = "User already in company";
+    for (let i = 0; i < teams.length; i++) {
+      if (teams[i].id == teamRef.id) {
+        response.message = "User already in team";
         res.json(response);
         return;
       }
@@ -197,16 +213,15 @@ export const joinCompany = async (req, res) => {
         id
       }
     });
-    await user.addCompany(company, {
+    await user.addCompany(teamRef, {
       through: {
-        typeUser,
         username: user.globalUsername
       }
     });
 
     const result = await User.findOne({
       where: { id },
-      include: Company
+      include: Team
     });
 
     response.data = result;
