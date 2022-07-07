@@ -3,18 +3,14 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 
 // Animations
-import { fadeVariants } from "../../../../animations/fade";
+import { fadeVariants } from "../../../../../animations/fade";
 
 // Componnets
-import DashboardWrapper from "../../../../components/Dashboard/Dashboard";
-import TeamWrapper from "../../../../components/Dashboard/Body/Teams/Wrapper";
-
-import { useContext } from "react";
-import { GlobalContext } from "../../../_app";
+import DashboardWrapper from "../../../../../components/Dashboard/Dashboard";
+import TeamWrapper from "../../../../../components/Dashboard/Body/Teams/Wrapper";
+import Messages from "../../../../../components/Messages/Messages";
 
 const Dashboard: NextPage = () => {
-  const { selectedTeam } = useContext(GlobalContext);
-
   return (
     <>
       <Head>
@@ -28,7 +24,9 @@ const Dashboard: NextPage = () => {
         key="dashboard-page"
       >
         <DashboardWrapper>
-          <TeamWrapper>{selectedTeam && selectedTeam.name}</TeamWrapper>
+          <TeamWrapper>
+            <Messages />
+          </TeamWrapper>
         </DashboardWrapper>
       </motion.div>
     </>

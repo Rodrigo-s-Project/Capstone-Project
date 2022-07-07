@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useContext, useState } from "react";
+import { Fragment, useEffect, useContext, useState, useCallback } from "react";
 import axios from "axios";
 import {
   getTeamEndpoint,
@@ -22,11 +22,7 @@ const TeamWrapper = ({ children }: Props) => {
   const router = useRouter();
   const { idTeam } = router.query;
 
-  useEffect(() => {
-    getTeam();
-  }, []);
-
-  const getTeam = async () => {
+  const getTeam = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await axios.get(getTeamEndpoint.url(idTeam), {
@@ -69,7 +65,11 @@ const TeamWrapper = ({ children }: Props) => {
           ...prev
         ]);
     }
-  };
+  }, [setArrayMsgs, setSelectedCompany, setSelectedTeam, idTeam, router]);
+
+  useEffect(() => {
+    getTeam();
+  }, [getTeam]);
 
   return <Fragment>{children}</Fragment>;
 };

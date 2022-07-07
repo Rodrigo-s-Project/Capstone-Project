@@ -90,7 +90,11 @@ const MenuDashboard = () => {
                 {selectedCompany.name}
               </motion.div>
               <LinkMenu
-                isActive={router.pathname.includes("/dashboard")}
+                isActive={
+                  router.pathname.includes("/dashboard") &&
+                  !router.pathname.includes("/messages") &&
+                  !router.pathname.includes("/calendar")
+                }
                 text="Teams"
                 click={() => {
                   router.replace(`/dashboard/${selectedCompany.id}`);
@@ -116,16 +120,26 @@ const MenuDashboard = () => {
                 </motion.div>
               ) : null}
               <LinkMenu
-                isActive={router.pathname == "/dashboard/messages"}
+                isActive={router.pathname.includes("/messages")}
                 text="Messages"
-                click={() => {}}
+                click={() => {
+                  if (selectedTeam)
+                    router.replace(
+                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/messages`
+                    );
+                }}
               >
                 <BriefcaseIcon />
               </LinkMenu>
               <LinkMenu
-                isActive={router.pathname == "/dashboard/calendar"}
+                isActive={router.pathname.includes("/calendar")}
                 text="Calendar"
-                click={() => {}}
+                click={() => {
+                  if (selectedTeam)
+                    router.replace(
+                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/calendar`
+                    );
+                }}
               >
                 <BriefcaseIcon />
               </LinkMenu>
