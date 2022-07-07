@@ -27,8 +27,6 @@ const DashboardNav = () => {
   // Sate Open on Responsive
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  const callBackDropDown = () => {};
-
   return (
     <motion.nav
       variants={fadeVariants}
@@ -94,7 +92,7 @@ const DashboardNav = () => {
               }}
             >
               <ChevronDown />
-              <DropDown click={callBackDropDown} isOpen={isDropDownOpen} />
+              <DropDown isOpen={isDropDownOpen} />
             </div>
           </div>
         </div>
