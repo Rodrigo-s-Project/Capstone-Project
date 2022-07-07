@@ -1,5 +1,6 @@
 import "../styles/globals.scss";
 import { AppProps } from "next/app";
+import Head from "next/head";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { SetStateAction, Dispatch, useState, createContext } from "react";
@@ -53,6 +54,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         isAuth
       }}
     >
+      <Head>
+        <title>Teamplace</title>
+      </Head>
       <AnimatePresence
         exitBeforeEnter
         initial={false}

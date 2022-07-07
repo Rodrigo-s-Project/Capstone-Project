@@ -15,12 +15,6 @@ export const Team = sequelize.define(
     teamPictureURL: {
       type: DataType.STRING
     },
-    emailUser: {
-      type: DataType.STRING
-    },
-    phoneNumberUser: {
-      type: DataType.STRING
-    },
     accessCode: {
       type: DataType.STRING
     }

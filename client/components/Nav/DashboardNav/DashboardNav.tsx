@@ -61,10 +61,10 @@ const DashboardNav = () => {
             <Bell />
           </div>
           <div className={styles.nav_controls_info_types}>
-            <div>Free</div>
+            <div>{user && user.typeAccount}</div>
           </div>
           <div className={styles.nav_controls_info_user}>
-            <Link href="/profile">
+            <Link href="/">
               <a
                 title="Go to Profile"
                 className={styles.nav_controls_info_user_profile}
