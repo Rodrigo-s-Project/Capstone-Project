@@ -44,7 +44,8 @@ const LogIn = () => {
       if (data.isAuth) {
         // Good
         if (refetchUser) refetchUser(successLogIn);
-      } else if (setArrayMsgs && data.readMsg) {
+      }
+      if (setArrayMsgs && data.readMsg) {
         setArrayMsgs(prev => [
           {
             type: data.typeMsg,

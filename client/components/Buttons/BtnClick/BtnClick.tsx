@@ -38,6 +38,7 @@ const BtnClick = ({
         }
       }}
       className={`${styles.btn} ${styles[color]} ${styles[border]}`}
+      tabIndex={-1}
     >
       {!isLoading && text}
       {isLoading && (

@@ -42,15 +42,16 @@ const SignUp = () => {
       if (data.isAuth) {
         // Good
         router.replace("/log-in");
-      } else {
-        if (setArrayMsgs && data.readMsg)
-          setArrayMsgs(prev => [
-            {
-              type: data.typeMsg,
-              text: data.message
-            },
-            ...prev
-          ]);
+      }
+
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
       }
     } catch (error) {
       console.error(error);

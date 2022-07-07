@@ -18,3 +18,8 @@ export const logInEndpoint = {
   url: `${process.env.API_URL}/auth/log-in`,
   method: "put"
 };
+
+export const logOutEndpoint = {
+  url: `${process.env.API_URL}/auth/log-out`,
+  method: "put"
+};
