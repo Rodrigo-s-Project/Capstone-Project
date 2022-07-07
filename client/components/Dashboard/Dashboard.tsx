@@ -4,13 +4,17 @@ import styles from "./Dashboard.module.scss";
 import Menu from "./Menu/Menu";
 import Body from "./Body/Body";
 
-const Dashboard = () => {
+type Props = {
+  children: any;
+};
+
+const DashboardWrapper = ({ children }: Props) => {
   return (
     <section className={styles.dashboard}>
       <Menu />
-      <Body />
+      <Body>{children}</Body>
     </section>
   );
 };
 
-export default Dashboard;
+export default DashboardWrapper;
