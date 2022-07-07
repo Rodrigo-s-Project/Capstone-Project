@@ -8,7 +8,7 @@ const Nav = () => {
   const [isDashboard, setIsDashboard] = useState(false);
 
   useEffect(() => {
-    setIsDashboard(router.pathname == "/dashboard");
+    setIsDashboard(router.pathname.includes("/dashboard"));
   }, [router.pathname]);
 
   return (

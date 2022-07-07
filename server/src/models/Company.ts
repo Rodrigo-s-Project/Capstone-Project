@@ -15,7 +15,10 @@ export const Company = sequelize.define(
     companyPictureURL: {
       type: DataType.STRING
     },
-    accessCode: {
+    accessCodeEmployee: {
+      type: DataType.STRING
+    },
+    accessCodeClient: {
       type: DataType.STRING
     }
   },
