@@ -13,6 +13,19 @@
       padding: 0 40px;
     }
   }
+  &_join_modal {
+    margin-top: 10px;
+    &_title {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    &_form {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 32px;
+    }
+  }
   &_grid {
     margin-top: 50px;
     display: grid;
