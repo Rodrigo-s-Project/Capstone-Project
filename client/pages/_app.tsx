@@ -8,6 +8,7 @@ import { SetStateAction, Dispatch, useState, createContext } from "react";
 // Components
 import Nav from "../components/Nav/Nav";
 import Loader from "../components/Loader/Spinner/Spinner";
+import PopUpModal, { ModalParams } from "../components/Modals/PopUp/PopUp";
 
 // Modals
 import Messages, { Message } from "../components/Modals/Messages/Messages";
@@ -31,6 +32,8 @@ interface ValueAppProvider {
   isAuth: boolean;
   isMenuOpen: boolean;
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
+  modalPopUp: Partial<ModalParams>;
+  setModalPopUp: Dispatch<SetStateAction<Partial<ModalParams>>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -48,6 +51,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Shared state Nav <---> Dashboard
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // State Modal Pop up
+  const [modalPopUp, setModalPopUp] = useState<Partial<ModalParams>>({});
+
   return (
     <GlobalContext.Provider
       value={{
@@ -58,7 +64,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         refetchUser,
         isAuth,
         isMenuOpen,
-        setIsMenuOpen
+        setIsMenuOpen,
+        modalPopUp,
+        setModalPopUp
       }}
     >
       <Head>
@@ -83,6 +91,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         ) : (
           <>
             <Nav />
+            <PopUpModal />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />

@@ -62,9 +62,9 @@ const Product = () => {
 
   return (
     <section className={`${styles.product} ${stylesLanding.section}`}>
-      <h1 className={styles.product_h1} ref={h1}>
+      <h2 className={styles.product_h1} ref={h1}>
         What is Teamplace?
-      </h1>
+      </h2>
       <div className={styles.product_cards}>
         <ProductCard _ref={card1} title="Custom Chats" Icon={ChatSvg}>
           We offer a custom chat for each team in a company to stay connected at

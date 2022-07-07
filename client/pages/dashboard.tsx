@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { fadeVariants } from "../animations/fade";
 
 // Componnets
-import DashboardComponent from "../components/Dashboard/Dashboard";
+import DashboardWrapper from "../components/Dashboard/Dashboard";
+import Company from "../components/Dashboard/Body/Company/Company";
 
 const Dashboard: NextPage = () => {
   return (
@@ -21,7 +22,9 @@ const Dashboard: NextPage = () => {
         exit="exit"
         key="dashboard-page"
       >
-        <DashboardComponent />
+        <DashboardWrapper>
+          <Company />
+        </DashboardWrapper>
       </motion.div>
     </>
   );
