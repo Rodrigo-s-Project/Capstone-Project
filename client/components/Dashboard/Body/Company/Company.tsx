@@ -10,7 +10,7 @@ import PlusIcon from "../../../Svgs/Plus";
 import InputText from "../../../Input/Text/InputText";
 import BtnClick from "../../../Buttons/BtnClick/BtnClick";
 
-const joinCompanyModal = () => {
+const JoinCompanyModal = () => {
   const [code, setCode] = useState("");
 
   const joinCompanyFetch = () => {
@@ -52,7 +52,7 @@ const JoinCompany = () => {
     if (setModalPopUp) {
       setModalPopUp({
         isModal: true,
-        ref: joinCompanyModal
+        ref: JoinCompanyModal
       });
     }
   };
