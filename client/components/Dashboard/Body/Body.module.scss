@@ -1,21 +1,26 @@
 .dashboard {
-  margin-left: 230px;
   padding: 50px 30px;
-  transition: margin-left ease-out 300ms, padding ease-out 300ms;
+  transition: left ease-out 300ms, padding ease-out 300ms, width ease-out 300ms;
+  position: fixed;
+  z-index: 90;
+  left: 230px;
+  top: 65px;
+  height: calc(100vh - 65px);
+  width: calc(100% - 230px);
 }
 @media screen and (max-width: 1000px) {
   .dashboard {
-    margin-left: 0;
+    left: 0;
     padding: 30px;
+    width: calc(100%);
     &_open {
-      margin-left: 230px;
+      left: 230px;
     }
   }
 }
 
 @media screen and (max-width: 589px) {
   .dashboard {
-    margin-left: 0;
     padding: 30px 10px;
   }
 }
