@@ -23,6 +23,9 @@ import { DATA_GET_USER } from "../routes/main.routes";
 // Hooks
 import { useAuth } from "../hooks/useAuth";
 
+// Routes
+import { COMPANY } from "../routes/dashboard.company.routes";
+
 interface ValueAppProvider {
   isDarkMode: boolean;
   setIsDarkMode: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +37,13 @@ interface ValueAppProvider {
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
   modalPopUp: Partial<ModalParams>;
   setModalPopUp: Dispatch<SetStateAction<Partial<ModalParams>>>;
+
+  setCompanies: Dispatch<SetStateAction<Array<COMPANY>>>;
+  companies: Array<COMPANY>;
+  refetchCompanies: boolean;
+  setRefetchCompanies: Dispatch<SetStateAction<boolean>>;
+  selectedCompany: Partial<COMPANY>;
+  setSelectedCompany: Dispatch<SetStateAction<Partial<COMPANY>>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -54,6 +64,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   // State Modal Pop up
   const [modalPopUp, setModalPopUp] = useState<Partial<ModalParams>>({});
 
+  // State Companies
+  const [companies, setCompanies] = useState<Array<COMPANY>>([]);
+  const [refetchCompanies, setRefetchCompanies] = useState<boolean>(false);
+  const [selectedCompany, setSelectedCompany] = useState<Partial<COMPANY>>({});
+
   return (
     <GlobalContext.Provider
       value={{
@@ -66,7 +81,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         isMenuOpen,
         setIsMenuOpen,
         modalPopUp,
-        setModalPopUp
+        setModalPopUp,
+        companies,
+        setCompanies,
+        refetchCompanies,
+        setRefetchCompanies,
+        selectedCompany,
+        setSelectedCompany
       }}
     >
       <Head>

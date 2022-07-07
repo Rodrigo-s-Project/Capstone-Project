@@ -1,7 +1,8 @@
 import styles from "./Company.module.scss";
 import BtnSpinner from "../../../Buttons/BtnClick/BtnClick";
 import { GlobalContext } from "../../../../pages/_app";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, Fragment } from "react";
+import axios from "axios";
 
 // Icons
 import PlusIcon from "../../../Svgs/Plus";
@@ -10,11 +11,187 @@ import PlusIcon from "../../../Svgs/Plus";
 import InputText from "../../../Input/Text/InputText";
 import BtnClick from "../../../Buttons/BtnClick/BtnClick";
 
+// Icons
+import Camera from "../../../Svgs/Camera";
+
+// Routes
+import {
+  getCompaniesEndpoint,
+  createCompanyEndpoint,
+  BODY_CREATE_COMPANY,
+  DATA_GET_COMPANIES,
+  COMPANY,
+  BODY_JOIN_COMPANY,
+  joinCompanyEndpoint
+} from "../../../../routes/dashboard.company.routes";
+import { RESPONSE } from "../../../../routes/index.routes";
+
+const CreateCompanyModal = () => {
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const [name, setName] = useState("");
+  const {
+    setArrayMsgs,
+    refetchUser,
+    setModalPopUp,
+    setRefetchCompanies
+  } = useContext(GlobalContext);
+
+  const createACompanyFetch = async () => {
+    try {
+      setIsLoadingCreate(true);
+
+      const body: BODY_CREATE_COMPANY = {
+        name
+      };
+
+      const response = await axios.post(createCompanyEndpoint.url, body, {
+        withCredentials: true
+      });
+      setIsLoadingCreate(false);
+
+      const data: RESPONSE = response.data;
+
+      if (!data.isAuth) {
+        // Bad
+        if (refetchUser) refetchUser();
+        return;
+      }
+
+      if (data.data) {
+        // Clean modal
+        if (setModalPopUp) {
+          setModalPopUp(prev => ({
+            ...prev,
+            isModal: false
+          }));
+        }
+
+        // Refetch
+        if (setRefetchCompanies) {
+          setRefetchCompanies(prev => !prev);
+        }
+      }
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoadingCreate(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
+
+  return (
+    <div className={styles.company_join_modal}>
+      <div className={styles.company_join_modal_title}>Enter Company Name</div>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+        }}
+        className={styles.company_join_modal_form}
+      >
+        <InputText
+          text="Company name"
+          value={name}
+          setValue={setName}
+          id="input-code-create-company"
+          type="text"
+        />
+        <BtnClick
+          text="Create company"
+          callback={createACompanyFetch}
+          color="lavender-300"
+          border="round_5"
+          isLoading={isLoadingCreate}
+        />
+      </form>
+    </div>
+  );
+};
+
 const JoinCompanyModal = () => {
   const [code, setCode] = useState("");
+  const [isLoadingJoin, setIsLoadingJoin] = useState(false);
+  const {
+    setArrayMsgs,
+    refetchUser,
+    setModalPopUp,
+    setRefetchCompanies
+  } = useContext(GlobalContext);
 
-  const joinCompanyFetch = () => {
-    // TODO: make fetch
+  const joinCompanyFetch = async () => {
+    try {
+      setIsLoadingJoin(true);
+
+      const body: BODY_JOIN_COMPANY = {
+        code
+      };
+
+      const response = await axios.put(joinCompanyEndpoint.url, body, {
+        withCredentials: true
+      });
+      setIsLoadingJoin(false);
+
+      const data: RESPONSE = response.data;
+
+      if (!data.isAuth) {
+        // Bad
+        if (refetchUser) refetchUser();
+        return;
+      }
+
+      if (data.data) {
+        // Clean modal
+        if (setModalPopUp) {
+          setModalPopUp(prev => ({
+            ...prev,
+            isModal: false
+          }));
+        }
+
+        // Refetch
+        if (setRefetchCompanies) {
+          setRefetchCompanies(prev => !prev);
+        }
+      }
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoadingJoin(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
   };
 
   return (
@@ -23,7 +200,6 @@ const JoinCompanyModal = () => {
       <form
         onSubmit={e => {
           e.preventDefault();
-          joinCompanyFetch();
         }}
         className={styles.company_join_modal_form}
       >
@@ -36,9 +212,10 @@ const JoinCompanyModal = () => {
         />
         <BtnClick
           text="Join to a company"
-          callback={() => {}}
+          callback={joinCompanyFetch}
           color="lavender-300"
           border="round_5"
+          isLoading={isLoadingJoin}
         />
       </form>
     </div>
@@ -71,8 +248,87 @@ const JoinCompany = () => {
   );
 };
 
+type Props = {
+  company: COMPANY;
+};
+
+const CompanyCard = ({ company }: Props) => {
+  return (
+    <div
+      onClick={() => {}}
+      title={company.name}
+      className={styles.company_grid_join}
+    >
+      <div className={styles.company_grid_profile}>
+        <Camera />
+      </div>
+      <div className={styles.company_grid_profile_name}>{company.name}</div>
+    </div>
+  );
+};
+
 const Company = () => {
-  const createCompany = () => {};
+  const {
+    setArrayMsgs,
+    setModalPopUp,
+    refetchCompanies,
+    setCompanies,
+    companies
+  } = useContext(GlobalContext);
+
+  const createACompany = () => {
+    if (setModalPopUp) {
+      setModalPopUp({
+        isModal: true,
+        ref: CreateCompanyModal
+      });
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+  // TODO: loader
+
+  useEffect(() => {
+    getCompanies();
+  }, [refetchCompanies]);
+
+  const getCompanies = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(getCompaniesEndpoint.url, {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      const companiesData: DATA_GET_COMPANIES = data.data;
+      if (setCompanies) {
+        setCompanies(companiesData.companies);
+      }
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
 
   return (
     <div className={styles.company}>
@@ -80,13 +336,21 @@ const Company = () => {
         <h1>Companies</h1>
         <BtnSpinner
           text="Create a company"
-          callback={createCompany}
+          callback={createACompany}
           color="lavender-300"
           border="round_5"
           additionalClass="btn-add-company"
         />
       </div>
       <div className={styles.company_grid}>
+        {companies &&
+          companies.map((company: COMPANY, index: number) => {
+            return (
+              <Fragment key={index}>
+                <CompanyCard company={company} />
+              </Fragment>
+            );
+          })}
         <JoinCompany />
       </div>
     </div>

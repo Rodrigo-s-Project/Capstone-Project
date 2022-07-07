@@ -19,7 +19,9 @@ app.use(
 // Routes
 import mainRoutes from "./routes/main.routes";
 import authRoutes from "./routes/auth.routes";
+import companyDashboardRoutes from "./routes/dashboard.company.routes";
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
+app.use("/dashboard/company", companyDashboardRoutes);
 
 app.use(express.json());
