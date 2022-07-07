@@ -12,10 +12,11 @@ import Header from "../components/Landing/Header/Header";
 import Product from "../components/Landing/Product/Product";
 
 const Home: NextPage = () => {
-  const { setSelectedCompany } = useContext(GlobalContext);
+  const { setSelectedCompany, setSelectedTeam } = useContext(GlobalContext);
 
   useEffect(() => {
     if (setSelectedCompany) setSelectedCompany(undefined);
+    if (setSelectedTeam) setSelectedTeam(undefined);
   }, []);
 
   return (

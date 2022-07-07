@@ -262,15 +262,15 @@ type Props = {
 };
 
 const TeamCard = ({ team }: Props) => {
-  // const router = useRouter();
-  // const { selectedCompany } = useContext(GlobalContext);
+  const router = useRouter();
+  const { selectedCompany } = useContext(GlobalContext);
 
   return (
     <div
       onClick={() => {
-        // router.replace(
-        //   `/dashboard/${selectedCompany && selectedCompany.id}/drive`
-        // );
+        router.replace(
+          `/dashboard/${selectedCompany && selectedCompany.id}/team/${team.id}`
+        );
       }}
       title={team.name}
       className={styles.team_grid_join}

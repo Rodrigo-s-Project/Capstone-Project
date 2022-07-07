@@ -41,9 +41,13 @@ const LinkMenu = ({ text, click, children, isActive }: Props) => {
 };
 
 const MenuDashboard = () => {
-  const { isMenuOpen, selectedCompany, setSelectedCompany } = useContext(
-    GlobalContext
-  );
+  const {
+    isMenuOpen,
+    selectedCompany,
+    setSelectedCompany,
+    selectedTeam,
+    setSelectedTeam
+  } = useContext(GlobalContext);
   const router = useRouter();
 
   return (
@@ -63,6 +67,7 @@ const MenuDashboard = () => {
           text="Companies"
           click={() => {
             if (setSelectedCompany) setSelectedCompany(undefined);
+            if (setSelectedTeam) setSelectedTeam(undefined);
             router.replace("/dashboard");
           }}
         >
@@ -79,6 +84,7 @@ const MenuDashboard = () => {
                 className={styles.selected_company}
                 onClick={() => {
                   router.replace(`/dashboard/${selectedCompany.id}`);
+                  if (setSelectedTeam) setSelectedTeam(undefined);
                 }}
               >
                 {selectedCompany.name}
@@ -86,10 +92,29 @@ const MenuDashboard = () => {
               <LinkMenu
                 isActive={router.pathname.includes("/dashboard")}
                 text="Teams"
-                click={() => {}}
+                click={() => {
+                  router.replace(`/dashboard/${selectedCompany.id}`);
+                  if (setSelectedTeam) setSelectedTeam(undefined);
+                }}
               >
                 <BriefcaseIcon />
               </LinkMenu>
+              {selectedTeam ? (
+                <motion.div
+                  variants={fadeVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className={styles.selected_company}
+                  onClick={() => {
+                    router.replace(
+                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
+                    );
+                  }}
+                >
+                  {selectedTeam.name}
+                </motion.div>
+              ) : null}
               <LinkMenu
                 isActive={router.pathname == "/dashboard/messages"}
                 text="Messages"

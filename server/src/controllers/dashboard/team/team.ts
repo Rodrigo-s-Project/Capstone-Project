@@ -72,8 +72,15 @@ export const getTeamFromUser = async (req, res) => {
       }
     });
 
+    const company = await req.user.getCompanies({
+      where: {
+        id: team.length > 0 ? team[0].companyId : 0
+      }
+    });
+
     response.data = {
-      team: team.length > 0 ? team[0] : {}
+      team: team.length > 0 ? team[0] : {},
+      company: company.length > 0 ? company[0] : {}
     };
     response.readMsg = false;
 

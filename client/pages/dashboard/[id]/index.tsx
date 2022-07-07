@@ -3,11 +3,11 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 
 // Animations
-import { fadeVariants } from "../../animations/fade";
+import { fadeVariants } from "../../../animations/fade";
 
 // Componnets
-import DashboardWrapper from "../../components/Dashboard/Dashboard";
-import Teams from "../../components/Dashboard/Body/Teams/Join/Teams";
+import DashboardWrapper from "../../../components/Dashboard/Dashboard";
+import Teams from "../../../components/Dashboard/Body/Teams/Join/Teams";
 
 const Dashboard: NextPage = () => {
   return (

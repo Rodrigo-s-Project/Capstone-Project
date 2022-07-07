@@ -1,3 +1,5 @@
+import { COMPANY } from "./dashboard.company.routes";
+
 export type TEAM = {
   adminId: number;
   accessCode: string;
@@ -24,6 +26,7 @@ export const getTeamsEndpoint = {
 
 export type DATA_GET_TEAM = {
   team: TEAM;
+  company: COMPANY;
 };
 
 export const getTeamEndpoint = {
