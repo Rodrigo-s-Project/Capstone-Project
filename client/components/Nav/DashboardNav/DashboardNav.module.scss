@@ -13,6 +13,7 @@
   &_logo {
     text-align: center;
     width: 230px;
+    transition: padding ease-out 300ms;
     a {
       text-align: center;
       font-size: 1.5rem;
