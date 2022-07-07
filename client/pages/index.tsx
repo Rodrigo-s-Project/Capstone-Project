@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (setSelectedCompany) setSelectedCompany(undefined);
     if (setSelectedTeam) setSelectedTeam(undefined);
-  }, []);
+  }, [setSelectedCompany, setSelectedTeam]);
 
   return (
     <>

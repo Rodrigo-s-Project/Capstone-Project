@@ -1,7 +1,7 @@
 import styles from "./Teams.module.scss";
 import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
 import { GlobalContext } from "../../../../../pages/_app";
-import { useContext, useState, useEffect, Fragment } from "react";
+import { useContext, useState, useEffect, Fragment, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -310,55 +310,54 @@ const Company = () => {
   const [isLoading, setIsLoading] = useState(false);
   // TODO: loader
 
+  const getAllTeams = useCallback(
+    async (companyId: number) => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(getTeamsEndpoint.url(companyId), {
+          withCredentials: true
+        });
+        setIsLoading(false);
+
+        const data: RESPONSE = response.data;
+        const companiesData: DATA_GET_TEAMS = data.data;
+        if (setTeams) {
+          setTeams(companiesData.teams);
+        }
+        if (setArrayMsgs && data.readMsg) {
+          setArrayMsgs(prev => [
+            {
+              type: data.typeMsg,
+              text: data.message
+            },
+            ...prev
+          ]);
+        }
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+
+        // Put a message
+        if (setArrayMsgs)
+          setArrayMsgs(prev => [
+            {
+              type: "danger",
+              text: "Server error"
+            },
+            ...prev
+          ]);
+      }
+    },
+    [setArrayMsgs, setTeams]
+  );
+
   useEffect(() => {
     if (selectedCompany) {
       getAllTeams(selectedCompany.id);
     }
-  }, [refetchTeams]);
+  }, [refetchTeams, getAllTeams, selectedCompany]);
 
-  useEffect(() => {
-    getCompanyData();
-  }, []);
-
-  const getAllTeams = async (companyId: number) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.get(getTeamsEndpoint.url(companyId), {
-        withCredentials: true
-      });
-      setIsLoading(false);
-
-      const data: RESPONSE = response.data;
-      const companiesData: DATA_GET_TEAMS = data.data;
-      if (setTeams) {
-        setTeams(companiesData.teams);
-      }
-      if (setArrayMsgs && data.readMsg) {
-        setArrayMsgs(prev => [
-          {
-            type: data.typeMsg,
-            text: data.message
-          },
-          ...prev
-        ]);
-      }
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
-
-      // Put a message
-      if (setArrayMsgs)
-        setArrayMsgs(prev => [
-          {
-            type: "danger",
-            text: "Server error"
-          },
-          ...prev
-        ]);
-    }
-  };
-
-  const getCompanyData = async () => {
+  const getCompanyData = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await axios.get(getCompanyEndpoint.url(id), {
@@ -402,7 +401,11 @@ const Company = () => {
           ...prev
         ]);
     }
-  };
+  }, [setArrayMsgs, setSelectedCompany, getAllTeams, id, router]);
+
+  useEffect(() => {
+    getCompanyData();
+  }, [getCompanyData]);
 
   return (
     <div className={styles.team}>

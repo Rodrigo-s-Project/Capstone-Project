@@ -1,7 +1,7 @@
 import styles from "./Company.module.scss";
 import BtnSpinner from "../../../Buttons/BtnClick/BtnClick";
 import { GlobalContext } from "../../../../pages/_app";
-import { useContext, useState, useEffect, Fragment } from "react";
+import { useContext, useState, useEffect, Fragment, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -293,11 +293,7 @@ const Company = () => {
   const [isLoading, setIsLoading] = useState(false);
   // TODO: loader
 
-  useEffect(() => {
-    getCompanies();
-  }, [refetchCompanies]);
-
-  const getCompanies = async () => {
+  const getCompanies = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await axios.get(getCompaniesEndpoint.url, {
@@ -333,7 +329,11 @@ const Company = () => {
           ...prev
         ]);
     }
-  };
+  }, [setArrayMsgs, setCompanies]);
+
+  useEffect(() => {
+    getCompanies();
+  }, [refetchCompanies, getCompanies]);
 
   return (
     <div className={styles.company}>

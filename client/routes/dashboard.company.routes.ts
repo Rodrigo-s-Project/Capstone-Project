@@ -26,7 +26,7 @@ export type DATA_GET_COMPANY = {
 };
 
 export const getCompanyEndpoint = {
-  url: (id: string) =>
+  url: (id: any) =>
     `${process.env.API_URL}/dashboard/company/get-company/${id}`,
   method: "get"
 };
