@@ -1,14 +1,13 @@
 import { COMPANY } from "./dashboard.company.routes";
 
 export type TEAM = {
-  adminId: number;
   accessCode: string;
-  companyPictureURL: string;
+  teamPictureURL: string;
+  companyId: number;
   id: number;
   name: string;
-  User_Company: {
-    companyId: number;
-    typeUser: "Employee" | "Admin" | "Client";
+  User_Team: {
+    teamId: number;
     userId: number;
     username: string;
   };

@@ -1,6 +1,7 @@
 export type COMPANY = {
   adminId: number;
-  accessCode: string;
+  accessCodeClient: string;
+  accessCodeEmployee: string;
   companyPictureURL: string;
   id: number;
   name: string;

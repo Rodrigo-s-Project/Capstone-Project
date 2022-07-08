@@ -3,7 +3,13 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { SetStateAction, Dispatch, useState, createContext } from "react";
+import {
+  SetStateAction,
+  Dispatch,
+  useState,
+  createContext,
+  useEffect
+} from "react";
 
 // Components
 import Nav from "../components/Nav/Nav";
@@ -22,6 +28,7 @@ import { DATA_GET_USER } from "../routes/main.routes";
 
 // Hooks
 import { useAuth } from "../hooks/useAuth";
+import { useColorTheme } from "../hooks/useColorTheme";
 
 // Routes
 import { COMPANY } from "../routes/dashboard.company.routes";
@@ -58,7 +65,20 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Auth
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState<DATA_GET_USER | undefined>(undefined);
-  const { refetch: refetchUser, isLoading } = useAuth({ setUser, setIsAuth });
+
+  const checkIfNeedToUpdateColor = (user: DATA_GET_USER) => {
+    let theme: any = localStorage.getItem("theme");
+    if (!theme) {
+      handleColorChange(user.isDarkModeOn ? "NIGHT" : "DAY");
+      if (setIsDarkMode) setIsDarkMode(user.isDarkModeOn);
+    }
+  };
+
+  const { refetch: refetchUser, isLoading } = useAuth({
+    setUser,
+    setIsAuth,
+    checkIfNeedToUpdateColor
+  });
 
   // Dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -81,6 +101,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     undefined
   );
   const [selectedTeam, setSelectedTeam] = useState<TEAM | undefined>(undefined);
+
+  // Update colors
+  const { updateColors, handleColorChange } = useColorTheme();
+  useEffect(() => {
+    const newTheme: any = updateColors();
+    if (setIsDarkMode) setIsDarkMode(newTheme == "NIGHT");
+  }, [updateColors]);
 
   return (
     <GlobalContext.Provider

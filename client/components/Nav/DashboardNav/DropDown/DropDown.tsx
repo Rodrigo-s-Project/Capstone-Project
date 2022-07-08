@@ -84,7 +84,13 @@ const DropDown = ({ isOpen }: Props) => {
         {isLoading && <Loader color="lavender-200" />}
         {!isLoading && "Log Out"}
       </div>
-      <div className={styles.drop_link} title="Go to profile">
+      <div
+        onClick={() => {
+          router.replace("/dashboard/profile");
+        }}
+        className={styles.drop_link}
+        title="Go to profile"
+      >
         Go to Profile
       </div>
     </div>

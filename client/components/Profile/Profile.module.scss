@@ -1,12 +1,7 @@
-.calendar {
+.profile {
   h1 {
     font-size: 2.5rem;
     color: var(--lavender-200);
-    width: 100%;
-    max-width: 350px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
   &_container {
     margin-top: 26px;
@@ -15,27 +10,17 @@
     width: 100%;
     padding: 15px 25px;
     height: calc(100vh - 230px);
-    overflow-y: auto;
-    padding-top: 0;
   }
 }
 @media screen and (max-width: 1000px) {
-  .calendar_container {
+  .profile_container {
     height: calc(100vh - 200px);
   }
 }
 @media screen and (max-width: 589px) {
-  .calendar {
+  .profile {
     h1 {
       text-align: center;
-      margin: 0 auto;
-    }
-  }
-}
-@media screen and (max-width: 380px) {
-  .calendar {
-    h1 {
-      font-size: 10vw;
     }
   }
 }

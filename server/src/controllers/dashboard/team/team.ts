@@ -29,6 +29,12 @@ export const getTeamsFromUser = async (req, res) => {
       return;
     }
 
+    if (isNaN(companyId)) {
+      response.message = "Invalid company ID.";
+      res.json(response);
+      return;
+    }
+
     const teams = await req.user.getTeams({
       where: {
         companyId
@@ -65,6 +71,12 @@ export const getTeamFromUser = async (req, res) => {
 
   try {
     const { id } = req.params;
+
+    if (isNaN(id)) {
+      response.message = "Invalid team ID.";
+      res.json(response);
+      return;
+    }
 
     const team = await req.user.getTeams({
       where: {
