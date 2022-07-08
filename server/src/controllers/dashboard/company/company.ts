@@ -53,6 +53,12 @@ export const getCompanyFromUser = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (isNaN(id)) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
     const company = await req.user.getCompanies({
       where: {
         id

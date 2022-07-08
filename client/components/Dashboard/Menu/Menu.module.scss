@@ -8,6 +8,8 @@
   z-index: 90;
   padding: 30px;
   transition: left ease-out 300ms, padding ease-out 300ms;
+  overflow-y: auto;
+
   &_nav {
     visibility: hidden;
     opacity: 0;
@@ -123,7 +125,13 @@
   color: var(--gray-900);
   border-radius: 100px; // Just a max
   margin: -10px 0;
-  cursor: pointer;
+  cursor: default;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 15px;
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--gray-500);

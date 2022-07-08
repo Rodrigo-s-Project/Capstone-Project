@@ -43,7 +43,7 @@ export const DashBoardNavControls = ({ rules }: Props) => {
           )}
         </div>
         <div className={rules.nav_controls_info_user}>
-          <Link href="/">
+          <Link href="/dashboard/profile">
             <a
               title="Go to Profile"
               className={rules.nav_controls_info_user_profile}

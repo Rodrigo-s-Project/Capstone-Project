@@ -1,35 +1,51 @@
 import styles from "./Colors.module.scss";
 import { useContext } from "react";
 import { GlobalContext } from "../../pages/_app";
-import { COLORS, KEY_COLOR, COLOR_MODE } from "../../config/colors";
+import { useColorTheme } from "../../hooks/useColorTheme";
+import axios from "axios";
+import { BODY_UPDATE_COLOR, updateUserColor } from "../../routes/main.routes";
+import { RESPONSE } from "../../routes/index.routes";
 
 type Props = {
   callback?: () => any;
 };
 
 const Colors = ({ callback }: Props) => {
-  const { isDarkMode, setIsDarkMode } = useContext(GlobalContext);
+  const { isDarkMode, setArrayMsgs } = useContext(GlobalContext);
+  const { handleColorChange } = useColorTheme();
 
-  const handleColorChange = () => {
-    // First change vars
-    changeVarsInCSS();
+  const fetchUserColor = async (newMode: boolean) => {
+    try {
+      const body: BODY_UPDATE_COLOR = {
+        isDarkModeOn: newMode
+      };
 
-    // Then change state
-    if (setIsDarkMode) setIsDarkMode(prev => !prev);
-  };
+      const response = await axios.put(updateUserColor.url, body, {
+        withCredentials: true
+      });
 
-  const changeVarsInCSS = () => {
-    const rootElement: any = document.querySelector(":root");
+      const data: RESPONSE = response.data;
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
 
-    if (!rootElement) return;
-
-    for (let i = 0; i < Object.keys(COLORS).length; i++) {
-      const key: string = Object.keys(COLORS)[i];
-      const newMode: COLOR_MODE = isDarkMode ? "DAY" : "NIGHT";
-      const property = COLORS[key as KEY_COLOR];
-      const value: string = property[newMode];
-
-      rootElement.style.setProperty(key, value);
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
     }
   };
 
@@ -38,6 +54,7 @@ const Colors = ({ callback }: Props) => {
       className={styles.color}
       onClick={() => {
         if (callback) callback();
+        fetchUserColor(!isDarkMode);
         handleColorChange();
       }}
       title="Toggle mode"
