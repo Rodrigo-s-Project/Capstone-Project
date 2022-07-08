@@ -400,6 +400,7 @@ const Company = () => {
           },
           ...prev
         ]);
+      router.replace("/");
     }
   }, [setArrayMsgs, setSelectedCompany, getAllTeams, id, router]);
 

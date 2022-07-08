@@ -15,9 +15,14 @@ import {
 type Params = {
   setUser: Dispatch<SetStateAction<DATA_GET_USER | undefined>>;
   setIsAuth: Dispatch<SetStateAction<boolean>>;
+  checkIfNeedToUpdateColor: (userData: DATA_GET_USER) => any;
 };
 
-export const useAuth = ({ setUser, setIsAuth }: Params) => {
+export const useAuth = ({
+  setUser,
+  setIsAuth,
+  checkIfNeedToUpdateColor
+}: Params) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -47,6 +52,7 @@ export const useAuth = ({ setUser, setIsAuth }: Params) => {
     // Only if yes auth
     if (setUser && data.isAuth) setUser(userData);
     if (_callback) _callback(data);
+    if (data.isAuth) checkIfNeedToUpdateColor(userData);
   };
 
   const redirectInCaseOfProtectedRoute = (isAuth: boolean) => {

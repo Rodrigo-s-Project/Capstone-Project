@@ -64,6 +64,7 @@ const TeamWrapper = ({ children }: Props) => {
           },
           ...prev
         ]);
+      router.replace("/");
     }
   }, [setArrayMsgs, setSelectedCompany, setSelectedTeam, idTeam, router]);
 

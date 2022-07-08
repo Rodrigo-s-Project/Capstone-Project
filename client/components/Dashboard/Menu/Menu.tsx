@@ -14,6 +14,7 @@ import { DashBoardNavControls } from "../../Nav/DashboardNav/DashboardNav";
 // Icons
 import BriefcaseIcon from "../../Svgs/Briefcase";
 import CogIcon from "../../Svgs/Cog";
+import FileInvoiceIcon from "../../Svgs/FileInvoice";
 
 type Props = {
   text: string;
@@ -43,10 +44,10 @@ const LinkMenu = ({ text, click, children, isActive }: Props) => {
 const MenuDashboard = () => {
   const {
     isMenuOpen,
-    selectedCompany,
     setSelectedCompany,
-    selectedTeam,
-    setSelectedTeam
+    setSelectedTeam,
+    selectedCompany,
+    selectedTeam
   } = useContext(GlobalContext);
   const router = useRouter();
 
@@ -62,6 +63,7 @@ const MenuDashboard = () => {
         />
       </div>
       <div className={styles.menu_links}>
+        {/* Companies Array */}
         <LinkMenu
           isActive={router.pathname == "/dashboard"}
           text="Companies"
@@ -73,79 +75,96 @@ const MenuDashboard = () => {
         >
           <BriefcaseIcon />
         </LinkMenu>
-        <AnimatePresence>
-          {selectedCompany ? (
-            <Fragment key="menu-company">
-              <motion.div
-                variants={fadeVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className={styles.selected_company}
-                onClick={() => {
-                  router.replace(`/dashboard/${selectedCompany.id}`);
-                  if (setSelectedTeam) setSelectedTeam(undefined);
-                }}
-              >
-                {selectedCompany.name}
-              </motion.div>
-              <LinkMenu
-                isActive={
-                  router.pathname.includes("/dashboard") &&
-                  !router.pathname.includes("/messages") &&
-                  !router.pathname.includes("/calendar")
-                }
-                text="Teams"
-                click={() => {
-                  router.replace(`/dashboard/${selectedCompany.id}`);
-                  if (setSelectedTeam) setSelectedTeam(undefined);
-                }}
-              >
-                <BriefcaseIcon />
-              </LinkMenu>
-              {selectedTeam ? (
+
+        {/* Controls */}
+        <AnimatePresence exitBeforeEnter>
+          <Fragment key="menu-controls">
+            {selectedCompany ? (
+              <>
                 <motion.div
                   variants={fadeVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
                   className={styles.selected_company}
-                  onClick={() => {
-                    router.replace(
-                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
-                    );
+                >
+                  {selectedCompany.name}
+                </motion.div>
+                <LinkMenu
+                  isActive={
+                    router.pathname.includes("/dashboard") &&
+                    !router.pathname.includes("/messages") &&
+                    !router.pathname.includes("/calendar") &&
+                    !router.pathname.includes("/team")
+                  }
+                  text="Teams"
+                  click={() => {
+                    router.replace(`/dashboard/${selectedCompany.id}`);
+                    if (setSelectedTeam) setSelectedTeam(undefined);
                   }}
+                >
+                  <BriefcaseIcon />
+                </LinkMenu>
+              </>
+            ) : null}
+
+            {selectedTeam && selectedCompany ? (
+              <>
+                <motion.div
+                  variants={fadeVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className={styles.selected_company}
                 >
                   {selectedTeam.name}
                 </motion.div>
-              ) : null}
-              <LinkMenu
-                isActive={router.pathname.includes("/messages")}
-                text="Messages"
-                click={() => {
-                  if (selectedTeam)
-                    router.replace(
-                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/messages`
-                    );
-                }}
-              >
-                <BriefcaseIcon />
-              </LinkMenu>
-              <LinkMenu
-                isActive={router.pathname.includes("/calendar")}
-                text="Calendar"
-                click={() => {
-                  if (selectedTeam)
-                    router.replace(
-                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/calendar`
-                    );
-                }}
-              >
-                <BriefcaseIcon />
-              </LinkMenu>
-            </Fragment>
-          ) : null}
+                <LinkMenu
+                  isActive={
+                    router.pathname.includes("/team") &&
+                    !router.pathname.includes("/messages") &&
+                    !router.pathname.includes("/calendar")
+                  }
+                  text="Drive"
+                  click={() => {
+                    if (selectedTeam)
+                      router.replace(
+                        `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
+                      );
+                  }}
+                >
+                  <FileInvoiceIcon />
+                </LinkMenu>
+                <LinkMenu
+                  isActive={router.pathname.includes("/messages")}
+                  text="Messages"
+                  click={() => {
+                    if (selectedTeam)
+                      router.replace(
+                        `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/messages`
+                      );
+                  }}
+                >
+                  <BriefcaseIcon />
+                </LinkMenu>
+                <LinkMenu
+                  isActive={router.pathname.includes("/calendar")}
+                  text="Calendar"
+                  click={() => {
+                    if (selectedTeam)
+                      router.replace(
+                        `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/calendar`
+                      );
+                  }}
+                >
+                  <BriefcaseIcon />
+                </LinkMenu>
+              </>
+            ) : null}
+          </Fragment>
         </AnimatePresence>
+
+        {/* Settings */}
         <LinkMenu
           isActive={router.pathname == "/settings"}
           text="Settings"
