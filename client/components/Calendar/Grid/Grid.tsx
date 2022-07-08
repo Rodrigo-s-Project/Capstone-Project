@@ -2,7 +2,7 @@ import styles from "./Grid.module.scss";
 import { useContext, Fragment, useState, useEffect, useCallback } from "react";
 
 import { CalendarContext } from "../Calendar";
-import RowElement from "./Row/Row";
+import RowElement, { RowHeader } from "./Row/Row";
 
 export type DateCalendar = {
   date: Date;
@@ -12,7 +12,9 @@ export type DateCalendar = {
 
 const Grid = () => {
   // Context
-  const { month, year } = useContext(CalendarContext);
+  const { month, year, calendarStretchRow, setCalendarStretchRow } = useContext(
+    CalendarContext
+  );
   const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>(
     []
   );
@@ -117,14 +119,26 @@ const Grid = () => {
   return (
     <div
       style={{
-        gridTemplateRows: `repeat(${getNumberOfRows()}, 1fr)`
+        gridTemplateRows: `30px repeat(${getNumberOfRows()}, ${calendarStretchRow})`
       }}
       className={styles.grid}
     >
+      <RowHeader
+        click={() => {
+          if (setCalendarStretchRow)
+            setCalendarStretchRow(prev => (prev == "100px" ? "1fr" : "100px"));
+        }}
+        calendarStretchRow={calendarStretchRow}
+        daysOfWeek={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]}
+      />
       {[...Array(getNumberOfRows())].map((_: any, index: number) => {
         return (
           <Fragment key={index}>
-            <RowElement datesRow={matrixDates[index]} />
+            <RowElement
+              totalNumberOfRows={getNumberOfRows()}
+              indexRow={index}
+              datesRow={matrixDates[index]}
+            />
           </Fragment>
         );
       })}

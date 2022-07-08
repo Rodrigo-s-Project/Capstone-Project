@@ -10,11 +10,15 @@ import styles from "./Calendar.module.scss";
 
 export const CalendarContext = createContext<Partial<CalendarAppProvide>>({});
 
+export type StretchCalendarRows = "1fr" | "100px";
+
 interface CalendarAppProvide {
   month: number;
   setMonth: Dispatch<SetStateAction<number>>;
   year: number;
   setYear: Dispatch<SetStateAction<number>>;
+  calendarStretchRow: StretchCalendarRows;
+  setCalendarStretchRow: Dispatch<SetStateAction<StretchCalendarRows>>;
 }
 
 // Components
@@ -28,13 +32,19 @@ const Calendar = () => {
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [year, setYear] = useState<number>(new Date().getFullYear());
 
+  const [calendarStretchRow, setCalendarStretchRow] = useState<
+    StretchCalendarRows
+  >("1fr");
+
   return (
     <CalendarContext.Provider
       value={{
         month,
         setMonth,
         year,
-        setYear
+        setYear,
+        calendarStretchRow,
+        setCalendarStretchRow
       }}
     >
       <div className={styles.calendar}>

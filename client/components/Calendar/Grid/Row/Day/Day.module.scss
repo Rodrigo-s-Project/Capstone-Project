@@ -1,0 +1,33 @@
+.day {
+  position: relative;
+  width: calc(100% / 7);
+  border: 0.5px solid var(--gray-500);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-300);
+    }
+  }
+  &_number {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: default;
+  }
+  &_today {
+    .day_number {
+      color: var(--white);
+      background-color: var(--lavender-400);
+      border-radius: 50%;
+      width: 27.5px;
+      height: 27.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &_anotherMonth {
+    .day_number {
+      color: var(--gray-600);
+    }
+  }
+}
