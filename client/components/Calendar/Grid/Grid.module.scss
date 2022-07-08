@@ -1,3 +1,15 @@
 .grid {
-    
+  display: grid;
+  height: calc(100% - 60px);
+}
+
+@media screen and (max-width: 760px) {
+  .grid {
+    height: calc(100% - 120px);
+  }
+}
+@media screen and (max-width: 360px) {
+  .grid {
+    height: calc(100% - 210px);
+  }
 }
