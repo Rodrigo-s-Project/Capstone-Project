@@ -12,6 +12,11 @@
     height: calc(100vh - 230px);
   }
 }
+@media screen and (max-width: 1000px) {
+  .settings_container {
+    height: calc(100vh - 200px);
+  }
+}
 @media screen and (max-width: 589px) {
   .settings {
     h1 {
