@@ -1,7 +1,7 @@
 import styles from "./Top.module.scss";
 
 import BtnChildren from "../../Buttons/BtnChildren/BtnChildren";
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { CalendarContext } from "../Calendar";
 
 // Icons
@@ -9,7 +9,16 @@ import ChevronLeft from "../../Svgs/ChevronLeft";
 import ChevronRight from "../../Svgs/ChevronRight";
 
 const TopCalendar = () => {
-  const { month, year, setMonth, setYear } = useContext(CalendarContext);
+  const {
+    month,
+    year,
+    setMonth,
+    setYear,
+    calendarView,
+    setCalendarView,
+    setCurrDay,
+    currDay
+  } = useContext(CalendarContext);
 
   const getFormatedTitle = (_month: any, _year: any): string => {
     // Vars undefined
@@ -22,21 +31,120 @@ const TopCalendar = () => {
     return `${month} ${_year}`;
   };
 
+  const moveLeft = () => {
+    // Month
+    const _year: any = year;
+    const _month: any = month;
+    const _currDay: any = currDay;
+    if (
+      !Number.isFinite(_year) ||
+      !Number.isFinite(_month) ||
+      !Number.isFinite(_currDay)
+    )
+      return;
+
+    if (calendarView == "Month") {
+      if (setMonth && setYear) {
+        if (month == 0) {
+          setMonth(11);
+          setYear(prev => prev - 1);
+        } else {
+          setMonth(prev => prev - 1);
+        }
+      }
+    } else if (calendarView == "Week") {
+      const newDate: Date = new Date(_year, _month, _currDay - 7);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev - 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev - 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    } else if (calendarView == "Day") {
+      const newDate: Date = new Date(_year, _month, _currDay - 1);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev - 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev - 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    }
+  };
+
+  const moveRight = useCallback(() => {
+    // Month
+    const _year: any = year;
+    const _month: any = month;
+    const _currDay: any = currDay;
+    if (
+      !Number.isFinite(_year) ||
+      !Number.isFinite(_month) ||
+      !Number.isFinite(_currDay)
+    )
+      return;
+
+    if (calendarView == "Month") {
+      if (setMonth && setYear) {
+        if (month == 11) {
+          setMonth(0);
+          setYear(prev => prev + 1);
+        } else {
+          setMonth(prev => prev + 1);
+        }
+      }
+    } else if (calendarView == "Week") {
+      const newDate: Date = new Date(_year, _month, _currDay + 7);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev + 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev + 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    } else if (calendarView == "Day") {
+      const newDate: Date = new Date(_year, _month, _currDay + 1);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev + 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev + 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    }
+  }, [year, month, currDay, calendarView, setCurrDay, setMonth, setYear]);
+
+  const getToday = () => {
+    if (setMonth && setYear && setCurrDay) {
+      setMonth(new Date().getMonth());
+      setYear(new Date().getFullYear());
+      setCurrDay(new Date().getDate());
+    }
+  };
+
   return (
     <div className={styles.calendar_container_top}>
       <div className={styles.calendar_container_top_left}>
         <div className={styles.calendar_container_top_left_arrows}>
           <BtnChildren
-            callback={() => {
-              if (setMonth && setYear) {
-                if (month == 0) {
-                  setMonth(11);
-                  setYear(prev => prev - 1);
-                } else {
-                  setMonth(prev => prev - 1);
-                }
-              }
-            }}
+            callback={moveLeft}
             color="lavender-300"
             border="round_5"
             additionalClass="btn-arrow-left-calendar"
@@ -45,16 +153,7 @@ const TopCalendar = () => {
             <ChevronLeft />
           </BtnChildren>
           <BtnChildren
-            callback={() => {
-              if (setMonth && setYear) {
-                if (month == 11) {
-                  setMonth(0);
-                  setYear(prev => prev + 1);
-                } else {
-                  setMonth(prev => prev + 1);
-                }
-              }
-            }}
+            callback={moveRight}
             color="lavender-300"
             border="round_5"
             additionalClass="btn-arrow-right-calendar"
@@ -64,12 +163,7 @@ const TopCalendar = () => {
           </BtnChildren>
         </div>
         <BtnChildren
-          callback={() => {
-            if (setMonth && setYear) {
-              setMonth(new Date().getMonth());
-              setYear(new Date().getFullYear());
-            }
-          }}
+          callback={getToday}
           color="lavender-300"
           border="round_5"
           additionalClass="btn-today-calendar"
@@ -82,27 +176,40 @@ const TopCalendar = () => {
       </div>
       <div className={styles.calendar_container_top_right}>
         <BtnChildren
-          callback={() => {}}
+          callback={() => {
+            if (window.innerWidth < 600) return;
+            if (setCalendarView) setCalendarView("Month");
+            getToday();
+          }}
           color="lavender-300"
           border="round_5"
           additionalClass="btn-month-calendar"
+          isDisabled={calendarView != "Month"}
         >
           Month
         </BtnChildren>
         <BtnChildren
-          callback={() => {}}
+          callback={() => {
+            if (window.innerWidth < 600) return;
+            if (setCalendarView) setCalendarView("Week");
+            getToday();
+          }}
           color="lavender-300"
           border="round_5"
-          isDisabled
+          isDisabled={calendarView != "Week"}
           additionalClass="btn-week-calendar"
         >
           Week
         </BtnChildren>
         <BtnChildren
-          callback={() => {}}
+          callback={() => {
+            if (window.innerWidth < 600) return;
+            if (setCalendarView) setCalendarView("Day");
+            getToday();
+          }}
           color="lavender-300"
           border="round_5"
-          isDisabled
+          isDisabled={calendarView != "Day"}
           additionalClass="btn-day-calendar"
         >
           Day

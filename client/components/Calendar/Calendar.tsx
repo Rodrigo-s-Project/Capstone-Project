@@ -3,18 +3,28 @@ import {
   createContext,
   useState,
   Dispatch,
-  SetStateAction
+  SetStateAction,
+  useEffect
 } from "react";
 import { GlobalContext } from "../../pages/_app";
 import styles from "./Calendar.module.scss";
 
 export const CalendarContext = createContext<Partial<CalendarAppProvide>>({});
 
+export type StretchCalendarRows = "1fr" | "100px";
+export type CalendarViews = "Month" | "Week" | "Day";
+
 interface CalendarAppProvide {
   month: number;
   setMonth: Dispatch<SetStateAction<number>>;
   year: number;
   setYear: Dispatch<SetStateAction<number>>;
+  currDay: number;
+  setCurrDay: Dispatch<SetStateAction<number>>;
+  calendarStretchRow: StretchCalendarRows;
+  setCalendarStretchRow: Dispatch<SetStateAction<StretchCalendarRows>>;
+  calendarView: CalendarViews;
+  setCalendarView: Dispatch<SetStateAction<CalendarViews>>;
 }
 
 // Components
@@ -27,6 +37,24 @@ const Calendar = () => {
   // State
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [currDay, setCurrDay] = useState<number>(new Date().getDate());
+
+  const [calendarStretchRow, setCalendarStretchRow] = useState<
+    StretchCalendarRows
+  >("1fr");
+
+  const [calendarView, setCalendarView] = useState<CalendarViews>("Month");
+
+  useEffect(() => {
+    changeCalendarForPhone();
+    window.addEventListener("resize", changeCalendarForPhone);
+  }, []);
+
+  const changeCalendarForPhone = () => {
+    if (window.innerWidth < 600) {
+      setCalendarView("Day");
+    }
+  };
 
   return (
     <CalendarContext.Provider
@@ -34,7 +62,13 @@ const Calendar = () => {
         month,
         setMonth,
         year,
-        setYear
+        setYear,
+        calendarStretchRow,
+        setCalendarStretchRow,
+        calendarView,
+        setCalendarView,
+        currDay,
+        setCurrDay
       }}
     >
       <div className={styles.calendar}>

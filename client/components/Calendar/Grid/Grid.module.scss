@@ -1,6 +1,12 @@
 .grid {
   display: grid;
   height: calc(100% - 60px);
+  overflow-y: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 0.5em;
+  }
 }
 
 @media screen and (max-width: 760px) {
