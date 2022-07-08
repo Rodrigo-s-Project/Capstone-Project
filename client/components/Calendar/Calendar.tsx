@@ -11,14 +11,19 @@ import styles from "./Calendar.module.scss";
 export const CalendarContext = createContext<Partial<CalendarAppProvide>>({});
 
 export type StretchCalendarRows = "1fr" | "100px";
+export type CalendarViews = "Month" | "Week" | "Day";
 
 interface CalendarAppProvide {
   month: number;
   setMonth: Dispatch<SetStateAction<number>>;
   year: number;
   setYear: Dispatch<SetStateAction<number>>;
+  currDay: number;
+  setCurrDay: Dispatch<SetStateAction<number>>;
   calendarStretchRow: StretchCalendarRows;
   setCalendarStretchRow: Dispatch<SetStateAction<StretchCalendarRows>>;
+  calendarView: CalendarViews;
+  setCalendarView: Dispatch<SetStateAction<CalendarViews>>;
 }
 
 // Components
@@ -31,10 +36,13 @@ const Calendar = () => {
   // State
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [currDay, setCurrDay] = useState<number>(new Date().getDate());
 
   const [calendarStretchRow, setCalendarStretchRow] = useState<
     StretchCalendarRows
   >("1fr");
+
+  const [calendarView, setCalendarView] = useState<CalendarViews>("Month");
 
   return (
     <CalendarContext.Provider
@@ -44,7 +52,11 @@ const Calendar = () => {
         year,
         setYear,
         calendarStretchRow,
-        setCalendarStretchRow
+        setCalendarStretchRow,
+        calendarView,
+        setCalendarView,
+        currDay,
+        setCurrDay
       }}
     >
       <div className={styles.calendar}>

@@ -3,7 +3,8 @@ import { DateCalendar } from "../Grid";
 import { StretchCalendarRows } from "../../Calendar";
 
 import DayComponent from "./Day/Day";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+import { CalendarContext } from "../../Calendar";
 
 import ChevronDown from "../../../Svgs/ChevronDown";
 
@@ -18,17 +19,22 @@ export const RowHeader = ({
   click,
   calendarStretchRow
 }: PropsHeaderRow) => {
+  const { calendarView } = useContext(CalendarContext);
+
   return (
     <div className={styles.row_header} onClick={click}>
-      <div
-        title={`${
-          calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
-        }`}
-        className={`${styles.row_header_svg} ${calendarStretchRow == "100px" &&
-          styles.row_header_svg_rotate}`}
-      >
-        <ChevronDown />
-      </div>
+      {calendarView == "Month" && (
+        <div
+          title={`${
+            calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
+          }`}
+          className={`${styles.row_header_svg} ${calendarStretchRow ==
+            "100px" && styles.row_header_svg_rotate}`}
+        >
+          <ChevronDown />
+        </div>
+      )}
+
       {daysOfWeek &&
         daysOfWeek.map((date: string, index: number) => {
           return (
@@ -43,11 +49,9 @@ export const RowHeader = ({
 
 type PropsRow = {
   datesRow: Array<DateCalendar>;
-  indexRow: number;
-  totalNumberOfRows: number;
 };
 
-const Row = ({ datesRow, indexRow, totalNumberOfRows }: PropsRow) => {
+const Row = ({ datesRow }: PropsRow) => {
   const getToday = (date: Date): boolean => {
     const today = new Date();
 
@@ -58,31 +62,13 @@ const Row = ({ datesRow, indexRow, totalNumberOfRows }: PropsRow) => {
     );
   };
 
-  const getIfAnotherMonth = (indexRow: number, date: DateCalendar) => {
-    // First row
-    if (indexRow == 0) {
-      if (date.day > 7) return true;
-    }
-
-    // Last row
-    if (indexRow == totalNumberOfRows - 1) {
-      if (date.day < 7) return true;
-    }
-
-    return false;
-  };
-
   return (
     <div className={styles.row}>
       {datesRow &&
         datesRow.map((date: DateCalendar, index: number) => {
           return (
             <Fragment key={index}>
-              <DayComponent
-                isToday={getToday(date.date)}
-                isAnotherMonth={getIfAnotherMonth(indexRow, date)}
-                day={date}
-              />
+              <DayComponent isToday={getToday(date.date)} day={date} />
             </Fragment>
           );
         })}
