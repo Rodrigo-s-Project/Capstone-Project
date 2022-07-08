@@ -37,7 +37,7 @@ const BtnChildren = ({
     <button
       extra-css={additionalClass}
       onClick={() => {
-        if (!isLoading && !isDisabled) {
+        if (!isLoading) {
           callback();
         }
       }}
