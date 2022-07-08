@@ -81,8 +81,34 @@ export const useDates = () => {
   const createMatrix = useCallback((): Array<Array<DateCalendar>> => {
     if (calendarView == "Month") return createMatrixMonth();
     if (calendarView == "Week") return getDaysInWeek(month, year, currDay);
+    if (calendarView == "Day") return createMatrixDay(month, year, currDay);
     return [];
   }, [calendarView, month, year, currDay]);
+
+  const createMatrixDay = (
+    _month: any,
+    _year: any,
+    _day: any
+  ): Array<Array<DateCalendar>> => {
+    if (
+      !Number.isFinite(_year) ||
+      !Number.isFinite(_month) ||
+      !Number.isFinite(_day)
+    )
+      return [];
+
+    // Get day
+    let thisDate: Date = new Date(_year, _month, _day);
+    let days: Array<DateCalendar> = [];
+
+    days.push({
+      date: thisDate,
+      weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
+      day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" }))
+    });
+
+    return [days];
+  };
 
   const createMatrixMonth = useCallback((): Array<Array<DateCalendar>> => {
     let matrix: Array<Array<DateCalendar>> = [];

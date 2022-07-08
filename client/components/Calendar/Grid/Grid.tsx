@@ -1,5 +1,5 @@
 import styles from "./Grid.module.scss";
-import { useContext, Fragment, useState, useEffect, useCallback } from "react";
+import { useContext, Fragment, useState, useEffect } from "react";
 
 import { CalendarContext } from "../Calendar";
 import RowElement, { RowHeader } from "./Row/Row";

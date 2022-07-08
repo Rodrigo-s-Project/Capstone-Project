@@ -3,7 +3,8 @@ import {
   createContext,
   useState,
   Dispatch,
-  SetStateAction
+  SetStateAction,
+  useEffect
 } from "react";
 import { GlobalContext } from "../../pages/_app";
 import styles from "./Calendar.module.scss";
@@ -43,6 +44,17 @@ const Calendar = () => {
   >("1fr");
 
   const [calendarView, setCalendarView] = useState<CalendarViews>("Month");
+
+  useEffect(() => {
+    changeCalendarForPhone();
+    window.addEventListener("resize", changeCalendarForPhone);
+  }, []);
+
+  const changeCalendarForPhone = () => {
+    if (window.innerWidth < 600) {
+      setCalendarView("Day");
+    }
+  };
 
   return (
     <CalendarContext.Provider

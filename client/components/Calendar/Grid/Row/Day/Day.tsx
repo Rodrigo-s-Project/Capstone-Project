@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Day = ({ day, isToday }: Props) => {
-  const { currDay, month, year } = useContext(CalendarContext);
+  const { currDay, month, year, calendarView } = useContext(CalendarContext);
 
   const isAnotherMonth = useCallback(
     (day: Date): boolean => {
@@ -36,7 +36,7 @@ const Day = ({ day, isToday }: Props) => {
     <div
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
         day.date
-      ) && styles.day_anotherMonth}`}
+      ) && styles.day_anotherMonth} ${calendarView == "Day" && styles.day_day}`}
     >
       <div className={styles.day_number}>{day.day}</div>
     </div>

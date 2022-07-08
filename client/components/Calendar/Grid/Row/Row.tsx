@@ -19,31 +19,44 @@ export const RowHeader = ({
   click,
   calendarStretchRow
 }: PropsHeaderRow) => {
-  const { calendarView } = useContext(CalendarContext);
+  const { calendarView, currDay, year, month } = useContext(CalendarContext);
 
   return (
-    <div className={styles.row_header} onClick={click}>
-      {calendarView == "Month" && (
-        <div
-          title={`${
-            calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
-          }`}
-          className={`${styles.row_header_svg} ${calendarStretchRow ==
-            "100px" && styles.row_header_svg_rotate}`}
-        >
-          <ChevronDown />
+    <>
+      {calendarView == "Day" && currDay && year && month && (
+        <div className={styles.row_header} onClick={click}>
+          <div
+            className={`${styles.row_header_div} ${styles.row_header_div_all}`}
+          >
+            {daysOfWeek[new Date(year, month, currDay).getDay()]}
+          </div>
         </div>
       )}
-
-      {daysOfWeek &&
-        daysOfWeek.map((date: string, index: number) => {
-          return (
-            <div className={styles.row_header_div} key={index}>
-              {date}
+      {calendarView != "Day" && (
+        <div className={styles.row_header} onClick={click}>
+          {calendarView == "Month" && (
+            <div
+              title={`${
+                calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
+              }`}
+              className={`${styles.row_header_svg} ${calendarStretchRow ==
+                "100px" && styles.row_header_svg_rotate}`}
+            >
+              <ChevronDown />
             </div>
-          );
-        })}
-    </div>
+          )}
+
+          {daysOfWeek &&
+            daysOfWeek.map((date: string, index: number) => {
+              return (
+                <div className={styles.row_header_div} key={index}>
+                  {date}
+                </div>
+              );
+            })}
+        </div>
+      )}
+    </>
   );
 };
 

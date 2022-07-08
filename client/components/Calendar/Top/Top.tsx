@@ -54,8 +54,26 @@ const TopCalendar = () => {
       }
     } else if (calendarView == "Week") {
       const newDate: Date = new Date(_year, _month, _currDay - 7);
+      // Check month
       if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
         if (setMonth) setMonth(prev => prev - 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev - 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    } else if (calendarView == "Day") {
+      const newDate: Date = new Date(_year, _month, _currDay - 1);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev - 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev - 1);
       }
 
       // Update state
@@ -86,9 +104,26 @@ const TopCalendar = () => {
       }
     } else if (calendarView == "Week") {
       const newDate: Date = new Date(_year, _month, _currDay + 7);
-
+      // Check month
       if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
         if (setMonth) setMonth(prev => prev + 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev + 1);
+      }
+
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    } else if (calendarView == "Day") {
+      const newDate: Date = new Date(_year, _month, _currDay + 1);
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev + 1);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev + 1);
       }
 
       // Update state
@@ -142,6 +177,7 @@ const TopCalendar = () => {
       <div className={styles.calendar_container_top_right}>
         <BtnChildren
           callback={() => {
+            if (window.innerWidth < 600) return;
             if (setCalendarView) setCalendarView("Month");
             getToday();
           }}
@@ -154,6 +190,7 @@ const TopCalendar = () => {
         </BtnChildren>
         <BtnChildren
           callback={() => {
+            if (window.innerWidth < 600) return;
             if (setCalendarView) setCalendarView("Week");
             getToday();
           }}
@@ -166,6 +203,7 @@ const TopCalendar = () => {
         </BtnChildren>
         <BtnChildren
           callback={() => {
+            if (window.innerWidth < 600) return;
             if (setCalendarView) setCalendarView("Day");
             getToday();
           }}

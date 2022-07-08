@@ -25,6 +25,9 @@
       justify-content: center;
       cursor: default;
       background-color: var(--gray-200);
+      &_all {
+        width: 100%;
+      }
     }
     &_svg {
       position: absolute;
