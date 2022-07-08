@@ -166,9 +166,11 @@ const MenuDashboard = () => {
 
         {/* Settings */}
         <LinkMenu
-          isActive={router.pathname == "/settings"}
+          isActive={router.pathname == "/dashboard/settings"}
           text="Settings"
-          click={() => {}}
+          click={() => {
+            router.replace(`/dashboard/settings`);
+          }}
         >
           <CogIcon />
         </LinkMenu>

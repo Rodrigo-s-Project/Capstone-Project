@@ -1,4 +1,4 @@
-.profile {
+.settings {
   h1 {
     font-size: 2.5rem;
     color: var(--lavender-200);
@@ -13,7 +13,7 @@
   }
 }
 @media screen and (max-width: 589px) {
-  .profile {
+  .settings {
     h1 {
       text-align: center;
     }
