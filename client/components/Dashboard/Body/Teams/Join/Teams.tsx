@@ -362,6 +362,16 @@ const Company = () => {
       const data: RESPONSE = response.data;
       const companyData: DATA_GET_COMPANY = data.data;
 
+      if (!companyData) {
+        router.replace("/");
+        return;
+      }
+
+      if (!companyData.company) {
+        router.replace("/");
+        return;
+      }
+
       if (!companyData.company.id) {
         router.replace("/");
         return;

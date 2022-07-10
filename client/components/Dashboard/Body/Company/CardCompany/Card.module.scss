@@ -1,0 +1,42 @@
+.company_grid {
+  &_profile {
+    width: 32px;
+    height: 32px;
+    background-color: var(--gray-500);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: calc(50% - 17.5px);
+    left: 30px;
+    z-index: 1;
+    &_name {
+      max-width: 100px;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    svg {
+      fill: var(--gray-100);
+      width: 40%;
+      height: 40%;
+    }
+  }
+  &_join {
+    background-color: var(--primary);
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 30px;
+    border-radius: 5px;
+    width: 250px;
+    position: relative;
+    color: var(--lavender-200);
+    transition: background-color ease-out 200ms;
+    cursor: pointer;
+    height: fit-content;
+  }
+}

@@ -21,10 +21,8 @@ import {
   CreateTeamModal,
   JoinTeamModal
 } from "../components/Dashboard/Body/Teams/Join/Teams";
-import {
-  CreateCompanyModal,
-  JoinCompanyModal
-} from "../components/Dashboard/Body/Company/Company";
+import CreateCompanyModal from "../components/Dashboard/Body/Company/Modals/CreateModal/CreateModal";
+import JoinCompanyModal from "../components/Dashboard/Body/Company/Modals/JoinModal/JoinModal";
 import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 
 // Animations
