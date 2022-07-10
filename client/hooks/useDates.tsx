@@ -1,15 +1,42 @@
 import { useCallback, useContext } from "react";
 
 import { CalendarContext } from "../components/Calendar/Calendar";
+import { TaskType } from "../components/Calendar/Grid/Row/Day/Task/Task";
 
 export type DateCalendar = {
   date: Date;
   weekday: string;
   day: number;
+  tasks: Array<TaskType> | undefined;
 };
 
 export const useDates = () => {
   const { month, year, calendarView, currDay } = useContext(CalendarContext);
+
+  // Temp
+  const generateTasks = (thisDate: Date): Array<TaskType> | undefined => {
+    const randomArrayLength = Math.floor(Math.random() * 5);
+    if (randomArrayLength < 5 && randomArrayLength > 3) return undefined;
+    let response: Array<TaskType> = [];
+    for (let i = 0; i < randomArrayLength; i++) {
+      response.push({
+        id: Math.floor(Math.random() * 100),
+        name: "Title Task",
+        description: "Lorem ipsum dolor sit amet",
+        fromDate: thisDate.getTime(),
+        arrayPeople: [],
+        arrayTags: [],
+        singleDate: Math.random() >= 0.5,
+        toDate: new Date(
+          thisDate.getFullYear(),
+          thisDate.getMonth(),
+          thisDate.getDate() + randomArrayLength
+        ).getTime()
+      });
+    }
+
+    return response;
+  };
 
   // FETCHING
   const getDaysInMonth = (_month: any, _year: any): Array<DateCalendar> => {
@@ -22,7 +49,8 @@ export const useDates = () => {
       days.push({
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
-        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" }))
+        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
+        tasks: generateTasks(thisDate)
       });
       date.setDate(date.getDate() + 1);
     }
@@ -49,7 +77,8 @@ export const useDates = () => {
       days.push({
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
-        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" }))
+        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
+        tasks: generateTasks(thisDate)
       });
     }
 
@@ -104,7 +133,8 @@ export const useDates = () => {
     days.push({
       date: thisDate,
       weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
-      day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" }))
+      day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
+      tasks: generateTasks(thisDate)
     });
 
     return [days];

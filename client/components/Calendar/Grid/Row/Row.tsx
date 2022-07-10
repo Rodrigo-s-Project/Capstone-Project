@@ -1,5 +1,5 @@
 import styles from "./Row.module.scss";
-import { DateCalendar } from "../Grid";
+import { DateCalendar } from "../../../../hooks/useDates";
 import { StretchCalendarRows } from "../../Calendar";
 
 import DayComponent from "./Day/Day";
@@ -24,7 +24,7 @@ export const RowHeader = ({
   return (
     <>
       {calendarView == "Day" && currDay && year && month && (
-        <div className={styles.row_header} onClick={click}>
+        <div className={styles.row_header}>
           <div
             className={`${styles.row_header_div} ${styles.row_header_div_all}`}
           >
@@ -33,14 +33,15 @@ export const RowHeader = ({
         </div>
       )}
       {calendarView != "Day" && (
-        <div className={styles.row_header} onClick={click}>
+        <div className={styles.row_header}>
           {calendarView == "Month" && (
             <div
+              onClick={click}
               title={`${
-                calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
+                calendarStretchRow == "20vh" ? "Shrink rows" : "Expand rows"
               }`}
               className={`${styles.row_header_svg} ${calendarStretchRow ==
-                "100px" && styles.row_header_svg_rotate}`}
+                "20vh" && styles.row_header_svg_rotate}`}
             >
               <ChevronDown />
             </div>

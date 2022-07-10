@@ -3,9 +3,9 @@ import axios from "axios";
 import {
   getTeamEndpoint,
   DATA_GET_TEAM
-} from "../../../../routes/dashboard.team.routes";
-import { RESPONSE } from "../../../../routes/index.routes";
-import { GlobalContext } from "../../../../pages/_app";
+} from "../../../../../routes/dashboard.team.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
+import { GlobalContext } from "../../../../../pages/_app";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -20,18 +20,28 @@ const TeamWrapper = ({ children }: Props) => {
   // TODO: loader
 
   const router = useRouter();
-  const { idTeam } = router.query;
+  const { idTeam, id } = router.query;
 
   const getTeam = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(getTeamEndpoint.url(idTeam), {
+      const response = await axios.get(getTeamEndpoint.url(id, idTeam), {
         withCredentials: true
       });
       setIsLoading(false);
 
       const data: RESPONSE = response.data;
       const teamData: DATA_GET_TEAM = data.data;
+
+      if (!teamData) {
+        router.replace("/");
+        return;
+      }
+
+      if (!teamData.company || !teamData.team) {
+        router.replace("/");
+        return;
+      }
 
       if (!teamData.company.id || !teamData.team.id) {
         router.replace("/");
@@ -66,7 +76,7 @@ const TeamWrapper = ({ children }: Props) => {
         ]);
       router.replace("/");
     }
-  }, [setArrayMsgs, setSelectedCompany, setSelectedTeam, idTeam, router]);
+  }, [setArrayMsgs, setSelectedCompany, setSelectedTeam, idTeam, router, id]);
 
   useEffect(() => {
     getTeam();

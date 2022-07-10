@@ -2,11 +2,7 @@
   position: relative;
   width: calc(100% / 7);
   border: 0.5px solid var(--gray-500);
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--gray-300);
-    }
-  }
+  overflow: hidden;
   &_number {
     position: absolute;
     top: 5px;
@@ -18,9 +14,10 @@
       color: var(--white);
       background-color: var(--lavender-400);
       border-radius: 50%;
-      width: 27.5px;
-      height: 27.5px;
+      width: 25px;
+      height: 25px;
       display: flex;
+      top: 3.5px;
       justify-content: center;
       align-items: center;
     }
@@ -33,4 +30,69 @@
   &_day {
     width: 100%;
   }
+  &_plus {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    cursor: default;
+    border-radius: 50%;
+    background-color: var(--gray-500);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+    &::before {
+      content: "Add task";
+      position: absolute;
+      top: calc(50% - 8.5px);
+      width: 70px;
+      text-align: center;
+      left: 25px;
+      background-color: var(--gray-400);
+      border-radius: 100px; // Just a max
+      font-size: 0.8rem;
+      height: 18px;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility ease-out 300ms, opacity ease-out 300ms;
+    }
+    svg {
+      width: 10px;
+      height: 10px;
+      fill: var(--lavender-400);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--gray-700);
+        svg {
+          fill: var(--white);
+        }
+        &::before {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      .day_plus {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+}
+.tasks {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 27.5px;
+  padding-bottom: 10px;
 }

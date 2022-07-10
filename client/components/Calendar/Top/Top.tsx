@@ -31,105 +31,68 @@ const TopCalendar = () => {
     return `${month} ${_year}`;
   };
 
-  const moveLeft = () => {
-    // Month
-    const _year: any = year;
-    const _month: any = month;
-    const _currDay: any = currDay;
-    if (
-      !Number.isFinite(_year) ||
-      !Number.isFinite(_month) ||
-      !Number.isFinite(_currDay)
-    )
-      return;
+  const updateStates = useCallback(
+    (newDate: Date, _year: any, _month: any, _currDay: any, aux: number) => {
+      // Check month
+      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
+        if (setMonth) setMonth(prev => prev + aux);
+      }
+      // Check year
+      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
+        if (setYear) setYear(prev => prev + aux);
+      }
 
-    if (calendarView == "Month") {
-      if (setMonth && setYear) {
-        if (month == 0) {
+      // Update state
+      if (setCurrDay) setCurrDay(newDate.getDate());
+    },
+    [setMonth, setCurrDay, setYear]
+  );
+
+  const moveDirection = useCallback(
+    (direction: "left" | "right") => {
+      const aux: number = direction == "left" ? -1 : 1;
+
+      // Month
+      const _year: any = year;
+      const _month: any = month;
+      const _currDay: any = currDay;
+      if (
+        !Number.isFinite(_year) ||
+        !Number.isFinite(_month) ||
+        !Number.isFinite(_currDay)
+      )
+        return;
+
+      if (calendarView == "Month" && setMonth && setYear) {
+        if (direction == "left" && _month == 0) {
           setMonth(11);
-          setYear(prev => prev - 1);
-        } else {
-          setMonth(prev => prev - 1);
-        }
-      }
-    } else if (calendarView == "Week") {
-      const newDate: Date = new Date(_year, _month, _currDay - 7);
-      // Check month
-      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
-        if (setMonth) setMonth(prev => prev - 1);
-      }
-      // Check year
-      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
-        if (setYear) setYear(prev => prev - 1);
-      }
-
-      // Update state
-      if (setCurrDay) setCurrDay(newDate.getDate());
-    } else if (calendarView == "Day") {
-      const newDate: Date = new Date(_year, _month, _currDay - 1);
-      // Check month
-      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
-        if (setMonth) setMonth(prev => prev - 1);
-      }
-      // Check year
-      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
-        if (setYear) setYear(prev => prev - 1);
-      }
-
-      // Update state
-      if (setCurrDay) setCurrDay(newDate.getDate());
-    }
-  };
-
-  const moveRight = useCallback(() => {
-    // Month
-    const _year: any = year;
-    const _month: any = month;
-    const _currDay: any = currDay;
-    if (
-      !Number.isFinite(_year) ||
-      !Number.isFinite(_month) ||
-      !Number.isFinite(_currDay)
-    )
-      return;
-
-    if (calendarView == "Month") {
-      if (setMonth && setYear) {
-        if (month == 11) {
+          setYear(prev => prev + aux);
+        } else if (direction == "right" && _month == 11) {
           setMonth(0);
-          setYear(prev => prev + 1);
+          setYear(prev => prev + aux);
         } else {
-          setMonth(prev => prev + 1);
+          setMonth(prev => prev + aux);
         }
+      } else if (calendarView == "Week") {
+        updateStates(
+          new Date(_year, _month, _currDay + aux * 7),
+          _year,
+          _month,
+          _currDay,
+          aux
+        );
+      } else if (calendarView == "Day") {
+        updateStates(
+          new Date(_year, _month, _currDay + aux),
+          _year,
+          _month,
+          _currDay,
+          aux
+        );
       }
-    } else if (calendarView == "Week") {
-      const newDate: Date = new Date(_year, _month, _currDay + 7);
-      // Check month
-      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
-        if (setMonth) setMonth(prev => prev + 1);
-      }
-      // Check year
-      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
-        if (setYear) setYear(prev => prev + 1);
-      }
-
-      // Update state
-      if (setCurrDay) setCurrDay(newDate.getDate());
-    } else if (calendarView == "Day") {
-      const newDate: Date = new Date(_year, _month, _currDay + 1);
-      // Check month
-      if (newDate.getMonth() != new Date(_year, _month, 1).getMonth()) {
-        if (setMonth) setMonth(prev => prev + 1);
-      }
-      // Check year
-      if (newDate.getFullYear() != new Date(_year, _month, 1).getFullYear()) {
-        if (setYear) setYear(prev => prev + 1);
-      }
-
-      // Update state
-      if (setCurrDay) setCurrDay(newDate.getDate());
-    }
-  }, [year, month, currDay, calendarView, setCurrDay, setMonth, setYear]);
+    },
+    [year, month, currDay, calendarView, setMonth, setYear, updateStates]
+  );
 
   const getToday = () => {
     if (setMonth && setYear && setCurrDay) {
@@ -144,7 +107,9 @@ const TopCalendar = () => {
       <div className={styles.calendar_container_top_left}>
         <div className={styles.calendar_container_top_left_arrows}>
           <BtnChildren
-            callback={moveLeft}
+            callback={() => {
+              moveDirection("left");
+            }}
             color="lavender-300"
             border="round_5"
             additionalClass="btn-arrow-left-calendar"
@@ -153,7 +118,9 @@ const TopCalendar = () => {
             <ChevronLeft />
           </BtnChildren>
           <BtnChildren
-            callback={moveRight}
+            callback={() => {
+              moveDirection("right");
+            }}
             color="lavender-300"
             border="round_5"
             additionalClass="btn-arrow-right-calendar"

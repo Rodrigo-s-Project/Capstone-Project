@@ -5,13 +5,7 @@ import { CalendarContext } from "../Calendar";
 import RowElement, { RowHeader } from "./Row/Row";
 
 // Hooks
-import { useDates } from "../../../hooks/useDates";
-
-export type DateCalendar = {
-  date: Date;
-  weekday: string;
-  day: number;
-};
+import { useDates, DateCalendar } from "../../../hooks/useDates";
 
 const Grid = () => {
   // Context
@@ -46,7 +40,7 @@ const Grid = () => {
       <RowHeader
         click={() => {
           if (setCalendarStretchRow)
-            setCalendarStretchRow(prev => (prev == "100px" ? "1fr" : "100px"));
+            setCalendarStretchRow(prev => (prev == "20vh" ? "1fr" : "20vh"));
         }}
         calendarStretchRow={calendarStretchRow}
         daysOfWeek={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]}

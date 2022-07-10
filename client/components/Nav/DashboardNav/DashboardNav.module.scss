@@ -1,7 +1,7 @@
 .nav {
   height: 65px;
   width: 100%;
-  max-width: 1420px;
+  max-width: 1520px;
   background-color: var(--primary);
   display: flex;
   align-items: center;
@@ -160,9 +160,9 @@
     }
   }
 }
-@media screen and (min-width: 1420px) {
+@media screen and (min-width: 1520px) {
   .nav {
-    left: calc(50% - 710px);
+    left: calc(50% - 760px);
   }
 }
 @media screen and (max-width: 1000px) {

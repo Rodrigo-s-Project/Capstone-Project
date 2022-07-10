@@ -70,17 +70,18 @@ export const getTeamFromUser = async (req, res) => {
   };
 
   try {
-    const { id } = req.params;
+    const { idCompany, idTeam } = req.params;
 
-    if (isNaN(id)) {
-      response.message = "Invalid team ID.";
+    if (isNaN(idTeam) || isNaN(idCompany)) {
+      response.message = "Invalid credentials.";
       res.json(response);
       return;
     }
 
     const team = await req.user.getTeams({
       where: {
-        id
+        id: idTeam,
+        companyId: idCompany
       }
     });
 

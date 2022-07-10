@@ -11,7 +11,7 @@ import {
 
 // Protected route
 router.get("/get-teams/:companyId", authenticate, getTeamsFromUser);
-router.get("/get-team/:id", authenticate, getTeamFromUser);
+router.get("/get-team/:idCompany/:idTeam", authenticate, getTeamFromUser);
 router.post("/create-team", authenticate, createTeam);
 router.put("/join-team", authenticate, joinTeam);
 

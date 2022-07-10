@@ -1,8 +1,14 @@
 import styles from "./Day.module.scss";
-import { DateCalendar } from "../../Grid";
-import { useContext, useCallback } from "react";
+import { DateCalendar } from "../../../../../hooks/useDates";
+import { useContext, useCallback, Fragment } from "react";
 
 import { CalendarContext } from "../../../Calendar";
+import { GlobalContext } from "../../../../../pages/_app";
+
+import Task, { TaskType } from "./Task/Task";
+
+// Icons
+import PlusIcon from "../../../../Svgs/Plus";
 
 type Props = {
   day: DateCalendar;
@@ -11,6 +17,7 @@ type Props = {
 
 const Day = ({ day, isToday }: Props) => {
   const { currDay, month, year, calendarView } = useContext(CalendarContext);
+  const { setModalPopUpCreateTask, setDayClick } = useContext(GlobalContext);
 
   const isAnotherMonth = useCallback(
     (day: Date): boolean => {
@@ -32,6 +39,13 @@ const Day = ({ day, isToday }: Props) => {
     [currDay, month, year]
   );
 
+  const createTask = () => {
+    if (setModalPopUpCreateTask && setDayClick) {
+      setDayClick(day);
+      setModalPopUpCreateTask(true);
+    }
+  };
+
   return (
     <div
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
@@ -39,6 +53,20 @@ const Day = ({ day, isToday }: Props) => {
       ) && styles.day_anotherMonth} ${calendarView == "Day" && styles.day_day}`}
     >
       <div className={styles.day_number}>{day.day}</div>
+      <div className={styles.day_plus} onClick={createTask}>
+        <PlusIcon />
+      </div>
+      <div className={styles.tasks}>
+        {day.tasks &&
+          day.tasks.length > 0 &&
+          day.tasks.map((task: TaskType, index: number) => {
+            return (
+              <Fragment key={index}>
+                <Task task={task} />
+              </Fragment>
+            );
+          })}
+      </div>
     </div>
   );
 };

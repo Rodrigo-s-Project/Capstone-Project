@@ -14,10 +14,14 @@ import {
 // Components
 import Nav from "../components/Nav/Nav";
 import Loader from "../components/Loader/Spinner/Spinner";
-import PopUpModal, { ModalParams } from "../components/Modals/PopUp/PopUp";
 
 // Modals
 import Messages, { Message } from "../components/Modals/Messages/Messages";
+import CreateTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Modals/CreateTeam/CreateTeam";
+import JoinTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Modals/JoinTeam/JoinTeamModal";
+import CreateCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/CreateModal/CreateModal";
+import JoinCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/JoinModal/JoinModal";
+import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -29,6 +33,7 @@ import { DATA_GET_USER } from "../routes/main.routes";
 // Hooks
 import { useAuth } from "../hooks/useAuth";
 import { useColorTheme } from "../hooks/useColorTheme";
+import { DateCalendar } from "../hooks/useDates";
 
 // Routes
 import { COMPANY } from "../routes/dashboard.company.routes";
@@ -43,8 +48,17 @@ interface ValueAppProvider {
   isAuth: boolean;
   isMenuOpen: boolean;
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
-  modalPopUp: Partial<ModalParams>;
-  setModalPopUp: Dispatch<SetStateAction<Partial<ModalParams>>>;
+
+  modalPopUpCreateCompany: boolean;
+  setModalPopUpCreateCompany: Dispatch<SetStateAction<boolean>>;
+  modalPopUpCreateTeam: boolean;
+  setModalPopUpCreateTeam: Dispatch<SetStateAction<boolean>>;
+  modalPopUpJoinCompany: boolean;
+  setModalPopUpJoinCompany: Dispatch<SetStateAction<boolean>>;
+  modalPopUpJoinTeam: boolean;
+  setModalPopUpJoinTeam: Dispatch<SetStateAction<boolean>>;
+  modalPopUpCreateTask: boolean;
+  setModalPopUpCreateTask: Dispatch<SetStateAction<boolean>>;
 
   setCompanies: Dispatch<SetStateAction<Array<COMPANY>>>;
   companies: Array<COMPANY>;
@@ -59,6 +73,11 @@ interface ValueAppProvider {
   setRefetchTeams: Dispatch<SetStateAction<boolean>>;
   selectedTeam: TEAM | undefined;
   setSelectedTeam: Dispatch<SetStateAction<TEAM | undefined>>;
+
+  dayClick: DateCalendar | undefined;
+  setDayClick: Dispatch<SetStateAction<DateCalendar | undefined>>;
+  isMenuToggled: boolean;
+  setIsMenuToggled: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -90,7 +109,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // State Modal Pop up
-  const [modalPopUp, setModalPopUp] = useState<Partial<ModalParams>>({});
+  const [modalPopUpCreateCompany, setModalPopUpCreateCompany] = useState<
+    boolean
+  >(false);
+  const [modalPopUpCreateTeam, setModalPopUpCreateTeam] = useState<boolean>(
+    false
+  );
+  const [modalPopUpJoinCompany, setModalPopUpJoinCompany] = useState<boolean>(
+    false
+  );
+  const [modalPopUpJoinTeam, setModalPopUpJoinTeam] = useState<boolean>(false);
+  const [modalPopUpCreateTask, setModalPopUpCreateTask] = useState<boolean>(
+    false
+  );
+
+  // Dashboard menu
+  const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
 
   // State Companies
   const [companies, setCompanies] = useState<Array<COMPANY>>([]);
@@ -109,6 +143,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (setIsDarkMode) setIsDarkMode(newTheme == "NIGHT");
   }, [updateColors]);
 
+  // Create tasks
+  const [dayClick, setDayClick] = useState<DateCalendar | undefined>(undefined);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -120,8 +157,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         isAuth,
         isMenuOpen,
         setIsMenuOpen,
-        modalPopUp,
-        setModalPopUp,
+        modalPopUpCreateCompany,
+        setModalPopUpCreateCompany,
+        modalPopUpCreateTeam,
+        setModalPopUpCreateTeam,
+        modalPopUpJoinCompany,
+        setModalPopUpJoinCompany,
+        modalPopUpJoinTeam,
+        setModalPopUpJoinTeam,
+        modalPopUpCreateTask,
+        setModalPopUpCreateTask,
         companies,
         setCompanies,
         refetchCompanies,
@@ -133,7 +178,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         refetchTeams,
         setRefetchTeams,
         selectedTeam,
-        setSelectedTeam
+        setSelectedTeam,
+        dayClick,
+        setDayClick,
+        isMenuToggled,
+        setIsMenuToggled
       }}
     >
       <Head>
@@ -158,7 +207,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         ) : (
           <>
             <Nav />
-            <PopUpModal />
+            <CreateTeamModal />
+            <JoinTeamModal />
+            <CreateCompanyModal />
+            <JoinCompanyModal />
+            <TaskModal />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />
