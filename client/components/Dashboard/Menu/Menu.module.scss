@@ -73,12 +73,18 @@
     }
   }
 }
-@media screen and (min-width: 1420px) {
+
+@media screen and (min-width: 1520px) {
   .menu {
-    left: calc(50% - 710px);
+    left: calc(50% - 760px);
   }
 }
 
+@media screen and (max-width: 1520px) and (min-width: 1000px) {
+  .menu_toggled {
+    left: -230px;
+  }
+}
 @media screen and (max-width: 1000px) {
   .menu {
     left: -230px;

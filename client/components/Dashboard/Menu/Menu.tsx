@@ -1,6 +1,6 @@
 import styles from "./Menu.module.scss";
 import stylesNav from "../../Nav/DashboardNav/DashboardNav.module.scss";
-import { useContext, Fragment } from "react";
+import { useContext, Fragment, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 import { fadeVariants } from "../../../animations/fade";
@@ -41,7 +41,15 @@ const LinkMenu = ({ text, click, children, isActive }: Props) => {
   );
 };
 
-const MenuDashboard = () => {
+type PropsMenu = {
+  isMenuToggled: boolean;
+  setIsMenuToggleVisible: Dispatch<SetStateAction<boolean>>;
+};
+
+const MenuDashboard = ({
+  isMenuToggled,
+  setIsMenuToggleVisible
+}: PropsMenu) => {
   const {
     isMenuOpen,
     setSelectedCompany,
@@ -52,7 +60,16 @@ const MenuDashboard = () => {
   const router = useRouter();
 
   return (
-    <aside className={`${styles.menu} ${isMenuOpen && styles.menu_open}`}>
+    <aside
+      className={`${styles.menu} ${isMenuOpen &&
+        styles.menu_open} ${isMenuToggled && styles.menu_toggled}`}
+      onMouseEnter={() => {
+        setIsMenuToggleVisible(true);
+      }}
+      onMouseLeave={() => {
+        setIsMenuToggleVisible(false);
+      }}
+    >
       <div className={styles.menu_nav}>
         <div className={styles.menu_nav_title}>Menu</div>
         <DashBoardNavControls
@@ -103,7 +120,7 @@ const MenuDashboard = () => {
                   click={() => {
                     // First travel
                     router.replace(`/dashboard/${selectedCompany.id}`);
-                    
+
                     if (setSelectedTeam) setSelectedTeam(undefined);
                   }}
                 >

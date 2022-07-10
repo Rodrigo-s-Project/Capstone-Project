@@ -25,6 +25,7 @@
     input {
       width: 100%;
       background-color: transparent;
+      color: var(--black);
       &::placeholder {
         color: var(--gray-600);
       }
@@ -43,32 +44,39 @@
     }
     button[extra-css="btn-add-people-task"],
     button[extra-css="btn-add-tag"] {
-      margin-top: 3px;
-      transform-origin: left;
-      transform: scale(0.8, 0.70);
-      width: 200px;
+      margin-top: 7px;
+      width: 180px;
+      height: 35px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
   &_create {
     button[extra-css="btn-created-tag"] {
-      transform-origin: right;
-      transform: scale(0.8, 0.70);
-      width: 200px;
+      margin-top: 7px;
+      width: 180px;
+      height: 35px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-left: auto;
-      display: block;
     }
   }
 }
 .modal_card_task {
   max-width: 650px !important;
 }
-@media screen and (max-width: 442px) {
-  .task_create {
-    button[extra-css="btn-created-tag"] {
+@media screen and (max-width: 600px) {
+  .task_tag,
+  .task_create,
+  .task_people {
+    button[extra-css="btn-created-tag"],
+    button[extra-css="btn-add-people-task"],
+    button[extra-css="btn-add-tag"] {
       width: 100%;
-      transform-origin: center;
-      margin: 0;
-      transform: scale(1, 0.70);
     }
   }
 }

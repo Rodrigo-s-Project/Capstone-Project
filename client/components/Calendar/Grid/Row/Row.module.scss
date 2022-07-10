@@ -3,6 +3,11 @@
   width: 100%;
   justify-content: space-between;
   position: relative;
+
+  // To prevent overflow on css grid 1fr
+  // min-height: 0px;
+  min-width: 0px;
+
   &_header {
     display: flex;
     width: 100%;

@@ -98,7 +98,7 @@ button {
   height: 100%;
   top: 0;
   left: 0;
-  max-width: 1420px;
+  max-width: 1520px;
   transition: color 300ms ease-out 0ms;
 }
 
@@ -106,9 +106,9 @@ button {
   margin-top: 111px;
 }
 
-@media screen and (min-width: 1420px) {
+@media screen and (min-width: 1520px) {
   #__next {
-    left: calc(50% - 710px);
+    left: calc(50% - 760px);
   }
 }
 

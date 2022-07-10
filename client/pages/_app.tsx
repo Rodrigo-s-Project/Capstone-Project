@@ -76,6 +76,8 @@ interface ValueAppProvider {
 
   dayClick: DateCalendar | undefined;
   setDayClick: Dispatch<SetStateAction<DateCalendar | undefined>>;
+  isMenuToggled: boolean;
+  setIsMenuToggled: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -120,6 +122,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [modalPopUpCreateTask, setModalPopUpCreateTask] = useState<boolean>(
     false
   );
+
+  // Dashboard menu
+  const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
 
   // State Companies
   const [companies, setCompanies] = useState<Array<COMPANY>>([]);
@@ -175,7 +180,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         selectedTeam,
         setSelectedTeam,
         dayClick,
-        setDayClick
+        setDayClick,
+        isMenuToggled,
+        setIsMenuToggled
       }}
     >
       <Head>
