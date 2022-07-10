@@ -11,7 +11,7 @@ import styles from "./Calendar.module.scss";
 
 export const CalendarContext = createContext<Partial<CalendarAppProvide>>({});
 
-export type StretchCalendarRows = "1fr" | "100px";
+export type StretchCalendarRows = "1fr" | "20vh";
 export type CalendarViews = "Month" | "Week" | "Day";
 
 interface CalendarAppProvide {

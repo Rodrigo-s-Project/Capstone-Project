@@ -3,9 +3,9 @@ import axios from "axios";
 import {
   getTeamEndpoint,
   DATA_GET_TEAM
-} from "../../../../routes/dashboard.team.routes";
-import { RESPONSE } from "../../../../routes/index.routes";
-import { GlobalContext } from "../../../../pages/_app";
+} from "../../../../../routes/dashboard.team.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
+import { GlobalContext } from "../../../../../pages/_app";
 import { useRouter } from "next/router";
 
 type Props = {

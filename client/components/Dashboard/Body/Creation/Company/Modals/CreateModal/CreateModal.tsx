@@ -1,20 +1,20 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import styles from "../JoinModal/JoinModal.module.scss";
+import styles from "../../../Creation.module.scss";
 
-import { GlobalContext } from "../../../../../../pages/_app";
+import { GlobalContext } from "../../../../../../../pages/_app";
 
 // Components
-import PopUpModal from "../../../../../Modals/PopUp/PopUp";
-import InputText from "../../../../../Input/Text/InputText";
-import BtnClick from "../../../../../Buttons/BtnClick/BtnClick";
+import PopUpModal from "../../../../../../Modals/PopUp/PopUp";
+import InputText from "../../../../../../Input/Text/InputText";
+import BtnClick from "../../../../../../Buttons/BtnClick/BtnClick";
 
 // Routes
 import {
   BODY_CREATE_COMPANY,
   createCompanyEndpoint
-} from "../../../../../../routes/dashboard.company.routes";
-import { RESPONSE } from "../../../../../../routes/index.routes";
+} from "../../../../../../../routes/dashboard.company.routes";
+import { RESPONSE } from "../../../../../../../routes/index.routes";
 
 export const CreateCompanyModal = () => {
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
@@ -87,15 +87,15 @@ export const CreateCompanyModal = () => {
       isModal={modalPopUpCreateCompany}
       setIsModal={setModalPopUpCreateCompany}
     >
-      <div className={styles.company_join_modal}>
-        <div className={styles.company_join_modal_title}>
+      <div className={styles.creation_join_modal}>
+        <div className={styles.creation_join_modal_title}>
           Enter Company Name
         </div>
         <form
           onSubmit={e => {
             e.preventDefault();
           }}
-          className={styles.company_join_modal_form}
+          className={styles.creation_join_modal_form}
         >
           <InputText
             text="Company name"

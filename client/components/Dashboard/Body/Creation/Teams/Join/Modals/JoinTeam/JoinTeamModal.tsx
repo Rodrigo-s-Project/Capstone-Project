@@ -1,41 +1,39 @@
 import { useState, useContext } from "react";
-import axios from "axios";
-import styles from "./JoinModal.module.scss";
-
-import { GlobalContext } from "../../../../../../pages/_app";
-
-// Components
-import PopUpModal from "../../../../../Modals/PopUp/PopUp";
-import InputText from "../../../../../Input/Text/InputText";
-import BtnClick from "../../../../../Buttons/BtnClick/BtnClick";
-
-// Routes
+import { GlobalContext } from "../../../../../../../../pages/_app";
 import {
-  BODY_JOIN_COMPANY,
-  joinCompanyEndpoint
-} from "../../../../../../routes/dashboard.company.routes";
-import { RESPONSE } from "../../../../../../routes/index.routes";
+  joinTeamEndpoint,
+  BODY_JOIN_TEAM
+} from "../../../../../../../../routes/dashboard.team.routes";
+import { RESPONSE } from "../../../../../../../../routes/index.routes";
+import axios from "axios";
 
-export const JoinCompanyModal = () => {
+import PopUpModal from "../../../../../../../Modals/PopUp/PopUp";
+import styles from "../../../../Creation.module.scss";
+import BtnClick from "../../../../../../../Buttons/BtnClick/BtnClick";
+import InputText from "../../../../../../../Input/Text/InputText";
+
+export const JoinTeamModal = () => {
   const [code, setCode] = useState("");
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const {
     setArrayMsgs,
     refetchUser,
-    setModalPopUpJoinCompany,
-    modalPopUpJoinCompany,
-    setRefetchCompanies
+    modalPopUpJoinTeam,
+    setModalPopUpJoinTeam,
+    selectedCompany,
+    setRefetchTeams
   } = useContext(GlobalContext);
 
-  const joinCompanyFetch = async () => {
+  const joinTeamFetch = async () => {
     try {
       setIsLoadingJoin(true);
 
-      const body: BODY_JOIN_COMPANY = {
-        code
+      const body: BODY_JOIN_TEAM = {
+        code,
+        companyId: selectedCompany && selectedCompany.id
       };
 
-      const response = await axios.put(joinCompanyEndpoint.url, body, {
+      const response = await axios.put(joinTeamEndpoint.url, body, {
         withCredentials: true
       });
       setIsLoadingJoin(false);
@@ -50,11 +48,11 @@ export const JoinCompanyModal = () => {
 
       if (data.data) {
         // Clean modal
-        if (setModalPopUpJoinCompany) setModalPopUpJoinCompany(false);
+        if (setModalPopUpJoinTeam) setModalPopUpJoinTeam(false);
 
         // Refetch
-        if (setRefetchCompanies) {
-          setRefetchCompanies(prev => !prev);
+        if (setRefetchTeams) {
+          setRefetchTeams(prev => !prev);
         }
       }
       if (setArrayMsgs && data.readMsg) {
@@ -83,30 +81,25 @@ export const JoinCompanyModal = () => {
   };
 
   return (
-    <PopUpModal
-      isModal={modalPopUpJoinCompany}
-      setIsModal={setModalPopUpJoinCompany}
-    >
-      <div className={styles.company_join_modal}>
-        <div className={styles.company_join_modal_title}>
-          Enter Company Code
-        </div>
+    <PopUpModal isModal={modalPopUpJoinTeam} setIsModal={setModalPopUpJoinTeam}>
+      <div className={styles.creation_join_modal}>
+        <div className={styles.creation_join_modal_title}>Enter Team Code</div>
         <form
           onSubmit={e => {
             e.preventDefault();
           }}
-          className={styles.company_join_modal_form}
+          className={styles.creation_join_modal_form}
         >
           <InputText
             text="Code"
             value={code}
             setValue={setCode}
-            id="input-code-join-company"
+            id="input-code-join-team"
             type="text"
           />
           <BtnClick
-            text="Join to a company"
-            callback={joinCompanyFetch}
+            text="Join to a team"
+            callback={joinTeamFetch}
             color="lavender-300"
             border="round_5"
             isLoading={isLoadingJoin}
@@ -117,4 +110,4 @@ export const JoinCompanyModal = () => {
   );
 };
 
-export default JoinCompanyModal;
+export default JoinTeamModal;

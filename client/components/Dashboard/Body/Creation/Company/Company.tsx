@@ -1,6 +1,6 @@
-import styles from "./Company.module.scss";
-import BtnSpinner from "../../../Buttons/BtnClick/BtnClick";
-import { GlobalContext } from "../../../../pages/_app";
+import styles from "../Creation.module.scss";
+import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
+import { GlobalContext } from "../../../../../pages/_app";
 import { useContext, useState, useEffect, Fragment, useCallback } from "react";
 import axios from "axios";
 
@@ -9,8 +9,8 @@ import {
   getCompaniesEndpoint,
   DATA_GET_COMPANIES,
   COMPANY
-} from "../../../../routes/dashboard.company.routes";
-import { RESPONSE } from "../../../../routes/index.routes";
+} from "../../../../../routes/dashboard.company.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
 
 // Components
 import JoinCompany from "./Join/Join";
@@ -75,18 +75,18 @@ const Company = () => {
   }, [refetchCompanies, getCompanies]);
 
   return (
-    <div className={styles.company}>
-      <div className={styles.company_top}>
+    <div className={styles.creation}>
+      <div className={styles.creation_top}>
         <h1>Companies</h1>
         <BtnSpinner
           text="Create a company"
           callback={createACompany}
           color="lavender-300"
           border="round_5"
-          additionalClass="btn-add-company"
+          additionalClass="btn-add-creation"
         />
       </div>
-      <div className={styles.company_grid}>
+      <div className={styles.creation_grid}>
         {companies &&
           companies.map((company: COMPANY, index: number) => {
             return (

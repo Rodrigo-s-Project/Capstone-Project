@@ -68,9 +68,11 @@ const MenuDashboard = () => {
           isActive={router.pathname == "/dashboard"}
           text="Companies"
           click={() => {
+            // First travel
+            router.replace("/dashboard");
+
             if (setSelectedCompany) setSelectedCompany(undefined);
             if (setSelectedTeam) setSelectedTeam(undefined);
-            router.replace("/dashboard");
           }}
         >
           <BriefcaseIcon />
@@ -99,7 +101,9 @@ const MenuDashboard = () => {
                   }
                   text="Teams"
                   click={() => {
+                    // First travel
                     router.replace(`/dashboard/${selectedCompany.id}`);
+                    
                     if (setSelectedTeam) setSelectedTeam(undefined);
                   }}
                 >
