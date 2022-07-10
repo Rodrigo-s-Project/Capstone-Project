@@ -11,11 +11,12 @@ type Props = {
 };
 
 const Colors = ({ callback }: Props) => {
-  const { isDarkMode, setArrayMsgs } = useContext(GlobalContext);
+  const { isDarkMode, setArrayMsgs, isAuth } = useContext(GlobalContext);
   const { handleColorChange } = useColorTheme();
 
   const fetchUserColor = async (newMode: boolean) => {
     try {
+      if (!isAuth) return;
       const body: BODY_UPDATE_COLOR = {
         isDarkModeOn: newMode
       };

@@ -1,5 +1,5 @@
 import styles from "./Row.module.scss";
-import { DateCalendar } from "../Grid";
+import { DateCalendar } from "../../../../hooks/useDates";
 import { StretchCalendarRows } from "../../Calendar";
 
 import DayComponent from "./Day/Day";

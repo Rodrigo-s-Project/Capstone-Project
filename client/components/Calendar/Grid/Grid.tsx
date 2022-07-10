@@ -5,13 +5,7 @@ import { CalendarContext } from "../Calendar";
 import RowElement, { RowHeader } from "./Row/Row";
 
 // Hooks
-import { useDates } from "../../../hooks/useDates";
-
-export type DateCalendar = {
-  date: Date;
-  weekday: string;
-  day: number;
-};
+import { useDates, DateCalendar } from "../../../hooks/useDates";
 
 const Grid = () => {
   // Context

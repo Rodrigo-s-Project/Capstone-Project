@@ -1,9 +1,14 @@
 import styles from "./Day.module.scss";
-import { DateCalendar } from "../../Grid";
-import { useContext, useCallback } from "react";
+import { DateCalendar } from "../../../../../hooks/useDates";
+import { useContext, useCallback, Fragment } from "react";
 
 import { CalendarContext } from "../../../Calendar";
 import { GlobalContext } from "../../../../../pages/_app";
+
+import Task, { TaskType } from "./Task/Task";
+
+// Icons
+import PlusIcon from "../../../../Svgs/Plus";
 
 type Props = {
   day: DateCalendar;
@@ -46,9 +51,22 @@ const Day = ({ day, isToday }: Props) => {
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
         day.date
       ) && styles.day_anotherMonth} ${calendarView == "Day" && styles.day_day}`}
-      onClick={createTask}
     >
       <div className={styles.day_number}>{day.day}</div>
+      <div className={styles.day_plus} onClick={createTask}>
+        <PlusIcon />
+      </div>
+      <div className={styles.tasks}>
+        {day.tasks &&
+          day.tasks.length > 0 &&
+          day.tasks.map((task: TaskType, index: number) => {
+            return (
+              <Fragment key={index}>
+                <Task task={task} />
+              </Fragment>
+            );
+          })}
+      </div>
     </div>
   );
 };
