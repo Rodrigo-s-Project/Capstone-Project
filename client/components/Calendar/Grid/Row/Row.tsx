@@ -38,10 +38,10 @@ export const RowHeader = ({
             <div
               onClick={click}
               title={`${
-                calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
+                calendarStretchRow == "20vh" ? "Shrink rows" : "Expand rows"
               }`}
               className={`${styles.row_header_svg} ${calendarStretchRow ==
-                "100px" && styles.row_header_svg_rotate}`}
+                "20vh" && styles.row_header_svg_rotate}`}
             >
               <ChevronDown />
             </div>

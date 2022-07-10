@@ -17,14 +17,10 @@ import Loader from "../components/Loader/Spinner/Spinner";
 
 // Modals
 import Messages, { Message } from "../components/Modals/Messages/Messages";
-import {
-  CreateTeamModal,
-  JoinTeamModal
-} from "../components/Dashboard/Body/Teams/Join/Teams";
-import {
-  CreateCompanyModal,
-  JoinCompanyModal
-} from "../components/Dashboard/Body/Company/Company";
+import CreateTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Modals/CreateTeam/CreateTeam";
+import JoinTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Modals/JoinTeam/JoinTeamModal";
+import CreateCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/CreateModal/CreateModal";
+import JoinCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/JoinModal/JoinModal";
 import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 
 // Animations

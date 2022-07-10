@@ -29,7 +29,8 @@ export type DATA_GET_TEAM = {
 };
 
 export const getTeamEndpoint = {
-  url: (id: any) => `${process.env.API_URL}/dashboard/team/get-team/${id}`,
+  url: (idCompany: any, idTeam: any) =>
+    `${process.env.API_URL}/dashboard/team/get-team/${idCompany}/${idTeam}`,
   method: "get"
 };
 

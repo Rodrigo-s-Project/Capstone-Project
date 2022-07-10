@@ -7,7 +7,7 @@ import { fadeVariants } from "../animations/fade";
 
 // Componnets
 import DashboardWrapper from "../components/Dashboard/Dashboard";
-import Company from "../components/Dashboard/Body/Company/Company";
+import Company from "../components/Dashboard/Body/Creation/Company/Company";
 
 const Dashboard: NextPage = () => {
   return (

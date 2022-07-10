@@ -1,4 +1,4 @@
-.team {
+.creation {
   &_top {
     display: flex;
     justify-content: space-between;
@@ -8,7 +8,7 @@
       font-size: 2.5rem;
       color: var(--lavender-200);
     }
-    button[extra-css="btn-add-team"] {
+    button[extra-css="btn-add-creation"] {
       transform: scale(0.8);
       padding: 0 40px;
     }
@@ -64,7 +64,6 @@
         height: 40%;
       }
     }
-    &_card,
     &_join {
       background-color: var(--primary);
       display: flex;
@@ -79,8 +78,6 @@
       transition: background-color ease-out 200ms;
       cursor: pointer;
       height: fit-content;
-    }
-    &_join {
       &_btn {
         position: absolute;
         background-color: var(--gray-200);
@@ -103,7 +100,7 @@
       @media (hover: hover) and (pointer: fine) {
         &:hover {
           background-color: var(--gray-300);
-          .team_grid_join_btn {
+          .creation_grid_join_btn {
             background-color: var(--gray-300);
           }
         }
@@ -117,7 +114,7 @@
   }
 }
 @media screen and (max-width: 589px) {
-  .team {
+  .creation {
     &_top {
       flex-direction: column;
       gap: 15px;
