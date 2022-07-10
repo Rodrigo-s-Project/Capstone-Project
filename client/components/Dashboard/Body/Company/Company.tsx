@@ -11,6 +11,7 @@ import PlusIcon from "../../../Svgs/Plus";
 // Components
 import InputText from "../../../Input/Text/InputText";
 import BtnClick from "../../../Buttons/BtnClick/BtnClick";
+import PopUpModal from "../../../Modals/PopUp/PopUp";
 
 // Icons
 import Camera from "../../../Svgs/Camera";
@@ -27,13 +28,14 @@ import {
 } from "../../../../routes/dashboard.company.routes";
 import { RESPONSE } from "../../../../routes/index.routes";
 
-const CreateCompanyModal = () => {
+export const CreateCompanyModal = () => {
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const [name, setName] = useState("");
   const {
     setArrayMsgs,
     refetchUser,
-    setModalPopUp,
+    setModalPopUpCreateCompany,
+    modalPopUpCreateCompany,
     setRefetchCompanies
   } = useContext(GlobalContext);
 
@@ -60,12 +62,7 @@ const CreateCompanyModal = () => {
 
       if (data.data) {
         // Clean modal
-        if (setModalPopUp) {
-          setModalPopUp(prev => ({
-            ...prev,
-            isModal: false
-          }));
-        }
+        if (setModalPopUpCreateCompany) setModalPopUpCreateCompany(false);
 
         // Refetch
         if (setRefetchCompanies) {
@@ -98,40 +95,48 @@ const CreateCompanyModal = () => {
   };
 
   return (
-    <div className={styles.company_join_modal}>
-      <div className={styles.company_join_modal_title}>Enter Company Name</div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-        className={styles.company_join_modal_form}
-      >
-        <InputText
-          text="Company name"
-          value={name}
-          setValue={setName}
-          id="input-code-create-company"
-          type="text"
-        />
-        <BtnClick
-          text="Create company"
-          callback={createACompanyFetch}
-          color="lavender-300"
-          border="round_5"
-          isLoading={isLoadingCreate}
-        />
-      </form>
-    </div>
+    <PopUpModal
+      isModal={modalPopUpCreateCompany}
+      setIsModal={setModalPopUpCreateCompany}
+    >
+      <div className={styles.company_join_modal}>
+        <div className={styles.company_join_modal_title}>
+          Enter Company Name
+        </div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+          className={styles.company_join_modal_form}
+        >
+          <InputText
+            text="Company name"
+            value={name}
+            setValue={setName}
+            id="input-code-create-company"
+            type="text"
+          />
+          <BtnClick
+            text="Create company"
+            callback={createACompanyFetch}
+            color="lavender-300"
+            border="round_5"
+            isLoading={isLoadingCreate}
+          />
+        </form>
+      </div>
+    </PopUpModal>
   );
 };
 
-const JoinCompanyModal = () => {
+export const JoinCompanyModal = () => {
   const [code, setCode] = useState("");
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const {
     setArrayMsgs,
     refetchUser,
-    setModalPopUp,
+    setModalPopUpJoinCompany,
+    modalPopUpJoinCompany,
     setRefetchCompanies
   } = useContext(GlobalContext);
 
@@ -158,12 +163,7 @@ const JoinCompanyModal = () => {
 
       if (data.data) {
         // Clean modal
-        if (setModalPopUp) {
-          setModalPopUp(prev => ({
-            ...prev,
-            isModal: false
-          }));
-        }
+        if (setModalPopUpJoinCompany) setModalPopUpJoinCompany(false);
 
         // Refetch
         if (setRefetchCompanies) {
@@ -196,43 +196,45 @@ const JoinCompanyModal = () => {
   };
 
   return (
-    <div className={styles.company_join_modal}>
-      <div className={styles.company_join_modal_title}>Enter Company Code</div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-        className={styles.company_join_modal_form}
-      >
-        <InputText
-          text="Code"
-          value={code}
-          setValue={setCode}
-          id="input-code-join-company"
-          type="text"
-        />
-        <BtnClick
-          text="Join to a company"
-          callback={joinCompanyFetch}
-          color="lavender-300"
-          border="round_5"
-          isLoading={isLoadingJoin}
-        />
-      </form>
-    </div>
+    <PopUpModal
+      isModal={modalPopUpJoinCompany}
+      setIsModal={setModalPopUpJoinCompany}
+    >
+      <div className={styles.company_join_modal}>
+        <div className={styles.company_join_modal_title}>
+          Enter Company Code
+        </div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+          className={styles.company_join_modal_form}
+        >
+          <InputText
+            text="Code"
+            value={code}
+            setValue={setCode}
+            id="input-code-join-company"
+            type="text"
+          />
+          <BtnClick
+            text="Join to a company"
+            callback={joinCompanyFetch}
+            color="lavender-300"
+            border="round_5"
+            isLoading={isLoadingJoin}
+          />
+        </form>
+      </div>
+    </PopUpModal>
   );
 };
 
 const JoinCompany = () => {
-  const { setModalPopUp } = useContext(GlobalContext);
+  const { setModalPopUpJoinCompany } = useContext(GlobalContext);
 
   const joinToACompany = () => {
-    if (setModalPopUp) {
-      setModalPopUp({
-        isModal: true,
-        ref: JoinCompanyModal
-      });
-    }
+    if (setModalPopUpJoinCompany) setModalPopUpJoinCompany(true);
   };
 
   return (
@@ -275,19 +277,14 @@ const CompanyCard = ({ company }: Props) => {
 const Company = () => {
   const {
     setArrayMsgs,
-    setModalPopUp,
+    setModalPopUpCreateCompany,
     refetchCompanies,
     setCompanies,
     companies
   } = useContext(GlobalContext);
 
   const createACompany = () => {
-    if (setModalPopUp) {
-      setModalPopUp({
-        isModal: true,
-        ref: CreateCompanyModal
-      });
-    }
+    if (setModalPopUpCreateCompany) setModalPopUpCreateCompany(true);
   };
 
   const [isLoading, setIsLoading] = useState(false);

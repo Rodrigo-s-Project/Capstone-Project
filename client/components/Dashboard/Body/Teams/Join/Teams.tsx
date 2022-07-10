@@ -31,13 +31,17 @@ import {
 } from "../../../../../routes/dashboard.team.routes";
 import { RESPONSE } from "../../../../../routes/index.routes";
 
-const CreateTeamModal = () => {
+// Modal Pop Up
+import PopUpModal from "../../../../Modals/PopUp/PopUp";
+
+export const CreateTeamModal = () => {
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const [name, setName] = useState("");
   const {
     setArrayMsgs,
     refetchUser,
-    setModalPopUp,
+    modalPopUpCreateTeam,
+    setModalPopUpCreateTeam,
     selectedCompany,
     setRefetchTeams
   } = useContext(GlobalContext);
@@ -66,12 +70,7 @@ const CreateTeamModal = () => {
 
       if (data.data) {
         // Clean modal
-        if (setModalPopUp) {
-          setModalPopUp(prev => ({
-            ...prev,
-            isModal: false
-          }));
-        }
+        if (setModalPopUpCreateTeam) setModalPopUpCreateTeam(false);
 
         // Refetch
         if (setRefetchTeams) {
@@ -104,40 +103,46 @@ const CreateTeamModal = () => {
   };
 
   return (
-    <div className={styles.team_join_modal}>
-      <div className={styles.team_join_modal_title}>Enter Team Name</div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-        className={styles.team_join_modal_form}
-      >
-        <InputText
-          text="Team name"
-          value={name}
-          setValue={setName}
-          id="input-code-create-team"
-          type="text"
-        />
-        <BtnClick
-          text="Create team"
-          callback={createATeamFetch}
-          color="lavender-300"
-          border="round_5"
-          isLoading={isLoadingCreate}
-        />
-      </form>
-    </div>
+    <PopUpModal
+      isModal={modalPopUpCreateTeam}
+      setIsModal={setModalPopUpCreateTeam}
+    >
+      <div className={styles.team_join_modal}>
+        <div className={styles.team_join_modal_title}>Enter Team Name</div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+          className={styles.team_join_modal_form}
+        >
+          <InputText
+            text="Team name"
+            value={name}
+            setValue={setName}
+            id="input-code-create-team"
+            type="text"
+          />
+          <BtnClick
+            text="Create team"
+            callback={createATeamFetch}
+            color="lavender-300"
+            border="round_5"
+            isLoading={isLoadingCreate}
+          />
+        </form>
+      </div>
+    </PopUpModal>
   );
 };
 
-const JoinTeamModal = () => {
+export const JoinTeamModal = () => {
   const [code, setCode] = useState("");
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const {
     setArrayMsgs,
     refetchUser,
-    setModalPopUp,
+    modalPopUpJoinTeam,
+    setModalPopUpJoinTeam,
     selectedCompany,
     setRefetchTeams
   } = useContext(GlobalContext);
@@ -166,12 +171,7 @@ const JoinTeamModal = () => {
 
       if (data.data) {
         // Clean modal
-        if (setModalPopUp) {
-          setModalPopUp(prev => ({
-            ...prev,
-            isModal: false
-          }));
-        }
+        if (setModalPopUpJoinTeam) setModalPopUpJoinTeam(false);
 
         // Refetch
         if (setRefetchTeams) {
@@ -204,43 +204,40 @@ const JoinTeamModal = () => {
   };
 
   return (
-    <div className={styles.team_join_modal}>
-      <div className={styles.team_join_modal_title}>Enter Team Code</div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-        }}
-        className={styles.team_join_modal_form}
-      >
-        <InputText
-          text="Code"
-          value={code}
-          setValue={setCode}
-          id="input-code-join-team"
-          type="text"
-        />
-        <BtnClick
-          text="Join to a team"
-          callback={joinTeamFetch}
-          color="lavender-300"
-          border="round_5"
-          isLoading={isLoadingJoin}
-        />
-      </form>
-    </div>
+    <PopUpModal isModal={modalPopUpJoinTeam} setIsModal={setModalPopUpJoinTeam}>
+      <div className={styles.team_join_modal}>
+        <div className={styles.team_join_modal_title}>Enter Team Code</div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+          className={styles.team_join_modal_form}
+        >
+          <InputText
+            text="Code"
+            value={code}
+            setValue={setCode}
+            id="input-code-join-team"
+            type="text"
+          />
+          <BtnClick
+            text="Join to a team"
+            callback={joinTeamFetch}
+            color="lavender-300"
+            border="round_5"
+            isLoading={isLoadingJoin}
+          />
+        </form>
+      </div>
+    </PopUpModal>
   );
 };
 
 const JoinTeam = () => {
-  const { setModalPopUp } = useContext(GlobalContext);
+  const { setModalPopUpJoinTeam } = useContext(GlobalContext);
 
   const joinToACompany = () => {
-    if (setModalPopUp) {
-      setModalPopUp({
-        isModal: true,
-        ref: JoinTeamModal
-      });
-    }
+    if (setModalPopUpJoinTeam) setModalPopUpJoinTeam(true);
   };
 
   return (
@@ -286,7 +283,7 @@ const TeamCard = ({ team }: Props) => {
 const Company = () => {
   const {
     setArrayMsgs,
-    setModalPopUp,
+    setModalPopUpCreateTeam,
     refetchTeams,
     teams,
     setSelectedCompany,
@@ -299,11 +296,8 @@ const Company = () => {
   const { id } = router.query;
 
   const createATeam = () => {
-    if (setModalPopUp) {
-      setModalPopUp({
-        isModal: true,
-        ref: CreateTeamModal
-      });
+    if (setModalPopUpCreateTeam) {
+      setModalPopUpCreateTeam(true);
     }
   };
 

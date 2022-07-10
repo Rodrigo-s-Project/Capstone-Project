@@ -3,6 +3,7 @@ import { DateCalendar } from "../../Grid";
 import { useContext, useCallback } from "react";
 
 import { CalendarContext } from "../../../Calendar";
+import { GlobalContext } from "../../../../../pages/_app";
 
 type Props = {
   day: DateCalendar;
@@ -11,6 +12,7 @@ type Props = {
 
 const Day = ({ day, isToday }: Props) => {
   const { currDay, month, year, calendarView } = useContext(CalendarContext);
+  const { setModalPopUpCreateTask, setDayClick } = useContext(GlobalContext);
 
   const isAnotherMonth = useCallback(
     (day: Date): boolean => {
@@ -32,11 +34,19 @@ const Day = ({ day, isToday }: Props) => {
     [currDay, month, year]
   );
 
+  const createTask = () => {
+    if (setModalPopUpCreateTask && setDayClick) {
+      setDayClick(day);
+      setModalPopUpCreateTask(true);
+    }
+  };
+
   return (
     <div
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
         day.date
       ) && styles.day_anotherMonth} ${calendarView == "Day" && styles.day_day}`}
+      onClick={createTask}
     >
       <div className={styles.day_number}>{day.day}</div>
     </div>

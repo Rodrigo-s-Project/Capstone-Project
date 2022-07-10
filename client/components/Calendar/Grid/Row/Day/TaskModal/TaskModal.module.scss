@@ -1,0 +1,74 @@
+.task {
+  &_title {
+    width: 100%;
+    margin-bottom: 10px;
+    input {
+      font-size: 2rem;
+      width: 100%;
+      background-color: transparent;
+      &::placeholder {
+        color: var(--gray-600);
+      }
+    }
+  }
+  &_date {
+    color: var(--lavender-200);
+    margin-bottom: 15px;
+  }
+  &_description {
+    margin-bottom: 15px;
+    &_title {
+      color: var(--gray-900);
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      background-color: transparent;
+      &::placeholder {
+        color: var(--gray-600);
+      }
+    }
+  }
+  &_people,
+  &_tag {
+    margin-bottom: 15px;
+    &_title {
+      color: var(--gray-900);
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    &_no {
+      color: var(--gray-600);
+    }
+    button[extra-css="btn-add-people-task"],
+    button[extra-css="btn-add-tag"] {
+      margin-top: 3px;
+      transform-origin: left;
+      transform: scale(0.8, 0.70);
+      width: 200px;
+    }
+  }
+  &_create {
+    button[extra-css="btn-created-tag"] {
+      transform-origin: right;
+      transform: scale(0.8, 0.70);
+      width: 200px;
+      margin-left: auto;
+      display: block;
+    }
+  }
+}
+.modal_card_task {
+  max-width: 650px !important;
+}
+@media screen and (max-width: 442px) {
+  .task_create {
+    button[extra-css="btn-created-tag"] {
+      width: 100%;
+      transform-origin: center;
+      margin: 0;
+      transform: scale(1, 0.70);
+    }
+  }
+}
