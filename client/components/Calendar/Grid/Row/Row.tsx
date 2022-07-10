@@ -24,7 +24,7 @@ export const RowHeader = ({
   return (
     <>
       {calendarView == "Day" && currDay && year && month && (
-        <div className={styles.row_header} onClick={click}>
+        <div className={styles.row_header}>
           <div
             className={`${styles.row_header_div} ${styles.row_header_div_all}`}
           >
@@ -33,9 +33,10 @@ export const RowHeader = ({
         </div>
       )}
       {calendarView != "Day" && (
-        <div className={styles.row_header} onClick={click}>
+        <div className={styles.row_header}>
           {calendarView == "Month" && (
             <div
+              onClick={click}
               title={`${
                 calendarStretchRow == "100px" ? "Shrink rows" : "Expand rows"
               }`}

@@ -1,38 +1,31 @@
 import styles from "./PopUp.module.scss";
-import { useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 // Components
 import TimesIcon from "../../Svgs/Times";
 
-// Context
-import { GlobalContext } from "../../../pages/_app";
-
 // Modal type
-export type ModalParams = {
-  ref: any;
-  isModal: boolean;
+export type ModalProps = {
+  isModal: boolean | undefined;
+  setIsModal: Dispatch<SetStateAction<boolean>> | undefined;
+  children: any;
+  extraCss?: string;
 };
 
-const PopUpModal = () => {
-  const { modalPopUp, setModalPopUp } = useContext(GlobalContext);
-
+const PopUpModal = ({
+  isModal,
+  setIsModal,
+  children,
+  extraCss
+}: ModalProps) => {
   const closeModal = () => {
-    if (setModalPopUp) {
-      setModalPopUp(prev => ({
-        ...prev,
-        isModal: false
-      }));
-    }
+    if (setIsModal) setIsModal(false);
   };
 
   return (
-    <div
-      className={`${modalPopUp && modalPopUp.isModal && styles.modal_open} ${
-        styles.modal
-      }`}
-    >
+    <div className={`${isModal && styles.modal_open} ${styles.modal}`}>
       <div onClick={closeModal} className={styles.modal_back}></div>
-      <div className={styles.modal_card}>
+      <div className={`${styles.modal_card} ${extraCss}`}>
         <button
           className={styles.modal_card_button}
           title="Close"
@@ -40,7 +33,7 @@ const PopUpModal = () => {
         >
           <TimesIcon />
         </button>
-        {modalPopUp && modalPopUp.ref && <modalPopUp.ref />}
+        {children}
       </div>
     </div>
   );
