@@ -42,6 +42,9 @@ export const JoinCompanyModal = () => {
 
       const data: RESPONSE = response.data;
 
+      // Clean state
+      setCode("");
+
       if (!data.isAuth) {
         // Bad
         if (refetchUser) refetchUser();

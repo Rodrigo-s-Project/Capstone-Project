@@ -8,7 +8,7 @@ import { fadeVariants } from "../../../../../animations/fade";
 // Componnets
 import DashboardWrapper from "../../../../../components/Dashboard/Dashboard";
 import TeamWrapper from "../../../../../components/Dashboard/Body/Creation/Teams/Wrapper";
-import Drive from "../../../../../components/Drive/Drive";
+import TeamController from "../../../../../components/Controls/Team/Team";
 
 const Dashboard: NextPage = () => {
   return (
@@ -25,7 +25,7 @@ const Dashboard: NextPage = () => {
       >
         <DashboardWrapper>
           <TeamWrapper>
-            <Drive />
+            <TeamController />
           </TeamWrapper>
         </DashboardWrapper>
       </motion.div>

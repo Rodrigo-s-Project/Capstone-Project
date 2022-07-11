@@ -10,15 +10,18 @@ export type ModalProps = {
   setIsModal: Dispatch<SetStateAction<boolean>> | undefined;
   children: any;
   extraCss?: string;
+  callbackClose?: () => any;
 };
 
 const PopUpModal = ({
   isModal,
   setIsModal,
   children,
-  extraCss
+  extraCss,
+  callbackClose
 }: ModalProps) => {
   const closeModal = () => {
+    if (callbackClose) callbackClose();
     if (setIsModal) setIsModal(false);
   };
 

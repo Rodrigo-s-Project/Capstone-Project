@@ -7,9 +7,12 @@ import { BODY_CREATE, BODY_JOIN } from "./team.types";
 
 // Models
 import { User } from "../../../models/User";
+import { Bucket } from "../../../models/Bucket";
+import { Connection } from "../../../models/Connection";
 
 // Utils
 import { createToken } from "../../../utils/keys";
+import { isNameRepeated } from "../../helpers/index";
 
 export const getTeamsFromUser = async (req, res) => {
   let response: RESPONSE = {
@@ -43,6 +46,66 @@ export const getTeamsFromUser = async (req, res) => {
 
     response.data = {
       teams
+    };
+    response.readMsg = false;
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const getTeamUsersFromId = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { idCompany, idTeam } = req.params;
+
+    if (isNaN(idTeam) || isNaN(idCompany)) {
+      response.message = "Invalid credentials.";
+      res.json(response);
+      return;
+    }
+
+    // Get company
+    const team = await req.user.getTeams({
+      where: {
+        id: idTeam,
+        companyId: idCompany
+      }
+    });
+
+    if (team.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Get all users
+    const allUsers: any = await team[0].getUsers();
+    let usersFromRes: any = [];
+
+    for (let i = 0; i < allUsers.length; i++) {
+      const { password: userPswd, ...userData } = allUsers[i].toJSON();
+      usersFromRes.push(userData);
+    }
+
+    response.data = {
+      users: usersFromRes
     };
     response.readMsg = false;
 
@@ -142,6 +205,18 @@ export const createTeam = async (req, res) => {
       return;
     }
 
+    const companiesAssociation = await req.user.getCompanies({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (companiesAssociation.length == 0) {
+      response.message = "Company doesn't exist.";
+      res.json(response);
+      return;
+    }
+
     // Only admin can create
     if (company.adminId != req.user.id) {
       response.message = "You don't have access to this information.";
@@ -149,7 +224,13 @@ export const createTeam = async (req, res) => {
       return;
     }
 
-    const newTeam = await Team.create({
+    if (isNameRepeated("team", req.user, name)) {
+      response.message = "Repeated name of team.";
+      res.json(response);
+      return;
+    }
+
+    const newTeam: any = await Team.create({
       name,
       accessCode: `${name}_${createToken(5)}`,
       companyId
@@ -167,9 +248,35 @@ export const createTeam = async (req, res) => {
 
     await user.addTeam(newTeam, {
       through: {
-        username: user.globalUsername
+        username: companiesAssociation[0].User_Company.username // Username company
       }
     });
+
+    // --------------------- Create connections in the database
+
+    // ---- Calendar
+    // Create relation to its only calendar
+    await newTeam.createCalendar();
+
+    // ---- Bucket
+    // Create main bucket
+    const bucketRef = await Bucket.create({
+      name: "Main directory"
+    });
+    await newTeam.addBucket(bucketRef);
+
+    // Then add the relation to that bucket with admin user
+    await user.addBucket(bucketRef);
+
+    // ---- Connection
+    // Add its first connection to the team
+    const connectionRef = await Connection.create({
+      name: "Main chat"
+    });
+    await newTeam.addConnection(connectionRef);
+
+    // Then add the relation to that connection with admin user
+    await user.addConnection(connectionRef);
 
     response.message = "Successful team creation!";
     response.readMsg = true;
@@ -214,8 +321,20 @@ export const joinTeam = async (req, res) => {
       return;
     }
 
+    const companiesAssociation: any = await req.user.getCompanies({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (companiesAssociation.length == 0) {
+      response.message = "Team not found.";
+      res.json(response);
+      return;
+    }
+
     // Check if user already in company
-    const teams = await req.user.getTeams();
+    const teams: any = await req.user.getTeams();
 
     for (let i = 0; i < teams.length; i++) {
       if (teams[i].id == teamRef.id) {
@@ -233,12 +352,32 @@ export const joinTeam = async (req, res) => {
         id
       }
     });
-    await user.addCompany(teamRef, {
+    await user.addTeam(teamRef, {
       through: {
-        username: user.globalUsername
+        username: companiesAssociation[0].User_Company.username // Username company
       }
     });
 
+    // --------------------- Create connections in the database
+    // ---- Bucket
+    // Then add the relation to the main bucket with this user
+    const bucketRef = await teamRef.getBuckets({
+      where: {
+        name: "Main directory" // This name cannot be changed
+      }
+    });
+    await user.addBucket(bucketRef);
+
+    // ---- Connection
+    // Add its first connection to the main team chat
+    const connectionRef = await teamRef.getConnections({
+      where: {
+        name: "Main chat" // This name cannot be changed
+      }
+    });
+    await user.addConnection(connectionRef);
+
+    // Give away result
     const result = await User.findOne({
       where: { id },
       include: Team

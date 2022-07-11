@@ -42,6 +42,9 @@ export const CreateCompanyModal = () => {
 
       const data: RESPONSE = response.data;
 
+      // Clean state
+      setName("");
+
       if (!data.isAuth) {
         // Bad
         if (refetchUser) refetchUser();

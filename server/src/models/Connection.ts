@@ -8,6 +8,9 @@ export const Connection = sequelize.define(
       type: DataType.INTEGER,
       primaryKey: true,
       autoIncrement: true
+    },
+    name: {
+      type: DataType.STRING
     }
   },
   {

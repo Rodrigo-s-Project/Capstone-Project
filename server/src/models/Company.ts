@@ -20,6 +20,13 @@ export const Company = sequelize.define(
     },
     accessCodeClient: {
       type: DataType.STRING
+    },
+    typeCompany: {
+      type: DataType.STRING
+    },
+    storage: {
+      type: DataType.INTEGER,
+      defaultValue: 0
     }
   },
   {

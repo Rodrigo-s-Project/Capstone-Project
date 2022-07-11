@@ -131,12 +131,17 @@
   color: var(--gray-900);
   border-radius: 100px; // Just a max
   margin: -10px 0;
-  cursor: default;
+  cursor: pointer;
 
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   padding: 0 15px;
+
+  &_active {
+    background-color: var(--lavender-400);
+    color: var(--white);
+  }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
