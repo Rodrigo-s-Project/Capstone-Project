@@ -39,7 +39,7 @@
 }
 .danger {
   background-color: var(--red-200);
-  color: var(--white);
+  color: #fff;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--red-300);

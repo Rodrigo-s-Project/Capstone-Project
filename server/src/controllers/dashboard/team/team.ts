@@ -62,6 +62,66 @@ export const getTeamsFromUser = async (req, res) => {
   }
 };
 
+export const getTeamUsersFromId = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { idCompany, idTeam } = req.params;
+
+    if (isNaN(idTeam) || isNaN(idCompany)) {
+      response.message = "Invalid credentials.";
+      res.json(response);
+      return;
+    }
+
+    // Get company
+    const team = await req.user.getTeams({
+      where: {
+        id: idTeam,
+        companyId: idCompany
+      }
+    });
+
+    if (team.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Get all users
+    const allUsers: any = await team[0].getUsers();
+    let usersFromRes: any = [];
+
+    for (let i = 0; i < allUsers.length; i++) {
+      const { password: userPswd, ...userData } = allUsers[i].toJSON();
+      usersFromRes.push(userData);
+    }
+
+    response.data = {
+      users: usersFromRes
+    };
+    response.readMsg = false;
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
 export const getTeamFromUser = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,

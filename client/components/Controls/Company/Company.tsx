@@ -11,6 +11,7 @@ import CameraIcon from "../../Svgs/Camera";
 import EditIcon from "../../Svgs/Edit";
 import CreditCardIcon from "../../Svgs/CreditCard";
 import CopyIcon from "../../Svgs/Copy";
+import TrashAltIcon from "../../Svgs/TrashAlt";
 
 // Routes
 import {
@@ -166,7 +167,7 @@ const CompanySettingsController = () => {
 
   useEffect(() => {
     getCompanyData();
-  }, [getCompanyData, getUsersFromCompany]);
+  }, [getCompanyData]);
 
   useEffect(() => {
     if (!user || !selectedCompany) return;
@@ -181,7 +182,13 @@ const CompanySettingsController = () => {
           <div className={styles.control_top}>
             <div className={styles.control_top_img}>
               <CameraIcon />
-              <div className={styles.control_top_img_container}></div>
+
+              <div
+                style={{
+                  backgroundImage: `url(${selectedCompany.companyPictureURL})`
+                }}
+                className={styles.control_top_img_container}
+              ></div>
 
               {selectedCompany.adminId == user.id && (
                 <div
@@ -295,24 +302,58 @@ const CompanySettingsController = () => {
                 <div className={styles.control_container_title}>
                   Manage users:
                 </div>
-                <div className={styles.control_container_row}>
-                  <div className={styles.control_container_row_bold}>
-                    Used storage (GB):
-                  </div>
-                  <div className={styles.control_container_row_data}>
-                    {selectedCompany.storage} /{" "}
-                    {selectedCompany.typeCompany == "Basic" ? 1000 : 100000} GB
-                  </div>
-                  <div
-                    title="Upgrade storage company"
-                    className={styles.control_container_row_edit}
-                  >
-                    <CreditCardIcon />
-                  </div>
+                <div className={styles.control_container_subtitle}>
+                  Users: {usersCompany.length} /{" "}
+                  {selectedCompany.typeCompany == "Basic" ? "30" : "Unlimited"}
+                </div>
+                <div className={styles.control_container_users}>
+                  {usersCompany.map(
+                    (userCompany: USER_COMPANY, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={styles.control_container_users_row}
+                        >
+                          <div
+                            className={styles.control_container_users_row_img}
+                          >
+                            <div
+                              className={
+                                styles.control_container_users_row_img_svg
+                              }
+                            >
+                              <CameraIcon />
+                            </div>
+                            {userCompany.profilePictureURL && (
+                              <img
+                                src={userCompany.profilePictureURL}
+                                alt={userCompany.User_Company.username}
+                              />
+                            )}
+                          </div>
+                          <div
+                            className={styles.control_container_users_row_name}
+                            title={userCompany.User_Company.username}
+                          >
+                            {userCompany.User_Company.username}
+                          </div>
+                          {userCompany.id != user.id && (
+                            <div
+                              className={
+                                styles.control_container_users_row_trash
+                              }
+                            >
+                              <TrashAltIcon />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+                  )}
                 </div>
               </>
             )}
-            <div className={styles.control_container_title}>User:</div>
+            <div className={styles.control_container_title}>Own account:</div>
             <div className={styles.control_container_row}>
               <div className={styles.control_container_row_bold}>
                 Username in company:
@@ -343,7 +384,7 @@ const CompanySettingsController = () => {
                     callback={() => {}}
                     color="danger"
                     border="round_5"
-                    additionalClass="btn-delete-company"
+                    additionalClass="btn-delete-creation"
                   />
                 </div>
               </>
