@@ -87,7 +87,7 @@ export const createTaskCalendar = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
     message: "",
-    readMsg: false,
+    readMsg: true,
     typeMsg: "danger",
     data: {}
   };
@@ -119,6 +119,12 @@ export const createTaskCalendar = async (req, res) => {
 
     if (!calendarRef) {
       response.message = "Calendar not found.";
+      res.json(response);
+      return;
+    }
+
+    if (name.trim() == "" || description.trim() == "") {
+      response.message = "Incomplete information.";
       res.json(response);
       return;
     }

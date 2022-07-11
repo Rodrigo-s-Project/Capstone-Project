@@ -1,5 +1,5 @@
 import styles from "./TaskModal.module.scss";
-import { useContext, useCallback, useState } from "react";
+import { useContext, useCallback } from "react";
 import { GlobalContext } from "../../../../../../pages/_app";
 import PopUpModal from "../../../../../Modals/PopUp/PopUp";
 import BtnSpinner from "../../../../../Buttons/BtnClick/BtnClick";
@@ -20,7 +20,16 @@ const TaskModal = () => {
     setArrayMsgs,
     selectedTeam,
     selectedCompany,
-    setRefetchTasks
+    setRefetchTasks,
+
+    nameTask,
+    descriptionTask,
+    setIsLoadingTask,
+    setNameTask,
+    setDescriptionTask,
+    isLoadingTask,
+    isTaskModalOnEditing,
+    setIsTaskModalOnEditing
   } = useContext(GlobalContext);
 
   const getDate = (): string => {
@@ -34,26 +43,21 @@ const TaskModal = () => {
   const addPeople = () => {};
   const addTags = () => {};
 
-  // State
-  const [nameTask, setNameTask] = useState<string>("");
-  const [descriptionTask, setDescriptionTask] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const createTaskfetch = useCallback(async () => {
     try {
       if (!dayClick || !selectedTeam || !selectedCompany) return;
 
       const body: BODY_CREATE_TASK = {
-        name: nameTask,
+        name: nameTask || "",
         singleDate: true,
         fromDate: dayClick.date.getTime(),
         toDate: dayClick.date.getTime(),
-        description: descriptionTask,
+        description: descriptionTask || "",
         arrayUsers: [],
         arrayTags: []
       };
 
-      setIsLoading(true);
+      if (setIsLoadingTask) setIsLoadingTask(true);
 
       const response = await axios.post(
         createTask.url(selectedTeam.id, selectedCompany.id),
@@ -63,7 +67,7 @@ const TaskModal = () => {
         }
       );
 
-      setIsLoading(false);
+      if (setIsLoadingTask) setIsLoadingTask(false);
 
       const data: RESPONSE = response.data;
 
@@ -78,14 +82,14 @@ const TaskModal = () => {
       }
 
       if (setModalPopUpCreateTask) setModalPopUpCreateTask(false);
-      setNameTask("");
-      setDescriptionTask("");
+      if (setNameTask) setNameTask("");
+      if (setDescriptionTask) setDescriptionTask("");
 
       // Refetch
       if (setRefetchTasks) setRefetchTasks(prev => !prev);
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
+      if (setIsLoadingTask) setIsLoadingTask(false);
       if (setArrayMsgs) {
         setArrayMsgs(prev => [
           {
@@ -104,20 +108,30 @@ const TaskModal = () => {
     nameTask,
     descriptionTask,
     setModalPopUpCreateTask,
-    setRefetchTasks
+    setRefetchTasks,
+    setIsLoadingTask,
+    setNameTask,
+    setDescriptionTask
   ]);
+
+  const clearEverything = useCallback(() => {
+    if (setNameTask) setNameTask("");
+    if (setDescriptionTask) setDescriptionTask("");
+    if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
+  }, [setNameTask, setDescriptionTask, setIsTaskModalOnEditing]);
 
   return (
     <PopUpModal
       isModal={modalPopUpCreateTask}
       setIsModal={setModalPopUpCreateTask}
       extraCss={styles.modal_card_task}
+      callbackClose={clearEverything}
     >
       <div className={styles.task_title}>
         <input
           value={nameTask}
           onChange={e => {
-            setNameTask(e.target.value);
+            if (setNameTask) setNameTask(e.target.value);
           }}
           type="text"
           placeholder="Title"
@@ -129,7 +143,7 @@ const TaskModal = () => {
         <input
           value={descriptionTask}
           onChange={e => {
-            setDescriptionTask(e.target.value);
+            if (setDescriptionTask) setDescriptionTask(e.target.value);
           }}
           type="text"
           placeholder="description..."
@@ -159,12 +173,18 @@ const TaskModal = () => {
       </div>
       <div className={styles.task_create}>
         <BtnSpinner
-          text="Create Task"
-          callback={createTaskfetch}
+          text={isTaskModalOnEditing ? "Edit Task" : "Create Task"}
+          callback={() => {
+            if (isTaskModalOnEditing) {
+              // TODO: edit task endpoint
+            } else {
+              createTaskfetch();
+            }
+          }}
           color="lavender-300"
           border="round_5"
           additionalClass="btn-created-tag"
-          isLoading={isLoading}
+          isLoading={isLoadingTask}
         />
       </div>
     </PopUpModal>

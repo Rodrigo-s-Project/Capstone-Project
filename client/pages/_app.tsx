@@ -93,6 +93,14 @@ interface ValueAppProvider {
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
 
   callBackImages: any;
+  nameTask: string;
+  setNameTask: Dispatch<SetStateAction<string>>;
+  descriptionTask: string;
+  setDescriptionTask: Dispatch<SetStateAction<string>>;
+  isLoadingTask: boolean;
+  setIsLoadingTask: Dispatch<SetStateAction<boolean>>;
+  isTaskModalOnEditing: boolean;
+  setIsTaskModalOnEditing: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -174,6 +182,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Modal images callback
   const callBackImages = useRef<any>(null);
 
+  // Tasks modal state
+  const [nameTask, setNameTask] = useState<string>("");
+  const [descriptionTask, setDescriptionTask] = useState<string>("");
+  const [isLoadingTask, setIsLoadingTask] = useState<boolean>(false);
+  const [isTaskModalOnEditing, setIsTaskModalOnEditing] = useState<boolean>(
+    false
+  );
+
   return (
     <GlobalContext.Provider
       value={{
@@ -219,7 +235,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         setControlModalState,
         callBackImages,
         refetchTasks,
-        setRefetchTasks
+        setRefetchTasks,
+        nameTask,
+        setNameTask,
+        descriptionTask,
+        setDescriptionTask,
+        isLoadingTask,
+        setIsLoadingTask,
+        isTaskModalOnEditing,
+        setIsTaskModalOnEditing
       }}
     >
       <Head>

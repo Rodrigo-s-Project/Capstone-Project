@@ -63,7 +63,7 @@ const Day = ({ day, isToday }: Props) => {
           day.tasks.map((task: TaskType, index: number) => {
             return (
               <Fragment key={index}>
-                <Task task={task} />
+                <Task task={task} day={day} />
               </Fragment>
             );
           })}
