@@ -6,7 +6,7 @@ import Spinner from "../../Loader/Spinner/Spinner";
 type Props = {
   text: string;
   callback: () => any;
-  color: "lavender-300" | "lavender-200" | "gray";
+  color: "lavender-300" | "lavender-200" | "gray" | "danger";
   border: "complete_rounded" | "round_5";
   additionalClass?: string;
   isLoading?: boolean;
@@ -25,7 +25,8 @@ const BtnClick = ({
     | "lavender-200"
     | "primary"
     | "dark" => {
-    if (color == "lavender-200" || color == "lavender-300") return "primary";
+    if (color == "lavender-200" || color == "lavender-300" || color == "danger")
+      return "primary";
     return "dark";
   };
 

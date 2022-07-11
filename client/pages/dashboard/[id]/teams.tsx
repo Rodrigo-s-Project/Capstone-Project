@@ -7,7 +7,7 @@ import { fadeVariants } from "../../../animations/fade";
 
 // Componnets
 import DashboardWrapper from "../../../components/Dashboard/Dashboard";
-import CompanyControl from "../../../components/Controls/Company/Company";
+import Teams from "../../../components/Dashboard/Body/Creation/Teams/Join/Teams";
 
 const Dashboard: NextPage = () => {
   return (
@@ -23,7 +23,7 @@ const Dashboard: NextPage = () => {
         key="dashboard-page"
       >
         <DashboardWrapper>
-          <CompanyControl />
+          <Teams />
         </DashboardWrapper>
       </motion.div>
     </>

@@ -18,10 +18,6 @@ export const User = sequelize.define(
     globalUsername: {
       type: DataType.STRING
     },
-    typeAccount: {
-      type: DataType.STRING,
-      defaultValue: "free"
-    },
     status: {
       type: DataType.STRING,
       defaultValue: "available"

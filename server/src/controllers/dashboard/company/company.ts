@@ -84,6 +84,65 @@ export const getCompanyFromUser = async (req, res) => {
   }
 };
 
+export const getCompanyUsersFromId = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Get company
+    const company = await req.user.getCompanies({
+      where: {
+        id
+      }
+    });
+
+    if (company.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Get all users
+    const allUsers: any = await company[0].getUsers();
+    let usersFromRes: any = [];
+
+    for (let i = 0; i < allUsers.length; i++) {
+      const { password: userPswd, ...userData } = allUsers[i].toJSON();
+      usersFromRes.push(userData);
+    }
+
+    response.data = {
+      users: usersFromRes
+    };
+    response.readMsg = false;
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
 export const createCompany = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
@@ -106,7 +165,8 @@ export const createCompany = async (req, res) => {
       name,
       accessCodeEmployee: `${name}_${createToken(5)}`,
       accessCodeClient: `${name}_${createToken(6)}`,
-      adminId: req.user.id
+      adminId: req.user.id,
+      typeCompany: "Basic" // TODO: change with Stripe
     });
 
     // Join itself
@@ -121,7 +181,8 @@ export const createCompany = async (req, res) => {
     await user.addCompany(newCompany, {
       through: {
         typeUser: "Admin",
-        username: user.globalUsername
+        username: user.globalUsername,
+        typeAccount: "Basic" // TODO: get the payment method
       }
     });
 
@@ -195,6 +256,8 @@ export const joinCompany = async (req, res) => {
       }
     }
 
+    // TODO: check limit of users in company
+
     const { id } = req.user.toJSON();
 
     // Token was correct
@@ -206,7 +269,8 @@ export const joinCompany = async (req, res) => {
     await user.addCompany(company, {
       through: {
         typeUser,
-        username: user.globalUsername
+        username: user.globalUsername,
+        typeAccount: "Free"
       }
     });
 
