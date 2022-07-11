@@ -29,6 +29,14 @@ const InputText = ({
     }
   }, [value, hasClicked]);
 
+  useEffect(() => {
+    if (value == "") {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  }, [value]);
+
   return (
     <div
       tabIndex={-1}

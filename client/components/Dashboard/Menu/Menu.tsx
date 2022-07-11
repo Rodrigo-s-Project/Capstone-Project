@@ -105,21 +105,27 @@ const MenuDashboard = ({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className={styles.selected_company}
+                  className={`${
+                    styles.selected_company
+                  } ${router.pathname.includes("/dashboard") &&
+                    !router.pathname.includes("/team") &&
+                    !router.pathname.includes("/messages") &&
+                    !router.pathname.includes("/calendar") &&
+                    !router.pathname.includes("/drive") &&
+                    styles.selected_company_active}`}
+                  onClick={() => {
+                    router.replace(`/dashboard/${selectedCompany.id}`);
+
+                    if (setSelectedTeam) setSelectedTeam(undefined);
+                  }}
                 >
                   {selectedCompany.name}
                 </motion.div>
                 <LinkMenu
-                  isActive={
-                    router.pathname.includes("/dashboard") &&
-                    !router.pathname.includes("/messages") &&
-                    !router.pathname.includes("/calendar") &&
-                    !router.pathname.includes("/team")
-                  }
+                  isActive={router.pathname.includes("/teams")}
                   text="Teams"
                   click={() => {
-                    // First travel
-                    router.replace(`/dashboard/${selectedCompany.id}`);
+                    router.replace(`/dashboard/${selectedCompany.id}/teams`);
 
                     if (setSelectedTeam) setSelectedTeam(undefined);
                   }}
@@ -136,21 +142,29 @@ const MenuDashboard = ({
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className={styles.selected_company}
+                  className={`${
+                    styles.selected_company
+                  } ${router.pathname.includes("/team") &&
+                    !router.pathname.includes("/teams") &&
+                    !router.pathname.includes("/drive") &&
+                    !router.pathname.includes("/messages") &&
+                    !router.pathname.includes("/calendar") &&
+                    styles.selected_company_active}`}
+                  onClick={() => {
+                    router.replace(
+                      `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
+                    );
+                  }}
                 >
                   {selectedTeam.name}
                 </motion.div>
                 <LinkMenu
-                  isActive={
-                    router.pathname.includes("/team") &&
-                    !router.pathname.includes("/messages") &&
-                    !router.pathname.includes("/calendar")
-                  }
+                  isActive={router.pathname.includes("/drive")}
                   text="Drive"
                   click={() => {
                     if (selectedTeam)
                       router.replace(
-                        `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}`
+                        `/dashboard/${selectedCompany.id}/team/${selectedTeam.id}/drive`
                       );
                   }}
                 >

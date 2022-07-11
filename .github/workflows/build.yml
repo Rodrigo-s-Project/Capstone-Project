@@ -45,3 +45,10 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      - name: Run cdn "build"
+        if: contains(steps.file_changes.outputs.files , '"cdn/')
+        working-directory: ./cdn
+        run: |
+          npm ci
+          npm run build

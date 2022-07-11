@@ -3,6 +3,7 @@
   text-align: center;
   height: 45px;
   display: inline-block;
+  cursor: pointer;
 
   div[extra-css="spinner-btn"] {
     margin: 0 auto;
@@ -34,6 +35,15 @@
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--gray-500);
+    }
+  }
+}
+.danger {
+  background-color: var(--red-200);
+  color: #fff;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--red-300);
     }
   }
 }

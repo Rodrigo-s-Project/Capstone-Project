@@ -53,3 +53,27 @@ export const joinTeamEndpoint = {
   url: `${process.env.API_URL}/dashboard/team/join-team`,
   method: "put"
 };
+
+export type USER_TEAM = {
+  id: number;
+  email: string;
+  globalUsername: string;
+  status: string;
+  profilePictureURL: string;
+  isDarkModeOn: boolean;
+  User_Team: {
+    teamId: number;
+    userId: number;
+    username: string;
+  };
+};
+
+export type DATA_GET_USER_TEAM = {
+  users: Array<USER_TEAM>;
+};
+
+export const getUsersTeamEndpoint = {
+  url: (idCompany: any, idTeam: any) =>
+    `${process.env.API_URL}/dashboard/team/get-team-users/${idCompany}/${idTeam}`,
+  method: "get"
+};

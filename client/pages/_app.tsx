@@ -8,7 +8,8 @@ import {
   Dispatch,
   useState,
   createContext,
-  useEffect
+  useEffect,
+  useRef
 } from "react";
 
 // Components
@@ -22,6 +23,8 @@ import JoinTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Moda
 import CreateCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/CreateModal/CreateModal";
 import JoinCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/JoinModal/JoinModal";
 import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
+import EditSectionModal from "../components/Controls/Modals/EditSection";
+import UploadImageModal from "../components/Modals/Images/UploadImage";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -29,6 +32,7 @@ import { fadeVariantsLongerExit } from "../animations/fade";
 // Context
 export const GlobalContext = createContext<Partial<ValueAppProvider>>({});
 import { DATA_GET_USER } from "../routes/main.routes";
+import { BODY_EDIT_SECTION } from "../routes/dashboard.controls.routes";
 
 // Hooks
 import { useAuth } from "../hooks/useAuth";
@@ -59,6 +63,10 @@ interface ValueAppProvider {
   setModalPopUpJoinTeam: Dispatch<SetStateAction<boolean>>;
   modalPopUpCreateTask: boolean;
   setModalPopUpCreateTask: Dispatch<SetStateAction<boolean>>;
+  modalPopUpEditControl: boolean;
+  setModalPopUpEditControl: Dispatch<SetStateAction<boolean>>;
+  modalPopUpImages: boolean;
+  setModalPopUpImages: Dispatch<SetStateAction<boolean>>;
 
   setCompanies: Dispatch<SetStateAction<Array<COMPANY>>>;
   companies: Array<COMPANY>;
@@ -78,6 +86,11 @@ interface ValueAppProvider {
   setDayClick: Dispatch<SetStateAction<DateCalendar | undefined>>;
   isMenuToggled: boolean;
   setIsMenuToggled: Dispatch<SetStateAction<boolean>>;
+
+  controlModalState: BODY_EDIT_SECTION | undefined;
+  setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
+
+  callBackImages: any;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -119,6 +132,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     false
   );
   const [modalPopUpJoinTeam, setModalPopUpJoinTeam] = useState<boolean>(false);
+  const [modalPopUpImages, setModalPopUpImages] = useState<boolean>(false);
+  const [modalPopUpEditControl, setModalPopUpEditControl] = useState<boolean>(
+    false
+  );
   const [modalPopUpCreateTask, setModalPopUpCreateTask] = useState<boolean>(
     false
   );
@@ -146,6 +163,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Create tasks
   const [dayClick, setDayClick] = useState<DateCalendar | undefined>(undefined);
 
+  // Modal edit controls
+  const [controlModalState, setControlModalState] = useState<
+    BODY_EDIT_SECTION | undefined
+  >();
+
+  // Modal images callback
+  const callBackImages = useRef<any>(null);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -167,6 +192,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         setModalPopUpJoinTeam,
         modalPopUpCreateTask,
         setModalPopUpCreateTask,
+        modalPopUpEditControl,
+        setModalPopUpEditControl,
+        modalPopUpImages,
+        setModalPopUpImages,
         companies,
         setCompanies,
         refetchCompanies,
@@ -182,7 +211,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         dayClick,
         setDayClick,
         isMenuToggled,
-        setIsMenuToggled
+        setIsMenuToggled,
+        controlModalState,
+        setControlModalState,
+        callBackImages
       }}
     >
       <Head>
@@ -212,6 +244,18 @@ function MyApp({ Component, pageProps }: AppProps) {
             <CreateCompanyModal />
             <JoinCompanyModal />
             <TaskModal />
+            <EditSectionModal />
+            <UploadImageModal
+              callback={data => {
+                if (!callBackImages) return;
+                if (!callBackImages.current) return;
+                try {
+                  callBackImages.current(data);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />

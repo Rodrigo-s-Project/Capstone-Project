@@ -95,7 +95,8 @@ export const setAssociations = () => {
     "User_Company",
     {
       typeUser: DataType.STRING,
-      username: DataType.STRING
+      username: DataType.STRING,
+      typeAccount: DataType.STRING
     },
     { timestamps: false }
   );

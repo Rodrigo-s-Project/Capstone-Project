@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 
 // Icons
 import Camera from "../../../../../Svgs/Camera";
+import { getImage } from "../../../../../../routes/cdn.routes";
 
 import { COMPANY } from "../../../../../../routes/dashboard.company.routes";
 
@@ -23,6 +24,12 @@ const CompanyCard = ({ company }: Props) => {
     >
       <div className={styles.creation_grid_profile}>
         <Camera />
+        {company.companyPictureURL && company.companyPictureURL != "" && (
+          <img
+            src={`${getImage.url(company.companyPictureURL)}`}
+            alt={company.name}
+          />
+        )}
       </div>
       <div className={styles.creation_grid_profile_name}>{company.name}</div>
     </div>

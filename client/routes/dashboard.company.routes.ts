@@ -5,11 +5,14 @@ export type COMPANY = {
   companyPictureURL: string;
   id: number;
   name: string;
+  typeCompany: "Basic" | "Enterprise";
+  storage: number;
   User_Company: {
     companyId: number;
     typeUser: "Employee" | "Admin" | "Client";
     userId: number;
     username: string;
+    typeAccount: "Free" | "Basic" | "Enterprise";
   };
 };
 
@@ -48,4 +51,30 @@ export type BODY_JOIN_COMPANY = {
 export const joinCompanyEndpoint = {
   url: `${process.env.API_URL}/dashboard/company/join-company`,
   method: "put"
+};
+
+export type USER_COMPANY = {
+  id: number;
+  email: string;
+  globalUsername: string;
+  status: string;
+  profilePictureURL: string;
+  isDarkModeOn: boolean;
+  User_Company: {
+    companyId: number;
+    typeAccount: "Free" | "Basic" | "Enterprise";
+    typeUser: "Employee" | "Admin" | "Client";
+    userId: number;
+    username: string;
+  };
+};
+
+export type DATA_GET_USER_COMPANY = {
+  users: Array<USER_COMPANY>;
+};
+
+export const getUsersCompanyEndpoint = {
+  url: (idCompany: any) =>
+    `${process.env.API_URL}/dashboard/company/get-company-users/${idCompany}`,
+  method: "get"
 };
