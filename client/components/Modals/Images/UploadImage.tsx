@@ -93,7 +93,8 @@ const UploadImage = ({ callback }: ModalProps) => {
       if (!data) {
       } else {
         if (setModalPopUpImages) setModalPopUpImages(false);
-
+        setImgState("");
+        setImgStateUrl("");
         callback(data);
       }
     } catch (error) {

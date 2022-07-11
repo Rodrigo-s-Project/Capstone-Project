@@ -5,7 +5,8 @@ import { useContext, useCallback, Fragment } from "react";
 import { CalendarContext } from "../../../Calendar";
 import { GlobalContext } from "../../../../../pages/_app";
 
-import Task, { TaskType } from "./Task/Task";
+import { TaskType } from "../../../../../routes/calendar.routes";
+import Task from "./Task/Task";
 
 // Icons
 import PlusIcon from "../../../../Svgs/Plus";

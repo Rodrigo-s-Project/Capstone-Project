@@ -86,6 +86,8 @@ interface ValueAppProvider {
   setDayClick: Dispatch<SetStateAction<DateCalendar | undefined>>;
   isMenuToggled: boolean;
   setIsMenuToggled: Dispatch<SetStateAction<boolean>>;
+  refetchTasks: boolean;
+  setRefetchTasks: Dispatch<SetStateAction<boolean>>;
 
   controlModalState: BODY_EDIT_SECTION | undefined;
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
@@ -162,6 +164,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // Create tasks
   const [dayClick, setDayClick] = useState<DateCalendar | undefined>(undefined);
+  const [refetchTasks, setRefetchTasks] = useState<boolean>(false);
 
   // Modal edit controls
   const [controlModalState, setControlModalState] = useState<
@@ -214,7 +217,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         setIsMenuToggled,
         controlModalState,
         setControlModalState,
-        callBackImages
+        callBackImages,
+        refetchTasks,
+        setRefetchTasks
       }}
     >
       <Head>

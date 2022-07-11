@@ -25,6 +25,9 @@ interface CalendarAppProvide {
   setCalendarStretchRow: Dispatch<SetStateAction<StretchCalendarRows>>;
   calendarView: CalendarViews;
   setCalendarView: Dispatch<SetStateAction<CalendarViews>>;
+
+  setIsCalendarLoading: Dispatch<SetStateAction<boolean>>;
+  isCalendarLoading: boolean;
 }
 
 // Components
@@ -44,6 +47,7 @@ const Calendar = () => {
   >("1fr");
 
   const [calendarView, setCalendarView] = useState<CalendarViews>("Month");
+  const [isCalendarLoading, setIsCalendarLoading] = useState<boolean>(false);
 
   useEffect(() => {
     changeCalendarForPhone();
@@ -68,7 +72,9 @@ const Calendar = () => {
         calendarView,
         setCalendarView,
         currDay,
-        setCurrDay
+        setCurrDay,
+        setIsCalendarLoading,
+        isCalendarLoading
       }}
     >
       <div className={styles.calendar}>
