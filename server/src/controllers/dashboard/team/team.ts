@@ -224,7 +224,7 @@ export const createTeam = async (req, res) => {
     }
 
     const newTeam: any = await Team.create({
-      name,
+      name, // Check for same names
       accessCode: `${name}_${createToken(5)}`,
       companyId
     });

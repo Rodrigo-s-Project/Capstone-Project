@@ -162,7 +162,7 @@ export const createCompany = async (req, res) => {
     }
 
     const newCompany = await Company.create({
-      name,
+      name, // TODO: check for same names
       accessCodeEmployee: `${name}_${createToken(5)}`,
       accessCodeClient: `${name}_${createToken(6)}`,
       adminId: req.user.id,

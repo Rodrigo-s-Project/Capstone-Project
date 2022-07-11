@@ -28,7 +28,9 @@ const CompanySettingsController = () => {
     setArrayMsgs,
     setSelectedCompany,
     selectedCompany,
-    user
+    user,
+    setModalPopUpEditControl,
+    setControlModalState
   } = useContext(GlobalContext);
 
   const router = useRouter();
@@ -38,6 +40,18 @@ const CompanySettingsController = () => {
   // TODO: loader
 
   const [usersCompany, setUsersCompany] = useState<Array<USER_COMPANY>>([]);
+
+  const notAvailable = () => {
+    // TODO: remove this when all finished
+    if (setArrayMsgs)
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
+  };
 
   const getCompanyData = useCallback(async () => {
     try {
@@ -215,6 +229,19 @@ const CompanySettingsController = () => {
                   <div
                     title="Edit name of company"
                     className={styles.control_container_row_edit}
+                    onClick={() => {
+                      if (setModalPopUpEditControl && setControlModalState) {
+                        setControlModalState({
+                          typeEdit: "company",
+                          identifier: "name",
+                          teamId: 0,
+                          companyId: selectedCompany.id,
+                          updatedValue: "",
+                          isUpdateOnSingleModel: true
+                        });
+                        setModalPopUpEditControl(true);
+                      }
+                    }}
                   >
                     <EditIcon />
                   </div>
@@ -229,6 +256,7 @@ const CompanySettingsController = () => {
                   <div
                     title="Upgrade company account"
                     className={styles.control_container_row_edit}
+                    onClick={notAvailable}
                   >
                     <CreditCardIcon />
                   </div>
@@ -295,6 +323,7 @@ const CompanySettingsController = () => {
                   <div
                     title="Upgrade storage company"
                     className={styles.control_container_row_edit}
+                    onClick={notAvailable}
                   >
                     <CreditCardIcon />
                   </div>
@@ -366,6 +395,19 @@ const CompanySettingsController = () => {
                 <div
                   title="Edit username"
                   className={styles.control_container_row_edit}
+                  onClick={() => {
+                    if (setModalPopUpEditControl && setControlModalState) {
+                      setControlModalState({
+                        typeEdit: "company",
+                        identifier: "username",
+                        teamId: 0,
+                        companyId: selectedCompany.id,
+                        updatedValue: "",
+                        isUpdateOnSingleModel: false
+                      });
+                      setModalPopUpEditControl(true);
+                    }
+                  }}
                 >
                   <EditIcon />
                 </div>

@@ -21,9 +21,11 @@ import mainRoutes from "./routes/main.routes";
 import authRoutes from "./routes/auth.routes";
 import companyDashboardRoutes from "./routes/dashboard.company.routes";
 import teamDashboardRoutes from "./routes/dashboard.team.routes";
+import controlsDashboardToues from "./routes/dashboard.controls.routes";
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
 app.use("/dashboard/company", companyDashboardRoutes);
 app.use("/dashboard/team", teamDashboardRoutes);
+app.use("/dashboard/controls", controlsDashboardToues);
 
 app.use(express.json());
