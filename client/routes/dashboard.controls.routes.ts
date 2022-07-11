@@ -18,7 +18,7 @@ export type DATA_EDIT_SECTION = {
 };
 
 export const editControlEndpoint = {
-  url: (companyId: number) =>
+  url: (companyId: any) =>
     `${process.env.API_URL}/dashboard/controls/edit/${companyId}`,
   method: "put"
 };

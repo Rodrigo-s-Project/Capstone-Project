@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { useRouter } from "next/router";
 
 import { GlobalContext } from "../../../../../../../pages/_app";
+import { getImage } from "../../../../../../../routes/cdn.routes";
 
 import { TEAM } from "../../../../../../../routes/dashboard.team.routes";
 
@@ -29,6 +30,9 @@ const TeamCard = ({ team }: Props) => {
     >
       <div className={styles.creation_grid_profile}>
         <Camera />
+        {team.teamPictureURL && team.teamPictureURL != "" && (
+          <img src={`${getImage.url(team.teamPictureURL)}`} alt={team.name} />
+        )}
       </div>
       <div className={styles.creation_grid_profile_name}>{team.name}</div>
     </div>

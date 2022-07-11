@@ -27,5 +27,3 @@ app.use("/auth", authRoutes);
 app.use("/dashboard/company", companyDashboardRoutes);
 app.use("/dashboard/team", teamDashboardRoutes);
 app.use("/dashboard/controls", controlsDashboardToues);
-
-app.use(express.json());

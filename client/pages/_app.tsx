@@ -8,7 +8,8 @@ import {
   Dispatch,
   useState,
   createContext,
-  useEffect
+  useEffect,
+  useRef
 } from "react";
 
 // Components
@@ -23,6 +24,7 @@ import CreateCompanyModal from "../components/Dashboard/Body/Creation/Company/Mo
 import JoinCompanyModal from "../components/Dashboard/Body/Creation/Company/Modals/JoinModal/JoinModal";
 import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 import EditSectionModal from "../components/Controls/Modals/EditSection";
+import UploadImageModal from "../components/Modals/Images/UploadImage";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -63,6 +65,8 @@ interface ValueAppProvider {
   setModalPopUpCreateTask: Dispatch<SetStateAction<boolean>>;
   modalPopUpEditControl: boolean;
   setModalPopUpEditControl: Dispatch<SetStateAction<boolean>>;
+  modalPopUpImages: boolean;
+  setModalPopUpImages: Dispatch<SetStateAction<boolean>>;
 
   setCompanies: Dispatch<SetStateAction<Array<COMPANY>>>;
   companies: Array<COMPANY>;
@@ -85,6 +89,8 @@ interface ValueAppProvider {
 
   controlModalState: BODY_EDIT_SECTION | undefined;
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
+
+  callBackImages: any;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -126,6 +132,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     false
   );
   const [modalPopUpJoinTeam, setModalPopUpJoinTeam] = useState<boolean>(false);
+  const [modalPopUpImages, setModalPopUpImages] = useState<boolean>(false);
   const [modalPopUpEditControl, setModalPopUpEditControl] = useState<boolean>(
     false
   );
@@ -161,6 +168,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     BODY_EDIT_SECTION | undefined
   >();
 
+  // Modal images callback
+  const callBackImages = useRef<any>(null);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -184,6 +194,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         setModalPopUpCreateTask,
         modalPopUpEditControl,
         setModalPopUpEditControl,
+        modalPopUpImages,
+        setModalPopUpImages,
         companies,
         setCompanies,
         refetchCompanies,
@@ -201,7 +213,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         isMenuToggled,
         setIsMenuToggled,
         controlModalState,
-        setControlModalState
+        setControlModalState,
+        callBackImages
       }}
     >
       <Head>
@@ -232,6 +245,17 @@ function MyApp({ Component, pageProps }: AppProps) {
             <JoinCompanyModal />
             <TaskModal />
             <EditSectionModal />
+            <UploadImageModal
+              callback={data => {
+                if (!callBackImages) return;
+                if (!callBackImages.current) return;
+                try {
+                  callBackImages.current(data);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            />
             <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
             <main className="main-content">
               <Component {...pageProps} />

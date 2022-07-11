@@ -22,6 +22,11 @@ import {
   USER_TEAM
 } from "../../../routes/dashboard.team.routes";
 import { RESPONSE } from "../../../routes/index.routes";
+import {
+  UPLOAD_IMAGE_DATA,
+  getImage,
+  deleteImage
+} from "../../../routes/cdn.routes";
 
 const TeamSettingsController = () => {
   const {
@@ -31,7 +36,9 @@ const TeamSettingsController = () => {
     selectedCompany,
     setControlModalState,
     setModalPopUpEditControl,
-    setSelectedTeam
+    setSelectedTeam,
+    callBackImages,
+    setModalPopUpImages
   } = useContext(GlobalContext);
 
   const notAvailable = () => {
@@ -67,6 +74,84 @@ const TeamSettingsController = () => {
   );
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const uploadNewImageTeam = async (
+    data: UPLOAD_IMAGE_DATA,
+    typeEdit: "company" | "team"
+  ) => {
+    if (!data.success || !selectedCompany || !selectedTeam) return;
+    fetchEdit(
+      {
+        typeEdit,
+        identifier: "img",
+        teamId: selectedTeam.id,
+        companyId: selectedCompany.id,
+        updatedValue: data.msg,
+        isUpdateOnSingleModel: true
+      },
+      setIsLoading,
+      data => {
+        if (setSelectedTeam) setSelectedTeam(data.newModel);
+      }
+    );
+  };
+
+  const deleteImageFetch = async () => {
+    try {
+      if (!selectedCompany || !selectedTeam) return;
+      const fileName: string = selectedTeam.teamPictureURL;
+      if (
+        fileName == "" ||
+        !fileName ||
+        fileName == null ||
+        fileName == undefined
+      ) {
+        return;
+      }
+
+      setIsLoading(true);
+      const response: any = await axios.delete(deleteImage.url(fileName), {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: UPLOAD_IMAGE_DATA = response.data;
+
+      if (!data.success) {
+        if (setArrayMsgs)
+          setArrayMsgs(prev => [
+            {
+              type: "danger",
+              text: data.msg
+            },
+            ...prev
+          ]);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+      router.replace("/");
+    }
+  };
+
+  const deletePrevImageTeam = async () => {
+    // Upload new
+    callBackImages.current = async (data: UPLOAD_IMAGE_DATA) => {
+      await deleteImageFetch();
+      await uploadNewImageTeam(data, "team");
+    };
+    if (setModalPopUpImages) setModalPopUpImages(true);
+  };
 
   const [usersTeam, setUsersTeam] = useState<Array<USER_TEAM>>([]);
   // TODO: loader
@@ -132,7 +217,7 @@ const TeamSettingsController = () => {
     if (!user || !selectedCompany || !selectedTeam) return;
     if (user.id != selectedCompany.adminId) return;
     getUsersFromTeam();
-  }, [user, selectedCompany, selectedTeam]);
+  }, [user, selectedCompany, selectedTeam, getUsersFromTeam]);
 
   const { fetchEdit } = useEditSection();
 
@@ -146,7 +231,9 @@ const TeamSettingsController = () => {
 
               <div
                 style={{
-                  backgroundImage: `url(${selectedTeam.teamPictureURL})`
+                  backgroundImage: `url(${getImage.url(
+                    selectedTeam.teamPictureURL
+                  )})`
                 }}
                 className={styles.control_top_img_container}
               ></div>
@@ -155,6 +242,7 @@ const TeamSettingsController = () => {
                 <div
                   title="Change picture"
                   className={`${styles.control_top_img_edit} ${styles.control_top_img}`}
+                  onClick={deletePrevImageTeam}
                 >
                   <EditIcon />
                 </div>

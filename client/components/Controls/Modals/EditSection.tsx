@@ -54,7 +54,14 @@ const EditSection = () => {
         setUpdatedValueState("");
       }
     );
-  }, [controlModalState, updatedValueState]);
+  }, [
+    controlModalState,
+    updatedValueState,
+    fetchEdit,
+    setModalPopUpEditControl,
+    setSelectedCompany,
+    setSelectedTeam
+  ]);
 
   const getTitle = (): string => {
     if (!controlModalState) return "";

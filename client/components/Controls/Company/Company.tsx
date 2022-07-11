@@ -5,6 +5,11 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { AnimatePresence } from "framer-motion";
 import BtnSpinner from "../../Buttons/BtnClick/BtnClick";
+import {
+  UPLOAD_IMAGE_DATA,
+  getImage,
+  deleteImage
+} from "../../../routes/cdn.routes";
 
 // Icons
 import CameraIcon from "../../Svgs/Camera";
@@ -33,7 +38,10 @@ const CompanySettingsController = () => {
     selectedCompany,
     user,
     setModalPopUpEditControl,
-    setControlModalState
+    setControlModalState,
+
+    callBackImages,
+    setModalPopUpImages
   } = useContext(GlobalContext);
 
   const router = useRouter();
@@ -43,6 +51,84 @@ const CompanySettingsController = () => {
   // TODO: loader
 
   const [usersCompany, setUsersCompany] = useState<Array<USER_COMPANY>>([]);
+
+  const uploadNewImageCompany = async (
+    data: UPLOAD_IMAGE_DATA,
+    typeEdit: "company" | "team"
+  ) => {
+    if (!data.success || !selectedCompany) return;
+    fetchEdit(
+      {
+        typeEdit,
+        identifier: "img",
+        teamId: 0,
+        companyId: selectedCompany.id,
+        updatedValue: data.msg,
+        isUpdateOnSingleModel: true
+      },
+      setIsLoading,
+      data => {
+        if (setSelectedCompany) setSelectedCompany(data.newModel);
+      }
+    );
+  };
+
+  const deleteImageFetch = async () => {
+    try {
+      if (!selectedCompany) return;
+      const fileName: string = selectedCompany.companyPictureURL;
+      if (
+        fileName == "" ||
+        !fileName ||
+        fileName == null ||
+        fileName == undefined
+      ) {
+        return;
+      }
+
+      setIsLoading(true);
+      const response: any = await axios.delete(deleteImage.url(fileName), {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: UPLOAD_IMAGE_DATA = response.data;
+
+      if (!data.success) {
+        if (setArrayMsgs)
+          setArrayMsgs(prev => [
+            {
+              type: "danger",
+              text: data.msg
+            },
+            ...prev
+          ]);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+      router.replace("/");
+    }
+  };
+
+  const deletePrevImageCompany = async () => {
+    // Upload new
+    callBackImages.current = async (data: UPLOAD_IMAGE_DATA) => {
+      await deleteImageFetch();
+      await uploadNewImageCompany(data, "company");
+    };
+    if (setModalPopUpImages) setModalPopUpImages(true);
+  };
 
   const notAvailable = () => {
     // TODO: remove this when all finished
@@ -190,7 +276,7 @@ const CompanySettingsController = () => {
     if (!user || !selectedCompany) return;
     if (user.id != selectedCompany.adminId) return;
     getUsersFromCompany();
-  }, [user, selectedCompany]);
+  }, [user, selectedCompany, getUsersFromCompany]);
 
   const { fetchEdit } = useEditSection();
 
@@ -204,7 +290,9 @@ const CompanySettingsController = () => {
 
               <div
                 style={{
-                  backgroundImage: `url(${selectedCompany.companyPictureURL})`
+                  backgroundImage: `url(${getImage.url(
+                    selectedCompany.companyPictureURL
+                  )})`
                 }}
                 className={styles.control_top_img_container}
               ></div>
@@ -213,6 +301,7 @@ const CompanySettingsController = () => {
                 <div
                   title="Change picture"
                   className={`${styles.control_top_img_edit} ${styles.control_top_img}`}
+                  onClick={deletePrevImageCompany}
                 >
                   <EditIcon />
                 </div>
