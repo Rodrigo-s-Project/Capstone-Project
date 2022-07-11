@@ -47,6 +47,21 @@ export const useEditSection = () => {
         const data: RESPONSE = response.data;
         const endpointData: DATA_EDIT_SECTION = data.data;
 
+        if (data.readMsg) {
+          // Put a message
+          if (setArrayMsgs) {
+            setArrayMsgs(prev => [
+              {
+                type: data.typeMsg,
+                text: data.message
+              },
+              ...prev
+            ]);
+          }
+
+          return;
+        }
+
         if (!endpointData) {
           router.replace("/");
           return;

@@ -13,6 +13,9 @@ import CreditCardIcon from "../../Svgs/CreditCard";
 import CopyIcon from "../../Svgs/Copy";
 import TrashAltIcon from "../../Svgs/TrashAlt";
 
+// Hooks
+import { useEditSection } from "../hooks/useEditSection";
+
 // Routes
 import {
   getCompanyEndpoint,
@@ -189,6 +192,8 @@ const CompanySettingsController = () => {
     getUsersFromCompany();
   }, [user, selectedCompany]);
 
+  const { fetchEdit } = useEditSection();
+
   return (
     <AnimatePresence>
       {!selectedCompany || !user ? null : (
@@ -281,6 +286,23 @@ const CompanySettingsController = () => {
                     <div
                       title="Edit code for employees"
                       className={styles.control_container_row_edit}
+                      onClick={() => {
+                        fetchEdit(
+                          {
+                            typeEdit: "company",
+                            identifier: "code-employees",
+                            teamId: 0,
+                            companyId: selectedCompany.id,
+                            updatedValue: "",
+                            isUpdateOnSingleModel: true
+                          },
+                          setIsLoading,
+                          data => {
+                            if (setSelectedCompany)
+                              setSelectedCompany(data.newModel);
+                          }
+                        );
+                      }}
                     >
                       <EditIcon />
                     </div>
@@ -306,6 +328,23 @@ const CompanySettingsController = () => {
                     <div
                       title="Edit code for clients"
                       className={styles.control_container_row_edit}
+                      onClick={() => {
+                        fetchEdit(
+                          {
+                            typeEdit: "company",
+                            identifier: "code-clients",
+                            teamId: 0,
+                            companyId: selectedCompany.id,
+                            updatedValue: "",
+                            isUpdateOnSingleModel: true
+                          },
+                          setIsLoading,
+                          data => {
+                            if (setSelectedCompany)
+                              setSelectedCompany(data.newModel);
+                          }
+                        );
+                      }}
                     >
                       <EditIcon />
                     </div>
@@ -371,6 +410,7 @@ const CompanySettingsController = () => {
                               className={
                                 styles.control_container_users_row_trash
                               }
+                              onClick={notAvailable}
                             >
                               <TrashAltIcon />
                             </div>
@@ -423,7 +463,7 @@ const CompanySettingsController = () => {
                 <div className={styles.control_container_row}>
                   <BtnSpinner
                     text="Delete company"
-                    callback={() => {}}
+                    callback={notAvailable}
                     color="danger"
                     border="round_5"
                     additionalClass="btn-delete-creation"

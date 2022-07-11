@@ -12,6 +12,7 @@ import { Connection } from "../../../models/Connection";
 
 // Utils
 import { createToken } from "../../../utils/keys";
+import { isNameRepeated } from "../../helpers/index";
 
 export const getTeamsFromUser = async (req, res) => {
   let response: RESPONSE = {
@@ -223,8 +224,14 @@ export const createTeam = async (req, res) => {
       return;
     }
 
+    if (isNameRepeated("team", req.user, name)) {
+      response.message = "Repeated name of team.";
+      res.json(response);
+      return;
+    }
+
     const newTeam: any = await Team.create({
-      name, // Check for same names
+      name,
       accessCode: `${name}_${createToken(5)}`,
       companyId
     });

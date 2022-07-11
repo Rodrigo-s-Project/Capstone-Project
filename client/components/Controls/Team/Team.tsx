@@ -12,6 +12,9 @@ import EditIcon from "../../Svgs/Edit";
 import TrashAltIcon from "../../Svgs/TrashAlt";
 import CopyIcon from "../../Svgs/Copy";
 
+// Hook
+import { useEditSection } from "../hooks/useEditSection";
+
 // Routes
 import {
   getUsersTeamEndpoint,
@@ -21,9 +24,27 @@ import {
 import { RESPONSE } from "../../../routes/index.routes";
 
 const TeamSettingsController = () => {
-  const { setArrayMsgs, selectedTeam, user, selectedCompany } = useContext(
-    GlobalContext
-  );
+  const {
+    setArrayMsgs,
+    selectedTeam,
+    user,
+    selectedCompany,
+    setControlModalState,
+    setModalPopUpEditControl,
+    setSelectedTeam
+  } = useContext(GlobalContext);
+
+  const notAvailable = () => {
+    // TODO: remove this when all finished
+    if (setArrayMsgs)
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
+  };
 
   const copyToClipBoard = useCallback(
     (text: string) => {
@@ -113,6 +134,8 @@ const TeamSettingsController = () => {
     getUsersFromTeam();
   }, [user, selectedCompany, selectedTeam]);
 
+  const { fetchEdit } = useEditSection();
+
   return (
     <AnimatePresence>
       {!selectedTeam || !user || !selectedCompany ? null : (
@@ -153,6 +176,19 @@ const TeamSettingsController = () => {
                   <div
                     title="Edit name of team"
                     className={styles.control_container_row_edit}
+                    onClick={() => {
+                      if (setModalPopUpEditControl && setControlModalState) {
+                        setControlModalState({
+                          typeEdit: "team",
+                          identifier: "name",
+                          teamId: selectedTeam.id,
+                          companyId: selectedCompany.id,
+                          updatedValue: "",
+                          isUpdateOnSingleModel: true
+                        });
+                        setModalPopUpEditControl(true);
+                      }
+                    }}
                   >
                     <EditIcon />
                   </div>
@@ -175,6 +211,22 @@ const TeamSettingsController = () => {
                     <div
                       title="Edit code"
                       className={styles.control_container_row_edit}
+                      onClick={() => {
+                        fetchEdit(
+                          {
+                            typeEdit: "team",
+                            identifier: "code",
+                            teamId: selectedTeam.id,
+                            companyId: selectedCompany.id,
+                            updatedValue: "",
+                            isUpdateOnSingleModel: true
+                          },
+                          setIsLoading,
+                          data => {
+                            if (setSelectedTeam) setSelectedTeam(data.newModel);
+                          }
+                        );
+                      }}
                     >
                       <EditIcon />
                     </div>
@@ -214,6 +266,7 @@ const TeamSettingsController = () => {
                         {userCompany.id != user.id && (
                           <div
                             className={styles.control_container_users_row_trash}
+                            onClick={notAvailable}
                           >
                             <TrashAltIcon />
                           </div>
@@ -237,6 +290,19 @@ const TeamSettingsController = () => {
                 <div
                   title="Edit username"
                   className={styles.control_container_row_edit}
+                  onClick={() => {
+                    if (setModalPopUpEditControl && setControlModalState) {
+                      setControlModalState({
+                        typeEdit: "team",
+                        identifier: "username",
+                        teamId: selectedTeam.id,
+                        companyId: selectedCompany.id,
+                        updatedValue: "",
+                        isUpdateOnSingleModel: false
+                      });
+                      setModalPopUpEditControl(true);
+                    }
+                  }}
                 >
                   <EditIcon />
                 </div>
@@ -252,7 +318,7 @@ const TeamSettingsController = () => {
                 <div className={styles.control_container_row}>
                   <BtnSpinner
                     text="Delete team"
-                    callback={() => {}}
+                    callback={notAvailable}
                     color="danger"
                     border="round_5"
                     additionalClass="btn-delete-creation"

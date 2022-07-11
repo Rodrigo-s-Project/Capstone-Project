@@ -2,6 +2,8 @@ import { RESPONSE } from "../../controllers.types";
 import { BODY_EDIT_SECTION } from "./index.types";
 import { createToken } from "../../../utils/keys";
 
+import { isNameRepeated } from "../../helpers/index";
+
 export const editSection = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
@@ -53,19 +55,44 @@ export const editSection = async (req, res) => {
       // Update single model
       if (isUpdateOnSingleModel) {
         if (identifier == "name") {
-          updateObj["name"] = updatedValue; // TODO: Check for same names
+          if (updatedValue.trim() == "") {
+            response.message = "Information incomplete.";
+            res.json(response);
+            return;
+          }
+
+          if (isNameRepeated("company", req.user, updatedValue)) {
+            response.message = "Repeated name of company.";
+            res.json(response);
+            return;
+          }
+
+          updateObj["name"] = updatedValue;
         } else if (identifier == "code-clients") {
           updateObj["accessCodeClient"] = `${company.name}_${createToken(6)}`;
         } else if (identifier == "code-employees") {
           updateObj["accessCodeEmployee"] = `${company.name}_${createToken(5)}`;
         } else if (identifier == "img") {
+          if (updatedValue.trim() == "") {
+            response.message = "Information incomplete.";
+            res.json(response);
+            return;
+          }
+
           updateObj["companyPictureURL"] = updatedValue;
         }
 
         await company.update(updateObj);
       } else {
-        if (identifier == "username") updateObj["username"] = updatedValue;
+        if (identifier == "username") {
+          if (updatedValue.trim() == "") {
+            response.message = "Information incomplete.";
+            res.json(response);
+            return;
+          }
 
+          updateObj["username"] = updatedValue;
+        }
         await company.User_Company.update(updateObj);
       }
 
@@ -113,7 +140,19 @@ export const editSection = async (req, res) => {
       // Update single model
       if (isUpdateOnSingleModel) {
         if (identifier == "name") {
-          updateObj["name"] = updatedValue; // TODO: Check for same names
+          if (updatedValue.trim() == "") {
+            response.message = "Information incomplete.";
+            res.json(response);
+            return;
+          }
+
+          if (isNameRepeated("team", req.user, updatedValue)) {
+            response.message = "Repeated name of team.";
+            res.json(response);
+            return;
+          }
+
+          updateObj["name"] = updatedValue;
         } else if (identifier == "code") {
           updateObj["accessCode"] = `${team.name}_${createToken(5)}`;
         } else if (identifier == "img") {
@@ -122,7 +161,15 @@ export const editSection = async (req, res) => {
 
         await team.update(updateObj);
       } else {
-        if (identifier == "username") updateObj["username"] = updatedValue;
+        if (identifier == "username") {
+          if (updatedValue.trim() == "") {
+            response.message = "Information incomplete.";
+            res.json(response);
+            return;
+          }
+
+          updateObj["username"] = updatedValue;
+        }
 
         await team.User_Team.update(updateObj);
       }

@@ -9,6 +9,7 @@ import { User } from "../../../models/User";
 
 // Utils
 import { createToken } from "../../../utils/keys";
+import { isNameRepeated } from "../../helpers/index";
 
 export const getCompaniesFromUser = async (req, res) => {
   let response: RESPONSE = {
@@ -161,8 +162,14 @@ export const createCompany = async (req, res) => {
       return;
     }
 
+    if (isNameRepeated("company", req.user, name)) {
+      response.message = "Repeated name of company.";
+      res.json(response);
+      return;
+    }
+
     const newCompany = await Company.create({
-      name, // TODO: check for same names
+      name,
       accessCodeEmployee: `${name}_${createToken(5)}`,
       accessCodeClient: `${name}_${createToken(6)}`,
       adminId: req.user.id,
