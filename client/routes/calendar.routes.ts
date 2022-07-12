@@ -90,3 +90,26 @@ export const editTask = {
     `${process.env.API_URL}/dashboard/calendar/edit-task/${teamId}/${calendarId}/${taskId}`,
   method: "put"
 };
+
+export type BODY_EDIT_TAG = {
+  text: string;
+  color: string;
+};
+
+export const editTag = {
+  url: (teamId: any, calendarId: any, tagId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/edit-tag/${teamId}/${calendarId}/${tagId}`,
+  method: "put"
+};
+
+export const deleteTag = {
+  url: (teamId: any, calendarId: any, tagId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/delete-tag/${teamId}/${calendarId}/${tagId}`,
+  method: "delete"
+};
+
+export const deleteTask = {
+  url: (teamId: any, calendarId: any, taskId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/delete-task/${teamId}/${calendarId}/${taskId}`,
+  method: "delete"
+};

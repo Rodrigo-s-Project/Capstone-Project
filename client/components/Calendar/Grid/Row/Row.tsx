@@ -67,6 +67,16 @@ type PropsRow = {
   setMatrixDates: Dispatch<SetStateAction<Array<Array<DateCalendar>>>>;
 };
 
+const matrixStarter = {
+  date: new Date(),
+  weekday: "",
+  day: 0,
+  tasks: undefined,
+  isOnHover: false,
+  isResizing: false,
+  dontShow: true
+};
+
 const Row = ({ datesRow, matrixDates, setMatrixDates }: PropsRow) => {
   const getToday = (date: Date): boolean => {
     const today = new Date();
@@ -93,6 +103,21 @@ const Row = ({ datesRow, matrixDates, setMatrixDates }: PropsRow) => {
             </Fragment>
           );
         })}
+      {!datesRow &&
+        Array(7)
+          .fill(matrixStarter)
+          .map((date: DateCalendar, index: number) => {
+            return (
+              <Fragment key={index}>
+                <DayComponent
+                  matrixDates={matrixDates}
+                  setMatrixDates={setMatrixDates}
+                  isToday={getToday(date.date)}
+                  day={date}
+                />
+              </Fragment>
+            );
+          })}
     </div>
   );
 };
