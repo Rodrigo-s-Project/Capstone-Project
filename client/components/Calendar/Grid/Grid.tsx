@@ -1,11 +1,22 @@
 import styles from "./Grid.module.scss";
-import { useContext, Fragment, useState, useEffect } from "react";
+import { useContext, Fragment, useState, useEffect, useCallback } from "react";
 
 import { CalendarContext } from "../Calendar";
+import { GlobalContext } from "../../../pages/_app";
 import RowElement, { RowHeader } from "./Row/Row";
 
 // Hooks
 import { useDates, DateCalendar } from "../../../hooks/useDates";
+
+const matrixStarter = {
+  date: new Date(),
+  weekday: "",
+  day: 0,
+  tasks: undefined,
+  isOnHover: false,
+  isResizing: false,
+  dontShow: true
+}
 
 const Grid = () => {
   // Context
@@ -16,17 +27,36 @@ const Grid = () => {
     setCalendarStretchRow,
     calendarView
   } = useContext(CalendarContext);
-  const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>(
-    []
-  );
+  const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>([
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+  ]);
 
   // Hook
   const { createMatrix, getNumberOfRows } = useDates();
+  const { selectedTeam, refetchTasks } = useContext(GlobalContext);
+
+  const generateMatrix = useCallback(async () => {
+    const matrix = await createMatrix();
+
+    setMatrixDates(matrix);
+  }, [createMatrix, setMatrixDates]);
 
   useEffect(() => {
-    const matrix = createMatrix();
-    setMatrixDates(matrix);
-  }, [setMatrixDates, month, year, createMatrix]);
+    generateMatrix();
+  }, [
+    setMatrixDates,
+    month,
+    year,
+    createMatrix,
+    generateMatrix,
+    selectedTeam,
+    refetchTasks
+  ]);
 
   return (
     <div
@@ -48,7 +78,11 @@ const Grid = () => {
       {[...Array(getNumberOfRows())].map((_: any, index: number) => {
         return (
           <Fragment key={index}>
-            <RowElement datesRow={matrixDates[index]} />
+            <RowElement
+              matrixDates={matrixDates}
+              setMatrixDates={setMatrixDates}
+              datesRow={matrixDates[index]}
+            />
           </Fragment>
         );
       })}

@@ -224,7 +224,7 @@ export const createTeam = async (req, res) => {
       return;
     }
 
-    if (isNameRepeated("team", req.user, name)) {
+    if (await isNameRepeated("team", req.user, name)) {
       response.message = "Repeated name of team.";
       res.json(response);
       return;

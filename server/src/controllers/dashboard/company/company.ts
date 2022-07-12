@@ -162,7 +162,7 @@ export const createCompany = async (req, res) => {
       return;
     }
 
-    if (isNameRepeated("company", req.user, name)) {
+    if (await isNameRepeated("company", req.user, name)) {
       response.message = "Repeated name of company.";
       res.json(response);
       return;

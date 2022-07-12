@@ -61,7 +61,7 @@ export const editSection = async (req, res) => {
             return;
           }
 
-          if (isNameRepeated("company", req.user, updatedValue)) {
+          if (await isNameRepeated("company", req.user, updatedValue)) {
             response.message = "Repeated name of company.";
             res.json(response);
             return;
@@ -146,7 +146,7 @@ export const editSection = async (req, res) => {
             return;
           }
 
-          if (isNameRepeated("team", req.user, updatedValue)) {
+          if (await isNameRepeated("team", req.user, updatedValue)) {
             response.message = "Repeated name of team.";
             res.json(response);
             return;
