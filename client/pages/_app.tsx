@@ -97,6 +97,15 @@ interface ValueAppProvider {
   setNameTask: Dispatch<SetStateAction<string>>;
   descriptionTask: string;
   setDescriptionTask: Dispatch<SetStateAction<string>>;
+  usersTask: Array<string>;
+  setUsersTask: Dispatch<SetStateAction<Array<string>>>;
+  tagsTask: Array<string>;
+  setTagsTask: Dispatch<SetStateAction<Array<string>>>;
+  allUsersCalendar: Array<DATA_GET_USER>;
+  setAllUsersCalendar: Dispatch<SetStateAction<Array<DATA_GET_USER>>>;
+  allTagsCalendar: Array<any>;
+  setAllTagsCalendar: Dispatch<SetStateAction<Array<any>>>;
+
   isLoadingTask: boolean;
   setIsLoadingTask: Dispatch<SetStateAction<boolean>>;
   isTaskModalOnEditing: boolean;
@@ -185,10 +194,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   // Tasks modal state
   const [nameTask, setNameTask] = useState<string>("");
   const [descriptionTask, setDescriptionTask] = useState<string>("");
+  const [usersTask, setUsersTask] = useState<Array<string>>([]);
+  const [tagsTask, setTagsTask] = useState<Array<string>>([]);
   const [isLoadingTask, setIsLoadingTask] = useState<boolean>(false);
   const [isTaskModalOnEditing, setIsTaskModalOnEditing] = useState<boolean>(
     false
   );
+
+  const [allUsersCalendar, setAllUsersCalendar] = useState<
+    Array<DATA_GET_USER>
+  >([]);
+  const [allTagsCalendar, setAllTagsCalendar] = useState<Array<any>>([]);
 
   return (
     <GlobalContext.Provider
@@ -240,6 +256,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         setNameTask,
         descriptionTask,
         setDescriptionTask,
+        usersTask,
+        setUsersTask,
+        tagsTask,
+        setTagsTask,
+        allUsersCalendar,
+        setAllUsersCalendar,
+        allTagsCalendar,
+        setAllTagsCalendar,
         isLoadingTask,
         setIsLoadingTask,
         isTaskModalOnEditing,

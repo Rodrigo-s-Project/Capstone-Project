@@ -1,5 +1,5 @@
 import styles from "./TaskModal.module.scss";
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useState } from "react";
 import { GlobalContext } from "../../../../../../pages/_app";
 import PopUpModal from "../../../../../Modals/PopUp/PopUp";
 import BtnSpinner from "../../../../../Buttons/BtnClick/BtnClick";
@@ -10,7 +10,10 @@ import {
   createTask,
   BODY_CREATE_TASK
 } from "../../../../../../routes/calendar.routes";
+import { getImage } from "../../../../../../routes/cdn.routes";
 import { RESPONSE } from "../../../../../../routes/index.routes";
+import CameraIcon from "../../../../../Svgs/Camera";
+import TimesIcon from "../../../../../Svgs/Times";
 
 const TaskModal = () => {
   const {
@@ -27,9 +30,17 @@ const TaskModal = () => {
     setIsLoadingTask,
     setNameTask,
     setDescriptionTask,
+    usersTask,
+    tagsTask,
+
     isLoadingTask,
     isTaskModalOnEditing,
-    setIsTaskModalOnEditing
+    setIsTaskModalOnEditing,
+
+    allTagsCalendar,
+    allUsersCalendar,
+    setUsersTask,
+    user
   } = useContext(GlobalContext);
 
   const getDate = (): string => {
@@ -40,7 +51,31 @@ const TaskModal = () => {
     })} ${dayClick.date.getDate()}, ${dayClick.date.getFullYear()}`;
   };
 
-  const addPeople = () => {};
+  const [isAddPeopleOpen, setIsAddPeopleOpen] = useState(false);
+  const addPeople = () => {
+    setIsAddPeopleOpen(prev => !prev);
+  };
+  const addPersonToArray = (newId: string) => {
+    if (!usersTask) return;
+    if (!setUsersTask) return;
+
+    let aux: Array<any> = [];
+    let isRepeated: boolean = false;
+    for (let i = 0; i < usersTask.length; i++) {
+      if (usersTask[i] == newId) {
+        isRepeated = true;
+        continue;
+      }
+      aux.push(usersTask[i]);
+    }
+
+    if (!isRepeated) {
+      aux.push(newId);
+    }
+
+    setUsersTask(aux);
+  };
+
   const addTags = () => {};
 
   const createTaskfetch = useCallback(async () => {
@@ -53,8 +88,8 @@ const TaskModal = () => {
         fromDate: dayClick.date.getTime(),
         toDate: dayClick.date.getTime(),
         description: descriptionTask || "",
-        arrayUsers: [],
-        arrayTags: []
+        arrayUsers: usersTask || [],
+        arrayTags: tagsTask || []
       };
 
       if (setIsLoadingTask) setIsLoadingTask(true);
@@ -84,6 +119,7 @@ const TaskModal = () => {
       if (setModalPopUpCreateTask) setModalPopUpCreateTask(false);
       if (setNameTask) setNameTask("");
       if (setDescriptionTask) setDescriptionTask("");
+      setIsAddPeopleOpen(false);
 
       // Refetch
       if (setRefetchTasks) setRefetchTasks(prev => !prev);
@@ -111,13 +147,16 @@ const TaskModal = () => {
     setRefetchTasks,
     setIsLoadingTask,
     setNameTask,
-    setDescriptionTask
+    setDescriptionTask,
+    usersTask,
+    tagsTask
   ]);
 
   const clearEverything = useCallback(() => {
     if (setNameTask) setNameTask("");
     if (setDescriptionTask) setDescriptionTask("");
     if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
+    setIsAddPeopleOpen(false);
   }, [setNameTask, setDescriptionTask, setIsTaskModalOnEditing]);
 
   return (
@@ -140,20 +179,85 @@ const TaskModal = () => {
       <div className={styles.task_date}>Date: {getDate()}</div>
       <div className={styles.task_description}>
         <div className={styles.task_description_title}>Description:</div>
-        <input
+        <textarea
           value={descriptionTask}
           onChange={e => {
             if (setDescriptionTask) setDescriptionTask(e.target.value);
           }}
-          type="text"
           placeholder="description..."
+          maxLength={500}
         />
       </div>
       <div className={styles.task_people}>
         <div className={styles.task_people_title}>People:</div>
-        <div className={styles.task_people_no}>No one selected</div>
+        {usersTask && usersTask.length == 0 && (
+          <div className={styles.task_people_no}>No one selected</div>
+        )}
+        {usersTask && allUsersCalendar && usersTask.length != 0 && (
+          <div className={styles.task_users}>
+            {allUsersCalendar.map((userRef: any, index: number) => {
+              if (usersTask.includes(userRef.id)) {
+                return (
+                  <div className={styles.task_users_container} key={index}>
+                    <div className={styles.task_users_container_img}>
+                      <CameraIcon />
+                      {userRef.profilePictureURL && (
+                        <img
+                          src={`${getImage.url(userRef.profilePictureURL)}`}
+                          alt={userRef.User_Team.username}
+                        />
+                      )}
+                    </div>
+                    <div className={styles.task_users_container_name}>
+                      {userRef.User_Team.username}
+                    </div>
+                    <div
+                      onClick={() => {
+                        addPersonToArray(userRef.id);
+                      }}
+                      className={styles.task_users_container_times}
+                    >
+                      <TimesIcon />
+                    </div>
+                  </div>
+                );
+              }
+            })}
+          </div>
+        )}
+        {isAddPeopleOpen && (
+          <div className={styles.task_users}>
+            {allUsersCalendar &&
+              allUsersCalendar.map((userRef: any, index: number) => {
+                if (user && userRef.id != user.id) {
+                  return (
+                    <div
+                      onClick={() => {
+                        addPersonToArray(userRef.id);
+                      }}
+                      className={styles.task_users_container}
+                      key={index}
+                    >
+                      <div className={styles.task_users_container_img}>
+                        <CameraIcon />
+                        {userRef.profilePictureURL && (
+                          <img
+                            src={`${getImage.url(userRef.profilePictureURL)}`}
+                            alt={userRef.User_Team.username}
+                          />
+                        )}
+                      </div>
+                      <div className={styles.task_users_container_name}>
+                        {userRef.User_Team.username}
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+          </div>
+        )}
         <BtnSpinner
-          text="Add people"
+          text={isAddPeopleOpen ? "Close" : "Add people"}
           callback={addPeople}
           color="lavender-300"
           border="round_5"

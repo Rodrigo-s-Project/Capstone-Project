@@ -17,7 +17,9 @@ type Props = {
 };
 
 const Day = ({ day, isToday }: Props) => {
-  const { currDay, month, year, calendarView } = useContext(CalendarContext);
+  const { currDay, month, year, calendarView, isCalendarLoading } = useContext(
+    CalendarContext
+  );
   const { setModalPopUpCreateTask, setDayClick } = useContext(GlobalContext);
 
   const isAnotherMonth = useCallback(
@@ -51,7 +53,8 @@ const Day = ({ day, isToday }: Props) => {
     <div
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
         day.date
-      ) && styles.day_anotherMonth} ${calendarView == "Day" && styles.day_day}`}
+      ) && styles.day_anotherMonth} ${calendarView == "Day" &&
+        styles.day_day} ${isCalendarLoading && styles.loader}`}
     >
       <div className={styles.day_number}>{day.day}</div>
       <div className={styles.day_plus} onClick={createTask}>

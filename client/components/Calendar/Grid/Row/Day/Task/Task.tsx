@@ -15,7 +15,8 @@ const Task = ({ task, day }: Props) => {
     setDayClick,
     setNameTask,
     setDescriptionTask,
-    setIsTaskModalOnEditing
+    setIsTaskModalOnEditing,
+    setUsersTask
   } = useContext(GlobalContext);
 
   const openTask = () => {
@@ -24,13 +25,21 @@ const Task = ({ task, day }: Props) => {
       setDayClick &&
       setNameTask &&
       setDescriptionTask &&
-      setIsTaskModalOnEditing
+      setIsTaskModalOnEditing &&
+      setUsersTask
     ) {
       setDayClick(day);
       setNameTask(task.taskRef.name);
       setDescriptionTask(task.taskRef.description);
       setIsTaskModalOnEditing(true);
       setModalPopUpCreateTask(true);
+
+      let aux: Array<any> = [];
+      for (let i = 0; i < task.users.length; i++) {
+        aux.push(task.users[i].id);
+      }
+
+      setUsersTask(aux);
     }
   };
 

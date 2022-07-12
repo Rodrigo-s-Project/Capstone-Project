@@ -22,10 +22,17 @@
       font-weight: bold;
       margin-bottom: 5px;
     }
-    input {
-      width: 100%;
+    textarea {
+      width: 100% !important;
       background-color: transparent;
       color: var(--black);
+      height: 100px;
+      resize: none;
+      padding: 5px 0;
+      outline: none;
+      border: none;
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
       &::placeholder {
         color: var(--gray-600);
       }
@@ -63,6 +70,68 @@
       align-items: center;
       justify-content: center;
       margin-left: auto;
+    }
+  }
+  &_users {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+    background-color: var(--gray-200);
+    border-radius: 5px;
+    &_container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 5px;
+      &_name {
+        font-size: 1rem;
+      }
+      &_img {
+        width: 32px;
+        height: 32px;
+        background-color: var(--gray-500);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          width: 40%;
+          height: 40%;
+          fill: var(--gray-100);
+        }
+        img {
+        }
+      }
+      &_times {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        border-radius: 5px;
+        svg {
+          width: 20px;
+          height: 20px;
+          fill: var(--gray-500);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--gray-600);
+          }
+        }
+      }
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background-color: var(--gray-400);
+        }
+      }
     }
   }
 }

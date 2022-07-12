@@ -36,6 +36,12 @@ export const authenticate = async (req, res, next) => {
       }
     });
 
+    if (!req.user) {
+      response.message = "Unauthenticated";
+      res.json(response);
+      return;
+    }
+
     next();
   } catch (error) {
     console.error(error);

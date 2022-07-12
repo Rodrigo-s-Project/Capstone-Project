@@ -3,8 +3,9 @@ import { Task } from "../../models/Task";
 import { User } from "../../models/User";
 import { Calendar } from "../../models/Calendar";
 import { Tag } from "../../models/Tag";
+import { Team } from "../../models/Team";
 import { Op } from "sequelize";
-import { BODY_CREATE_TASK } from "./calendar.types";
+import { BODY_CREATE_TASK, BODY_CREATE_TAG } from "./calendar.types";
 
 export const getAllTasksCalendar = async (req, res) => {
   let response: RESPONSE = {
@@ -20,6 +21,14 @@ export const getAllTasksCalendar = async (req, res) => {
 
     if (isNaN(teamId) || isNaN(fromDate) || isNaN(toDate)) {
       response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const teamRef: any = await Team.findByPk(teamId);
+
+    if (!teamRef) {
+      response.message = "Team not found.";
       res.json(response);
       return;
     }
@@ -58,11 +67,13 @@ export const getAllTasksCalendar = async (req, res) => {
     }
 
     const tagsCalendar: Array<any> = await calendarRef.getTags();
+    const users: Array<any> = await teamRef.getUsers();
 
     response.data = {
       tasks,
       calendar: calendarRef,
-      tagsCalendar
+      tagsCalendar,
+      users
     };
     response.typeMsg = "success";
     res.json(response);
@@ -142,47 +153,91 @@ export const createTaskCalendar = async (req, res) => {
 
     // Relate with users
     for (let i = 0; i < arrayUsers.length; i++) {
-      const userRef: any = await User.findByPk(arrayUsers[i].userId);
+      const userRef: any = await User.findByPk(arrayUsers[i]);
 
       if (!userRef) continue;
 
       await newTask.addUser(userRef);
     }
 
-    // Create tags and relate them
+    // Relate tags
     for (let i = 0; i < arrayTags.length; i++) {
-      const newTag: any = await Tag.create({
-        color: arrayTags[i].color,
-        text: arrayTags[i].text,
-        calendarId
-      });
+      const tagRef: any = await Tag.findByPk(arrayTags[i]);
 
-      await newTask.addTag(newTag);
-    }
+      if (!tagRef) continue;
 
-    const arrayTasks: Array<any> = await Task.findAll({
-      where: {
-        calendarId: calendarRef.id,
-        fromDate: {
-          [Op.between]: [fromDate, toDate] // Between from and to
-        }
-      }
-    });
-
-    let tasks: Array<any> = [];
-    for (let i = 0; i < arrayTasks.length; i++) {
-      const users: Array<any> = await arrayTasks[i].getUsers();
-      const tags: Array<any> = await arrayTasks[i].getTags();
-
-      tasks.push({
-        taskRef: arrayTasks[i],
-        users,
-        tags
-      });
+      await newTask.addTag(tagRef);
     }
 
     response.typeMsg = "success";
     response.message = "Task created!";
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {
+      tasks: [],
+      calendar: {},
+      tagsCalendar: {}
+    };
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const createTagCalendar = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { teamId, calendarId } = req.params;
+    const { text, color }: BODY_CREATE_TAG = req.body;
+
+    // Checks
+    if (isNaN(teamId) || isNaN(calendarId)) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const calendarRef: any = await Calendar.findOne({
+      where: {
+        teamId
+      }
+    });
+
+    if (!calendarRef) {
+      response.message = "Calendar not found.";
+      res.json(response);
+      return;
+    }
+
+    if (text.trim() == "" || color.trim() == "") {
+      response.message = "Incomplete information.";
+      res.json(response);
+      return;
+    }
+
+    // Create tag
+    const newTag: any = await Tag.create({
+      text,
+      color
+    });
+
+    // We make the association
+    calendarRef.addTag(newTag);
+
+    response.readMsg = false;
+    response.typeMsg = "success";
     res.json(response);
   } catch (error) {
     console.error(error);

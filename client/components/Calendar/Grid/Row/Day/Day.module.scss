@@ -3,6 +3,29 @@
   width: calc(100% / 7);
   border: 0.5px solid var(--gray-500);
   overflow: hidden;
+  &::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--lavender-300);
+    background: linear-gradient(
+      to right, transparent, var(--gray-500), transparent
+    );
+    opacity: 0;
+    visibility: hidden;
+    z-index: 100;
+    animation-timing-function: linear;
+    animation-name: anima-loader-day;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+  }
   &_number {
     position: absolute;
     top: 5px;
@@ -95,4 +118,21 @@
   gap: 5px;
   margin-top: 27.5px;
   padding-bottom: 10px;
+}
+.loader {
+  &::after {
+    opacity: 0.5;
+    visibility: visible;
+  }
+}
+
+@keyframes anima-loader-day {
+  0% {
+    left: -100%;
+    right: 100%;
+  }
+  100% {
+    left: 100%;
+    right: -100%;
+  }
 }

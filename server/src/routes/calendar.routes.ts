@@ -4,7 +4,8 @@ const router = express.Router();
 import { authenticate } from "../middlewares/auth/index";
 import {
   getAllTasksCalendar,
-  createTaskCalendar
+  createTaskCalendar,
+  createTagCalendar
 } from "../controllers/calendar/index";
 
 // Protected route
@@ -18,5 +19,6 @@ router.post(
   authenticate,
   createTaskCalendar
 );
+router.post("/create-tag/:teamId/:calendarId", authenticate, createTagCalendar);
 
 export default router;

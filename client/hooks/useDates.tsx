@@ -25,7 +25,12 @@ export const useDates = () => {
     currDay,
     setIsCalendarLoading
   } = useContext(CalendarContext);
-  const { setArrayMsgs, selectedTeam } = useContext(GlobalContext);
+  const {
+    setArrayMsgs,
+    selectedTeam,
+    setAllUsersCalendar,
+    setAllTagsCalendar
+  } = useContext(GlobalContext);
 
   const fetchTasks = useCallback(
     async (
@@ -49,6 +54,11 @@ export const useDates = () => {
         const data: RESPONSE = response.data;
         const dataResponse: DATA_GET_TASKS = data.data;
 
+        if (setAllUsersCalendar && setAllTagsCalendar) {
+          setAllUsersCalendar(dataResponse.users);
+          setAllTagsCalendar(dataResponse.tagsCalendar);
+        }
+
         return dataResponse;
       } catch (error) {
         if (setIsCalendarLoading) setIsCalendarLoading(false);
@@ -66,7 +76,7 @@ export const useDates = () => {
         return undefined;
       }
     },
-    [selectedTeam]
+    [selectedTeam, setAllUsersCalendar, setAllTagsCalendar]
   );
 
   const getTaskType = (allTasks: DATA_GET_TASKS, fromDate: number) => {
@@ -86,18 +96,22 @@ export const useDates = () => {
   // FETCHING
   const getDaysInMonth = async (
     _month: any,
-    _year: any
+    _year: any,
+    needsToFetch: boolean = true
   ): Promise<Array<DateCalendar>> => {
     if (!Number.isFinite(_year) || !Number.isFinite(_month)) return [];
 
     let date: Date = new Date(_year, _month, 1);
+    let allTasks: DATA_GET_TASKS | undefined = undefined;
 
-    const allTasks: DATA_GET_TASKS | undefined = await fetchTasks(
-      new Date(_year, _month - 2, 1).getTime(),
-      new Date(_year, _month + 1, 1).getTime()
-    );
+    if (needsToFetch) {
+      allTasks = await fetchTasks(
+        new Date(_year, _month - 2, 1).getTime(),
+        new Date(_year, _month + 1, 1).getTime()
+      );
+    }
 
-    if (!allTasks) {
+    if (!allTasks || !needsToFetch) {
       let days: Array<DateCalendar> = [];
       while (date.getMonth() === _month) {
         let thisDate: Date = new Date(date);
@@ -129,6 +143,26 @@ export const useDates = () => {
     }
 
     return daysData;
+  };
+
+  const getDaysInMonthStatic = (
+    _month: any,
+    _year: any
+  ): Array<DateCalendar> => {
+    if (!Number.isFinite(_year) || !Number.isFinite(_month)) return [];
+    let date: Date = new Date(_year, _month, 1);
+    let days: Array<DateCalendar> = [];
+    while (date.getMonth() === _month) {
+      let thisDate: Date = new Date(date);
+      days.push({
+        date: thisDate,
+        weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
+        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
+        tasks: []
+      });
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
   };
 
   const getDaysInWeek = async (
@@ -183,13 +217,13 @@ export const useDates = () => {
   };
 
   // ROWS
-  const getNumberOfRows = useCallback(async (): Promise<number> => {
-    if (calendarView == "Month") return await getNumberOfRowsInMonth();
+  const getNumberOfRows = useCallback((): number => {
+    if (calendarView == "Month") return getNumberOfRowsInMonth();
     return 1;
   }, [calendarView, month, year]);
 
-  const getNumberOfRowsInMonth = useCallback(async (): Promise<number> => {
-    const dates: Array<DateCalendar> = await getDaysInMonth(month, year);
+  const getNumberOfRowsInMonth = useCallback((): number => {
+    const dates: Array<DateCalendar> = getDaysInMonthStatic(month, year);
     let numberOfSundays = 0;
     for (let i = 0; i < dates.length; i++) {
       if (dates[i].weekday == "Sunday") {
@@ -215,11 +249,11 @@ export const useDates = () => {
     return [];
   }, [calendarView, month, year, currDay, selectedTeam]);
 
-  const createMatrixDay = (
+  const createMatrixDay = async (
     _month: any,
     _year: any,
     _day: any
-  ): Array<Array<DateCalendar>> => {
+  ): Promise<Array<Array<DateCalendar>>> => {
     if (
       !Number.isFinite(_year) ||
       !Number.isFinite(_month) ||
@@ -229,8 +263,28 @@ export const useDates = () => {
 
     // Get day
     let thisDate: Date = new Date(_year, _month, _day);
+
+    let date: Date = new Date(_year, _month, _day - 1);
+    let date2: Date = new Date(_year, _month, _day + 1);
+    const allTasks: DATA_GET_TASKS | undefined = await fetchTasks(
+      date.getTime(),
+      date2.getTime()
+    );
+
     let days: Array<DateCalendar> = [];
 
+    if (allTasks) {
+      // Data
+      days.push({
+        date: thisDate,
+        weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
+        day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
+        tasks: getTaskType(allTasks, thisDate.getTime())
+      });
+
+      return [days];
+    }
+    // Static
     days.push({
       date: thisDate,
       weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
@@ -246,7 +300,7 @@ export const useDates = () => {
   > => {
     let matrix: Array<Array<DateCalendar>> = [];
     const numberOfRows: number = await getNumberOfRows();
-    const dates: Array<DateCalendar> = await getDaysInMonth(month, year);
+    const dates: Array<DateCalendar> = await getDaysInMonth(month, year, true);
 
     const auxMonth: any = month;
     const auxYear: any = year;
@@ -261,7 +315,8 @@ export const useDates = () => {
     const prevYear: number = auxMonth == 0 ? auxYear - 1 : auxYear;
     const prevDates: Array<DateCalendar> = await getDaysInMonth(
       prevMonth,
-      prevYear
+      prevYear,
+      true
     );
 
     // dates[0].date.getDay() -> is the number of complementary dates it needs
@@ -289,7 +344,8 @@ export const useDates = () => {
     const nextYear: number = auxMonth == 11 ? auxYear + 1 : auxYear;
     const nextDates: Array<DateCalendar> = await getDaysInMonth(
       nextMonth,
-      nextYear
+      nextYear,
+      true
     );
 
     // 6 - dates[dates.length - 1].date.getDay() -> is the number of complementary dates it needs

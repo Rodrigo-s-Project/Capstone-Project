@@ -1,3 +1,5 @@
+import { DATA_GET_USER } from "./main.routes";
+
 export type TaskType = {
   taskRef: {
     id: number;
@@ -37,6 +39,7 @@ export type DATA_GET_TASKS = {
     calendarId: number;
     taskId: number;
   }>;
+  users: Array<DATA_GET_USER>;
 };
 
 export const getAllTasks = {
@@ -51,13 +54,8 @@ export type BODY_CREATE_TASK = {
   fromDate: number;
   toDate: number;
   description: string;
-  arrayUsers: Array<{
-    userId: string;
-  }>;
-  arrayTags: Array<{
-    text: string;
-    color: string;
-  }>;
+  arrayUsers: Array<string>;
+  arrayTags: Array<string>;
 };
 
 export const createTask = {
