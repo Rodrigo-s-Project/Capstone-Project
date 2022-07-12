@@ -6,7 +6,7 @@ import Spinner from "../../Loader/Spinner/Spinner";
 type Props = {
   children: any;
   callback: () => any;
-  color: "lavender-300" | "lavender-200" | "gray";
+  color: "lavender-300" | "lavender-200" | "gray" | "danger";
   border: "complete_rounded" | "round_5";
   additionalClass?: string;
   isLoading?: boolean;
