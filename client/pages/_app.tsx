@@ -93,6 +93,14 @@ interface ValueAppProvider {
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
 
   callBackImages: any;
+  idTask: number;
+  setIdTask: Dispatch<SetStateAction<number>>;
+  isSingleDateTask: boolean;
+  setIsSingleDateTask: Dispatch<SetStateAction<boolean>>;
+  fromTask: number;
+  setFromTask: Dispatch<SetStateAction<number>>;
+  toTask: number;
+  setToTask: Dispatch<SetStateAction<number>>;
   nameTask: string;
   setNameTask: Dispatch<SetStateAction<string>>;
   descriptionTask: string;
@@ -192,6 +200,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   const callBackImages = useRef<any>(null);
 
   // Tasks modal state
+  const [idTask, setIdTask] = useState<number>(0);
+  const [isSingleDateTask, setIsSingleDateTask] = useState<boolean>(false);
+  const [fromTask, setFromTask] = useState<number>(0);
+  const [toTask, setToTask] = useState<number>(0);
   const [nameTask, setNameTask] = useState<string>("");
   const [descriptionTask, setDescriptionTask] = useState<string>("");
   const [usersTask, setUsersTask] = useState<Array<string>>([]);
@@ -252,6 +264,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         callBackImages,
         refetchTasks,
         setRefetchTasks,
+        idTask,
+        isSingleDateTask,
+        setIsSingleDateTask,
+        fromTask,
+        setFromTask,
+        toTask,
+        setToTask,
+        setIdTask,
         nameTask,
         setNameTask,
         descriptionTask,

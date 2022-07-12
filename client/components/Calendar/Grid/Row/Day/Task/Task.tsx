@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
+import { invertColor } from "../../../../../../utils/invertColors";
 
 type Props = {
   task: TaskType;
@@ -17,7 +18,11 @@ const Task = ({ task, day }: Props) => {
     setDescriptionTask,
     setIsTaskModalOnEditing,
     setUsersTask,
-    setTagsTask
+    setTagsTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask
   } = useContext(GlobalContext);
 
   const openTask = () => {
@@ -28,9 +33,17 @@ const Task = ({ task, day }: Props) => {
       setDescriptionTask &&
       setIsTaskModalOnEditing &&
       setUsersTask &&
-      setTagsTask
+      setTagsTask &&
+      setIdTask &&
+      setIsSingleDateTask &&
+      setFromTask &&
+      setToTask
     ) {
       setDayClick(day);
+      setIdTask(task.taskRef.id);
+      setIsSingleDateTask(task.taskRef.singleDate);
+      setFromTask(task.taskRef.fromDate);
+      setToTask(task.taskRef.toDate);
       setNameTask(task.taskRef.name);
       setDescriptionTask(task.taskRef.description);
       setIsTaskModalOnEditing(true);
@@ -55,6 +68,32 @@ const Task = ({ task, day }: Props) => {
   return (
     <div onClick={openTask} className={styles.task} title="Open task">
       {task.taskRef.name}
+      {task.tags.length > 0 && (
+        <div className={styles.task_tags}>
+          {task.tags.map(
+            (
+              tag: {
+                text: string;
+                id: number;
+                color: string;
+              },
+              index: number
+            ) => {
+              return (
+                <div
+                  style={{
+                    backgroundColor: tag.color,
+                    color: invertColor(tag.color, true)
+                  }}
+                  key={index}
+                >
+                  {tag.text}
+                </div>
+              );
+            }
+          )}
+        </div>
+      )}
     </div>
   );
 };

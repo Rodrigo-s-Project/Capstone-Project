@@ -5,7 +5,8 @@ import { authenticate } from "../middlewares/auth/index";
 import {
   getAllTasksCalendar,
   createTaskCalendar,
-  createTagCalendar
+  createTagCalendar,
+  editTaskCalendar
 } from "../controllers/calendar/index";
 
 // Protected route
@@ -18,6 +19,11 @@ router.post(
   "/create-task/:teamId/:calendarId",
   authenticate,
   createTaskCalendar
+);
+router.put(
+  "/edit-task/:teamId/:calendarId/:taskId",
+  authenticate,
+  editTaskCalendar
 );
 router.post("/create-tag/:teamId/:calendarId", authenticate, createTagCalendar);
 

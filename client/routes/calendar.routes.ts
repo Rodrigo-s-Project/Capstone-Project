@@ -74,3 +74,19 @@ export const createTag = {
     `${process.env.API_URL}/dashboard/calendar/create-tag/${teamId}/${calendarId}`,
   method: "post"
 };
+
+export type BODY_EDIT_TASK = {
+  name: string;
+  singleDate: any;
+  fromDate: number;
+  toDate: any;
+  description: string;
+  arrayUsers: Array<string>;
+  arrayTags: Array<string>;
+};
+
+export const editTask = {
+  url: (teamId: any, calendarId: any, taskId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/edit-task/${teamId}/${calendarId}/${taskId}`,
+  method: "put"
+};

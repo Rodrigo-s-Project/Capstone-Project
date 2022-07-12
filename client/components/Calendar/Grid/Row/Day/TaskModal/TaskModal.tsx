@@ -13,7 +13,9 @@ import {
   createTask,
   BODY_CREATE_TASK,
   createTag,
-  BODY_CREATE_TAG
+  BODY_CREATE_TAG,
+  editTask,
+  BODY_EDIT_TASK
 } from "../../../../../../routes/calendar.routes";
 import { getImage } from "../../../../../../routes/cdn.routes";
 import { RESPONSE } from "../../../../../../routes/index.routes";
@@ -47,7 +49,15 @@ const TaskModal = () => {
     allUsersCalendar,
     setUsersTask,
     user,
-    setTagsTask
+    setTagsTask,
+    idTask,
+    isSingleDateTask,
+    fromTask,
+    toTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask
   } = useContext(GlobalContext);
 
   const getDate = (): string => {
@@ -215,6 +225,10 @@ const TaskModal = () => {
       if (setDescriptionTask) setDescriptionTask("");
       if (setTagsTask) setTagsTask([]);
       if (setUsersTask) setUsersTask([]);
+      if (setIdTask) setIdTask(0);
+      if (setIsSingleDateTask) setIsSingleDateTask(false);
+      if (setFromTask) setFromTask(0);
+      if (setToTask) setToTask(0);
       setNewTagTextState("");
       setNewTagColorState("#4542f7");
       setIsAddPeopleOpen(false);
@@ -250,7 +264,111 @@ const TaskModal = () => {
     usersTask,
     tagsTask,
     setTagsTask,
-    setUsersTask
+    setUsersTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask
+  ]);
+
+  const editTaskFetch = useCallback(async () => {
+    try {
+      if (
+        !dayClick ||
+        !selectedTeam ||
+        !selectedCompany ||
+        !idTask ||
+        !fromTask
+      )
+        return;
+
+      const body: BODY_EDIT_TASK = {
+        name: nameTask || "",
+        singleDate: isSingleDateTask,
+        fromDate: fromTask,
+        toDate: toTask,
+        description: descriptionTask || "",
+        arrayUsers: usersTask || [],
+        arrayTags: tagsTask || []
+      };
+
+      if (setIsLoadingTask) setIsLoadingTask(true);
+
+      const response = await axios.put(
+        editTask.url(selectedTeam.id, selectedCompany.id, idTask),
+        body,
+        {
+          withCredentials: true
+        }
+      );
+
+      if (setIsLoadingTask) setIsLoadingTask(false);
+
+      const data: RESPONSE = response.data;
+
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      if (setModalPopUpCreateTask) setModalPopUpCreateTask(false);
+      if (setNameTask) setNameTask("");
+      if (setDescriptionTask) setDescriptionTask("");
+      if (setTagsTask) setTagsTask([]);
+      if (setUsersTask) setUsersTask([]);
+      if (setIdTask) setIdTask(0);
+      if (setIsSingleDateTask) setIsSingleDateTask(false);
+      if (setFromTask) setFromTask(0);
+      if (setToTask) setToTask(0);
+      setNewTagTextState("");
+      setNewTagColorState("#4542f7");
+      setIsAddPeopleOpen(false);
+      setIsAddTagsopen(false);
+
+      // Refetch
+      if (setRefetchTasks) setRefetchTasks(prev => !prev);
+    } catch (error) {
+      console.error(error);
+      if (setIsLoadingTask) setIsLoadingTask(false);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on edit task!"
+          },
+          ...prev
+        ]);
+      }
+    }
+  }, [
+    dayClick,
+    selectedTeam,
+    selectedCompany,
+    setArrayMsgs,
+    nameTask,
+    descriptionTask,
+    setModalPopUpCreateTask,
+    setRefetchTasks,
+    setIsLoadingTask,
+    setNameTask,
+    setDescriptionTask,
+    usersTask,
+    tagsTask,
+    setTagsTask,
+    setUsersTask,
+    idTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask,
+    fromTask,
+    isSingleDateTask,
+    toTask
   ]);
 
   const clearEverything = useCallback(() => {
@@ -259,6 +377,10 @@ const TaskModal = () => {
     if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
     if (setTagsTask) setTagsTask([]);
     if (setUsersTask) setUsersTask([]);
+    if (setIdTask) setIdTask(0);
+    if (setIsSingleDateTask) setIsSingleDateTask(false);
+    if (setFromTask) setFromTask(0);
+    if (setToTask) setToTask(0);
     setIsAddPeopleOpen(false);
     setIsAddTagsopen(false);
     setNewTagTextState("");
@@ -268,7 +390,11 @@ const TaskModal = () => {
     setDescriptionTask,
     setIsTaskModalOnEditing,
     setTagsTask,
-    setUsersTask
+    setUsersTask,
+    setFromTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setToTask
   ]);
 
   return (
@@ -422,7 +548,7 @@ const TaskModal = () => {
               text={isTaskModalOnEditing ? "Edit Task" : "Create Task"}
               callback={() => {
                 if (isTaskModalOnEditing) {
-                  // TODO: edit task endpoint
+                  editTaskFetch();
                 } else {
                   createTaskfetch();
                 }

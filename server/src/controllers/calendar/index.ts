@@ -255,3 +255,112 @@ export const createTagCalendar = async (req, res) => {
     res.json(response);
   }
 };
+
+export const editTaskCalendar = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { teamId, calendarId, taskId } = req.params;
+    const {
+      name,
+      singleDate,
+      fromDate,
+      toDate,
+      description,
+      arrayUsers,
+      arrayTags
+    }: BODY_CREATE_TASK = req.body;
+
+    // Checks
+    if (
+      isNaN(teamId) ||
+      isNaN(fromDate) ||
+      isNaN(calendarId) ||
+      isNaN(taskId)
+    ) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const calendarRef: any = await Calendar.findOne({
+      where: {
+        teamId
+      }
+    });
+
+    if (!calendarRef) {
+      response.message = "Calendar not found.";
+      res.json(response);
+      return;
+    }
+
+    if (name.trim() == "" || description.trim() == "") {
+      response.message = "Incomplete information.";
+      res.json(response);
+      return;
+    }
+
+    // Edit task
+    const taskRef: any = await Task.findByPk(taskId);
+
+    if (!taskRef) {
+      response.message = "Task not found.";
+      res.json(response);
+      return;
+    }
+
+    await taskRef.update({
+      name,
+      singleDate,
+      fromDate,
+      toDate,
+      description
+    });
+
+    // Edit elated users
+    let arrayUsersRefs: Array<any> = [];
+    for (let i = 0; i < arrayUsers.length; i++) {
+      const userRef: any = await User.findByPk(arrayUsers[i]);
+
+      if (!userRef) continue;
+      arrayUsersRefs.push(userRef);
+    }
+    await taskRef.setUsers(arrayUsersRefs);
+
+    // Edit related tags
+    let arrayTagsRefs: Array<any> = [];
+    for (let i = 0; i < arrayTags.length; i++) {
+      const tagRef: any = await Tag.findByPk(arrayTags[i]);
+
+      if (!tagRef) continue;
+      arrayTagsRefs.push(tagRef);
+    }
+    await taskRef.setTags(arrayTagsRefs);
+
+    response.typeMsg = "success";
+    response.message = "Task edited successfully!"
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {
+      tasks: [],
+      calendar: {},
+      tagsCalendar: {}
+    };
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
