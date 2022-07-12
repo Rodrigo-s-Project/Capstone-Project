@@ -13,6 +13,16 @@
   white-space: nowrap;
   cursor: pointer;
   position: relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  &::selection {
+    background-color: transparent;
+    color: inherit;
+  }
   &::before {
     position: absolute;
     content: "";
@@ -36,10 +46,18 @@
     flex-wrap: wrap;
     margin: 5px 0;
     gap: 10px;
+    &::selection {
+      background-color: transparent;
+      color: inherit;
+    }
     div {
       padding: 3px 5px;
       border-radius: 5px;
-      font-size: .8rem;
+      font-size: 0.8rem;
+      &::selection {
+        background-color: transparent;
+        color: inherit;
+      }
     }
   }
 
@@ -48,4 +66,26 @@
       background-color: var(--lavender-400);
     }
   }
+}
+.resize {
+}
+.resizer_left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 1;
+  // background-color: yellow;
+}
+.resizer_right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 1;
+  // background-color: violet;
 }

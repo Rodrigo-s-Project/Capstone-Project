@@ -15,9 +15,7 @@ export type DateCalendar = {
   weekday: string;
   day: number;
   tasks: Array<TaskType> | undefined;
-  isOnHover: boolean;
-  isResizing: boolean;
-  dontShow?: boolean
+  dontShow?: boolean;
 };
 
 export const useDates = () => {
@@ -124,9 +122,7 @@ export const useDates = () => {
           day: parseInt(
             thisDate.toLocaleDateString("en-US", { day: "numeric" })
           ),
-          tasks: [],
-          isOnHover: false,
-          isResizing: false
+          tasks: []
         });
         date.setDate(date.getDate() + 1);
       }
@@ -142,9 +138,7 @@ export const useDates = () => {
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
         day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
-        tasks: getTaskType(allTasks, thisDate.getTime()),
-        isOnHover: false,
-        isResizing: false
+        tasks: getTaskType(allTasks, thisDate.getTime())
       });
       dateData.setDate(dateData.getDate() + 1);
     }
@@ -165,9 +159,7 @@ export const useDates = () => {
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
         day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
-        tasks: [],
-        isOnHover: false,
-        isResizing: false
+        tasks: []
       });
       date.setDate(date.getDate() + 1);
     }
@@ -204,9 +196,7 @@ export const useDates = () => {
           day: parseInt(
             thisDate.toLocaleDateString("en-US", { day: "numeric" })
           ),
-          tasks: [],
-          isOnHover: false,
-          isResizing: false
+          tasks: []
         });
       }
 
@@ -220,9 +210,7 @@ export const useDates = () => {
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
         day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
-        tasks: getTaskType(allTasks, thisDate.getTime()),
-        isOnHover: false,
-        isResizing: false
+        tasks: getTaskType(allTasks, thisDate.getTime())
       });
     }
 
@@ -292,9 +280,7 @@ export const useDates = () => {
         date: thisDate,
         weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
         day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
-        tasks: getTaskType(allTasks, thisDate.getTime()),
-        isOnHover: false,
-        isResizing: false
+        tasks: getTaskType(allTasks, thisDate.getTime())
       });
 
       return [days];
@@ -304,9 +290,7 @@ export const useDates = () => {
       date: thisDate,
       weekday: thisDate.toLocaleDateString("en-US", { weekday: "long" }),
       day: parseInt(thisDate.toLocaleDateString("en-US", { day: "numeric" })),
-      tasks: [],
-      isOnHover: false,
-      isResizing: false
+      tasks: []
     });
 
     return [days];

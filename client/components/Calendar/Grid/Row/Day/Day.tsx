@@ -57,6 +57,163 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
     }
   };
 
+  const onHoverEditToDateTask = useCallback(() => {
+    if (!matrixDates) return;
+    let newMatrix: Array<Array<DateCalendar>> = [];
+    let coordenatesToEdit: Array<Array<number>> = [];
+    let coordenatesToEditArrayIds: Array<number> = [];
+
+    for (let i = 0; i < matrixDates.length; i++) {
+      const rowElement = matrixDates[i];
+      let newMatrixRow: Array<DateCalendar> = [];
+
+      for (let j = 0; j < rowElement.length; j++) {
+        let element = rowElement[j];
+
+        if (element.tasks) {
+          // Ours, so we need to go deeper
+          let newArrayTasks: Array<TaskType> | undefined = [];
+
+          for (let k = 0; k < element.tasks.length; k++) {
+            const taskRefLoop: TaskType = element.tasks[k];
+
+            if (taskRefLoop.isResizing) {
+              // Task that is resizing
+              newArrayTasks.push({
+                ...element.tasks[k],
+                taskRef: {
+                  ...element.tasks[k].taskRef,
+                  toDate: day.date.getTime(),
+                  singleDate:
+                    day.date.getTime() == element.tasks[k].taskRef.fromDate
+                }
+              });
+
+              if (
+                day.date.getTime() >= element.tasks[k].taskRef.fromDate &&
+                !coordenatesToEditArrayIds.includes(element.tasks[k].taskRef.id)
+              ) {
+                // Multiple task
+                // Then add to coordenates
+                coordenatesToEdit.push([i, j, k]);
+                coordenatesToEditArrayIds.push(element.tasks[k].taskRef.id);
+              }
+            } else {
+              newArrayTasks.push(taskRefLoop);
+            }
+          }
+
+          // We need to create replicas from resizing -> toDate
+          newMatrixRow.push({
+            date: rowElement[j].date,
+            weekday: rowElement[j].weekday,
+            day: rowElement[j].day,
+            dontShow: rowElement[j].dontShow,
+            tasks: newArrayTasks
+          });
+        } else {
+          newMatrixRow.push(element);
+        }
+      }
+      newMatrix.push(newMatrixRow);
+    }
+
+    createReplicas(newMatrix, coordenatesToEdit);
+  }, [matrixDates, setMatrixDates]);
+
+  const checkIfAlreadytaskInDay = (
+    includesArr: Array<TaskType>,
+    task: TaskType
+  ): boolean => {
+    let isThere: boolean = false;
+
+    for (let i = 0; i < includesArr.length; i++) {
+      if (includesArr[i].taskRef.id == task.taskRef.id) {
+        isThere = true;
+        break;
+      }
+    }
+
+    return isThere;
+  };
+  const createReplicas = (
+    matrixWithState: Array<Array<DateCalendar>>,
+    coordenatesToEdit: Array<Array<number>>
+  ) => {
+    let replicaMatrix: Array<Array<DateCalendar>> = matrixWithState;
+
+    for (let i = 0; i < coordenatesToEdit.length; i++) {
+      const c: Array<number> = coordenatesToEdit[i];
+      let row = matrixWithState[c[0]];
+      let singleDate = row[c[1]];
+      if (!singleDate.tasks) continue;
+
+      let taskToEditToReplicate: TaskType | undefined = singleDate.tasks[c[2]];
+      let toDateTaskForReference: number = taskToEditToReplicate.taskRef.toDate;
+      let fromDateTaskForReference: number =
+        taskToEditToReplicate.taskRef.fromDate;
+
+      // Start running to matrixWithState
+      // We are going to start at our current indexes
+      for (let j = 0; j < matrixWithState.length; j++) {
+        for (let k = 0; k < matrixWithState[j].length; k++) {
+          let singleDateNext = matrixWithState[j][k];
+          if (singleDateNext.date.getTime() >= fromDateTaskForReference) {
+            const toDateNow: number = singleDateNext.date.getTime();
+            if (toDateTaskForReference >= toDateNow) {
+              // We are still between or in the tail
+              // replicate taskToEditToReplicate in this location
+              let currTasksOnState: Array<TaskType> | undefined =
+                matrixWithState[j][k].tasks;
+              let auxArr: Array<TaskType> = [];
+              if (currTasksOnState) {
+                auxArr = [...auxArr, ...currTasksOnState];
+              }
+
+              // We need to add this before current state
+              // Check if it is already there or not
+              if (
+                taskToEditToReplicate &&
+                !checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)
+              ) {
+                auxArr = [taskToEditToReplicate, ...auxArr];
+              }
+
+              replicaMatrix[j][k].tasks = auxArr;
+            }
+            if (toDateTaskForReference < toDateNow) {
+              // We are further
+              // This means that we dont need further tasks with this id
+              let currTasksOnState: Array<TaskType> | undefined =
+                matrixWithState[j][k].tasks;
+              let auxArr: Array<TaskType> = [];
+              if (currTasksOnState) {
+                auxArr = [...auxArr, ...currTasksOnState];
+              }
+              if (checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)) {
+                // It is inside
+                // Destroy it
+                let newAuxArr: Array<TaskType> = [];
+                for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
+                  if (
+                    auxArr[indexAux].taskRef.id !=
+                    taskToEditToReplicate.taskRef.id
+                  ) {
+                    newAuxArr.push(auxArr[indexAux]);
+                  }
+                }
+                auxArr = newAuxArr;
+              }
+              replicaMatrix[j][k].tasks = auxArr;
+            }
+          }
+        }
+      }
+    }
+
+    setMatrixDates(replicaMatrix);
+  };
+
   return (
     <div
       className={`${styles.day} ${isToday && styles.day_today} ${isAnotherMonth(
@@ -64,6 +221,7 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
       ) && styles.day_anotherMonth} ${calendarView == "Day" &&
         styles.day_day} ${(isCalendarLoading || day.dontShow) &&
         styles.loader}`}
+      onMouseEnter={onHoverEditToDateTask}
     >
       {!day.dontShow && (
         <>

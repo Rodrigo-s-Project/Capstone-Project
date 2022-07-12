@@ -6,7 +6,6 @@ import { Tag } from "../../models/Tag";
 import { Team } from "../../models/Team";
 import { Op } from "sequelize";
 import { BODY_CREATE_TASK, BODY_CREATE_TAG } from "./calendar.types";
-import { userInfo } from "os";
 
 export const getAllTasksCalendar = async (req, res) => {
   let response: RESPONSE = {
@@ -63,7 +62,8 @@ export const getAllTasksCalendar = async (req, res) => {
       tasks.push({
         taskRef: arrayTasks[i],
         users,
-        tags
+        tags,
+        isResizing: false // Always include
       });
     }
 

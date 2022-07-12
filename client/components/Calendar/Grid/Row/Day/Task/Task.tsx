@@ -1,5 +1,11 @@
 import styles from "./Task.module.scss";
-import { useContext, Dispatch, SetStateAction } from "react";
+import {
+  useContext,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect
+} from "react";
 import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
@@ -67,47 +73,102 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     }
   };
 
-  const dragStarts = () => {
-    // if (!matrixDates) return;
-    // let newMatrix: Array<Array<DateCalendar>> = [];
+  const dragStarts = useCallback(() => {
+    if (!matrixDates) return;
+    let newMatrix: Array<Array<DateCalendar>> = [];
 
-    // for (let i = 0; i < matrixDates.length; i++) {
-    //   const rowElement = matrixDates[i];
-    //   let newMatrixRow: Array<DateCalendar> = [];
+    for (let i = 0; i < matrixDates.length; i++) {
+      const rowElement = matrixDates[i];
+      let newMatrixRow: Array<DateCalendar> = [];
 
-    //   for (let j = 0; j < rowElement.length; j++) {
-    //     const element = rowElement[j];
+      for (let j = 0; j < rowElement.length; j++) {
+        let element = rowElement[j];
 
-    //     if (element.day == day.day) {
-    //       // Ours
-    //       newMatrixRow.push({
-    //         ...element,
-    //         isResizing: true
-    //       });
-    //     } else {
-    //       newMatrixRow.push(element);
-    //     }
-    //   }
+        if (element.tasks) {
+          // Ours, so we need to go deeper
+          let newArrayTasks: Array<TaskType> | undefined = [];
 
-    //   newMatrix.push(newMatrixRow);
-    // }
+          for (let k = 0; k < element.tasks.length; k++) {
+            const taskRefLoop: TaskType = element.tasks[k];
 
-    // setMatrixDates(newMatrix);
-  };
+            if (taskRefLoop.taskRef.id == task.taskRef.id) {
+              // Our task... finally
+              // So we need to edit its resizing
+              newArrayTasks.push({
+                ...element.tasks[k],
+                isResizing: true
+              });
+            } else {
+              newArrayTasks.push(taskRefLoop);
+            }
+          }
+          newMatrixRow.push({
+            date: rowElement[j].date,
+            weekday: rowElement[j].weekday,
+            day: rowElement[j].day,
+            dontShow: rowElement[j].dontShow,
+            tasks: newArrayTasks
+          });
+        } else {
+          newMatrixRow.push(element);
+        }
+      }
+      newMatrix.push(newMatrixRow);
+    }
 
-  const dragFinishes = () => {};
+    setMatrixDates(newMatrix);
+  }, [matrixDates, setMatrixDates]);
+
+  const dragFinishes = useCallback(() => {
+    // In this case we want to stablich all the tasks resizing to false
+    if (!matrixDates) return;
+    let newMatrix: Array<Array<DateCalendar>> = [];
+    for (let i = 0; i < matrixDates.length; i++) {
+      const rowElement = matrixDates[i];
+      let newMatrixRow: Array<DateCalendar> = [];
+
+      for (let j = 0; j < rowElement.length; j++) {
+        let element = rowElement[j];
+        if (element.tasks) {
+          // Stablish to false
+          for (let k = 0; k < element.tasks.length; k++) {
+            element.tasks[k].isResizing = false;
+          }
+        }
+        newMatrixRow.push(element);
+      }
+      newMatrix.push(newMatrixRow);
+    }
+    setMatrixDates(newMatrix);
+  }, [matrixDates, setMatrixDates]);
+
+  useEffect(() => {
+    window.addEventListener("mouseup", dragFinishes);
+    return () => {
+      window.removeEventListener("mouseup", dragFinishes);
+    };
+  }, [matrixDates]);
 
   return (
     <div
-      onMouseDown={dragStarts}
-      onMouseUp={dragFinishes}
-      onClick={openTask}
-      className={styles.task}
+      onClick={e => {
+        if (e.target === e.currentTarget) {
+          openTask();
+        }
+      }}
+      className={`${styles.task} ${task.isResizing && styles.resize}`}
       title="Open task"
     >
+      <div className={styles.resizer_left}></div>
+      <div
+        onMouseDown={dragStarts}
+        onMouseUp={dragFinishes}
+        className={styles.resizer_right}
+      ></div>
+
       {task.taskRef.name}
       {task.tags.length > 0 && (
-        <div className={styles.task_tags}>
+        <div onClick={openTask} className={styles.task_tags}>
           {task.tags.map(
             (
               tag: {
