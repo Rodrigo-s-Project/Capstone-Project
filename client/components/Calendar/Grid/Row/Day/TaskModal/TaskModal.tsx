@@ -15,12 +15,17 @@ import {
   createTag,
   BODY_CREATE_TAG,
   editTask,
-  BODY_EDIT_TASK
+  BODY_EDIT_TASK,
+  editTag,
+  BODY_EDIT_TAG,
+  deleteTag
 } from "../../../../../../routes/calendar.routes";
 import { getImage } from "../../../../../../routes/cdn.routes";
 import { RESPONSE } from "../../../../../../routes/index.routes";
 import CameraIcon from "../../../../../Svgs/Camera";
 import TimesIcon from "../../../../../Svgs/Times";
+import EditIcon from "../../../../../Svgs/Edit";
+import TrashAltIcon from "../../../../../Svgs/TrashAlt";
 import ChevronLeftIcon from "../../../../../Svgs/ChevronLeft";
 
 const TaskModal = () => {
@@ -60,6 +65,12 @@ const TaskModal = () => {
     setToTask
   } = useContext(GlobalContext);
 
+  const [isEditingTags, setIsEditingTags] = useState<boolean>(false);
+  const [
+    areYouSureYouWantToDeleteTag,
+    setAreYouSureYouWantToDeleteTag
+  ] = useState<boolean>(false);
+
   const getDate = (): string => {
     if (!dayClick) return "";
 
@@ -96,10 +107,16 @@ const TaskModal = () => {
   const [isAddTagsopen, setIsAddTagsopen] = useState(false);
   const addTags = () => {
     setIsAddTagsopen(prev => !prev);
+    setNewTagTextState("");
+    setNewTagColorState("#4542f7");
+    setIsEditingTags(false);
+    setIdTagForEdit(0);
+    setAreYouSureYouWantToDeleteTag(false);
   };
 
   const [newTagTextState, setNewTagTextState] = useState("");
   const [newTagColorState, setNewTagColorState] = useState("#4542f7");
+  const [idTagForEdit, setIdTagForEdit] = useState<number>(0);
 
   const handleChangeTextTag = (e: any) => {
     setNewTagTextState(e.target.value);
@@ -165,6 +182,9 @@ const TaskModal = () => {
 
       setNewTagTextState("");
       setNewTagColorState("#4542f7");
+      setIsEditingTags(false);
+      setIdTagForEdit(0);
+      setAreYouSureYouWantToDeleteTag(false);
       // Refetch
       if (setRefetchTasks) setRefetchTasks(prev => !prev);
     } catch (error) {
@@ -175,6 +195,110 @@ const TaskModal = () => {
           {
             type: "danger",
             text: "Error on creating task!"
+          },
+          ...prev
+        ]);
+      }
+    }
+  };
+
+  const editTagFetch = async () => {
+    try {
+      if (!dayClick || !selectedTeam || !selectedCompany) return;
+
+      const body: BODY_EDIT_TAG = {
+        text: newTagTextState,
+        color: newTagColorState
+      };
+
+      if (setIsLoadingTask) setIsLoadingTask(true);
+
+      const response = await axios.put(
+        editTag.url(selectedTeam.id, selectedCompany.id, idTagForEdit),
+        body,
+        {
+          withCredentials: true
+        }
+      );
+
+      if (setIsLoadingTask) setIsLoadingTask(false);
+
+      const data: RESPONSE = response.data;
+
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      setNewTagTextState("");
+      setNewTagColorState("#4542f7");
+      setIsEditingTags(false);
+      setIdTagForEdit(0);
+      setAreYouSureYouWantToDeleteTag(false);
+      // Refetch
+      if (setRefetchTasks) setRefetchTasks(prev => !prev);
+    } catch (error) {
+      console.error(error);
+      if (setIsLoadingTask) setIsLoadingTask(false);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on editing task!"
+          },
+          ...prev
+        ]);
+      }
+    }
+  };
+
+  const deleteTagFetch = async () => {
+    try {
+      if (!dayClick || !selectedTeam || !selectedCompany) return;
+
+      if (setIsLoadingTask) setIsLoadingTask(true);
+
+      const response = await axios.delete(
+        deleteTag.url(selectedTeam.id, selectedCompany.id, idTagForEdit),
+        {
+          withCredentials: true
+        }
+      );
+
+      if (setIsLoadingTask) setIsLoadingTask(false);
+
+      const data: RESPONSE = response.data;
+
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      setNewTagTextState("");
+      setNewTagColorState("#4542f7");
+      setIsEditingTags(false);
+      setIdTagForEdit(0);
+      setAreYouSureYouWantToDeleteTag(false);
+      // Refetch
+      if (setRefetchTasks) setRefetchTasks(prev => !prev);
+    } catch (error) {
+      console.error(error);
+      if (setIsLoadingTask) setIsLoadingTask(false);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on editing task!"
           },
           ...prev
         ]);
@@ -229,6 +353,9 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      setAreYouSureYouWantToDeleteTag(false);
+      setIdTagForEdit(0);
+      setIsEditingTags(false);
       setNewTagTextState("");
       setNewTagColorState("#4542f7");
       setIsAddPeopleOpen(false);
@@ -268,7 +395,10 @@ const TaskModal = () => {
     setIdTask,
     setIsSingleDateTask,
     setFromTask,
-    setToTask
+    setToTask,
+    setIsEditingTags,
+    setIdTagForEdit,
+    setAreYouSureYouWantToDeleteTag
   ]);
 
   const editTaskFetch = useCallback(async () => {
@@ -325,6 +455,9 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      setAreYouSureYouWantToDeleteTag(false);
+      setIdTagForEdit(0);
+      setIsEditingTags(false);
       setNewTagTextState("");
       setNewTagColorState("#4542f7");
       setIsAddPeopleOpen(false);
@@ -368,7 +501,10 @@ const TaskModal = () => {
     setToTask,
     fromTask,
     isSingleDateTask,
-    toTask
+    toTask,
+    setIsEditingTags,
+    setIdTagForEdit,
+    setAreYouSureYouWantToDeleteTag
   ]);
 
   const clearEverything = useCallback(() => {
@@ -382,9 +518,12 @@ const TaskModal = () => {
     if (setFromTask) setFromTask(0);
     if (setToTask) setToTask(0);
     setIsAddPeopleOpen(false);
+    setIsEditingTags(false);
     setIsAddTagsopen(false);
     setNewTagTextState("");
+    setIdTagForEdit(0);
     setNewTagColorState("#4542f7");
+    setAreYouSureYouWantToDeleteTag(false);
   }, [
     setNameTask,
     setDescriptionTask,
@@ -394,7 +533,10 @@ const TaskModal = () => {
     setFromTask,
     setIdTask,
     setIsSingleDateTask,
-    setToTask
+    setToTask,
+    setIsEditingTags,
+    setIdTagForEdit,
+    setAreYouSureYouWantToDeleteTag
   ]);
 
   return (
@@ -577,7 +719,7 @@ const TaskModal = () => {
                     return (
                       <div
                         onClick={() => {
-                          addTagToArray(tagRef.id);
+                          if (!isEditingTags) addTagToArray(tagRef.id);
                         }}
                         style={{
                           backgroundColor: tagRef.color,
@@ -597,10 +739,68 @@ const TaskModal = () => {
             </div>
           </div>
           <div className={styles.wrapper}>
-            <div className={styles.tags_subtitle}>All tags:</div>
+            <div className={styles.tags_subtitles}>
+              <div className={styles.tags_subtitles_1}>All tags:</div>
+              <div
+                className={styles.tags_subtitles_2}
+                onClick={() => {
+                  setIsEditingTags(prev => !prev);
+                  setNewTagTextState("");
+                  setNewTagColorState("#4542f7");
+                  setIdTagForEdit(0);
+                  setAreYouSureYouWantToDeleteTag(false);
+                }}
+                title={isEditingTags ? "Close editing" : "Edit tags"}
+              >
+                {isEditingTags ? "Close editing" : "Edit tags"}
+              </div>
+            </div>
             <div className={styles.tags_container}>
+              {areYouSureYouWantToDeleteTag && (
+                <div className={styles.delete_tag}>
+                  <div>
+                    Are you sure you want to delete this tag? (It will be
+                    deleted from all the calendar)
+                  </div>
+                  <div
+                    style={{
+                      backgroundColor: newTagColorState,
+                      color: invertColor(newTagColorState, true),
+                      width: "fit-content"
+                    }}
+                    className={styles.tags_container_tag}
+                  >
+                    {newTagTextState}
+                  </div>
+                  <div>
+                    <BtnSpinner
+                      text="Cancel"
+                      callback={() => {
+                        setAreYouSureYouWantToDeleteTag(false);
+                        setIdTagForEdit(0);
+                        setNewTagTextState("");
+                        setNewTagColorState("#4542f7");
+                      }}
+                      color="gray"
+                      border="round_5"
+                      additionalClass="btn-ask-tag"
+                      isLoading={isLoadingTask}
+                    />
+                    <BtnSpinner
+                      text="Delete"
+                      callback={deleteTagFetch}
+                      color="lavender-300"
+                      border="round_5"
+                      additionalClass="btn-ask-tag"
+                      isLoading={isLoadingTask}
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Pool for created tags */}
-              {allTagsCalendar &&
+              {!areYouSureYouWantToDeleteTag &&
+                allTagsCalendar &&
                 allTagsCalendar.map((tagRef: any, index: number) => {
                   return (
                     <div
@@ -611,10 +811,48 @@ const TaskModal = () => {
                       className={styles.tags_container_tag}
                       key={index}
                       onClick={() => {
+                        if (isEditingTags) return;
                         addTagToArray(tagRef.id);
                       }}
                     >
                       {tagRef.text}
+                      {isEditingTags && (
+                        <div className={styles.tags_container_tag_edit}>
+                          <div
+                            style={{
+                              backgroundColor: tagRef.color
+                            }}
+                            onClick={() => {
+                              setNewTagTextState(tagRef.text);
+                              setNewTagColorState(tagRef.color);
+                              setIdTagForEdit(tagRef.id);
+                            }}
+                          >
+                            <EditIcon
+                              styles={{
+                                fill: invertColor(tagRef.color, true)
+                              }}
+                            />
+                          </div>
+                          <div
+                            style={{
+                              backgroundColor: tagRef.color
+                            }}
+                            onClick={() => {
+                              setAreYouSureYouWantToDeleteTag(true);
+                              setIdTagForEdit(tagRef.id);
+                              setNewTagTextState(tagRef.text);
+                              setNewTagColorState(tagRef.color);
+                            }}
+                          >
+                            <TrashAltIcon
+                              styles={{
+                                fill: invertColor(tagRef.color, true)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -623,55 +861,63 @@ const TaskModal = () => {
               )}
             </div>
           </div>
-          <div className={styles.wrapper}>
-            <div className={styles.tags_subtitle}>Create a tag:</div>
-            <div className={styles.tags_create}>
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                }}
-              >
-                <div className={styles.tags_create_inputs}>
-                  <input
-                    type="text"
-                    onChange={handleChangeTextTag}
-                    value={newTagTextState}
-                    placeholder="Text of tag"
-                    maxLength={15}
-                  />
-                  <input
-                    type="color"
-                    onChange={handleChangeColorTag}
-                    value={newTagColorState}
-                  />
-                </div>
-                {newTagTextState != "" && (
-                  <div className={styles.tags_create_prev}>
-                    <div className={styles.tags_create_prev_title}>
-                      Previsualization of the tag:
-                    </div>
-                    <div
-                      className={styles.tags_create_prev_tag}
-                      style={{
-                        backgroundColor: newTagColorState,
-                        color: invertColor(newTagColorState, true)
-                      }}
-                    >
-                      {newTagTextState}
-                    </div>
+          {!areYouSureYouWantToDeleteTag && (
+            <div className={styles.wrapper}>
+              <div className={styles.tags_subtitle}>Create a tag:</div>
+              <div className={styles.tags_create}>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                  }}
+                >
+                  <div className={styles.tags_create_inputs}>
+                    <input
+                      type="text"
+                      onChange={handleChangeTextTag}
+                      value={newTagTextState}
+                      placeholder="Text of tag"
+                      maxLength={15}
+                    />
+                    <input
+                      type="color"
+                      onChange={handleChangeColorTag}
+                      value={newTagColorState}
+                    />
                   </div>
-                )}
-                <BtnSpinner
-                  text="Create new tag"
-                  callback={createTagFetch}
-                  color="lavender-300"
-                  border="round_5"
-                  additionalClass="btn-add-tag-task"
-                  isLoading={isLoadingTask}
-                />
-              </form>
+                  {newTagTextState != "" && (
+                    <div className={styles.tags_create_prev}>
+                      <div className={styles.tags_create_prev_title}>
+                        Previsualization of the tag:
+                      </div>
+                      <div
+                        className={styles.tags_create_prev_tag}
+                        style={{
+                          backgroundColor: newTagColorState,
+                          color: invertColor(newTagColorState, true)
+                        }}
+                      >
+                        {newTagTextState}
+                      </div>
+                    </div>
+                  )}
+                  <BtnSpinner
+                    text={isEditingTags ? "Edit tag" : "Create new tag"}
+                    callback={() => {
+                      if (isEditingTags) {
+                        editTagFetch();
+                      } else {
+                        createTagFetch();
+                      }
+                    }}
+                    color="lavender-300"
+                    border="round_5"
+                    additionalClass="btn-add-tag-task"
+                    isLoading={isLoadingTask}
+                  />
+                </form>
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </PopUpModal>

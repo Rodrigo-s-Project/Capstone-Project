@@ -200,7 +200,7 @@
       fill: var(--lavender-200);
       margin-right: 10px;
     }
-    @media (hover: hover) and (pointer:fine) {
+    @media (hover: hover) and (pointer: fine) {
       &:hover {
         text-decoration: underline;
       }
@@ -210,6 +210,30 @@
     font-size: 1.2rem;
     color: var(--lavender-200);
     margin-bottom: 10px;
+    &s {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &_1,
+      &_2 {
+        font-size: 1.2rem;
+        color: var(--lavender-200);
+        margin-bottom: 10px;
+      }
+      &_2 {
+        background-color: var(--lavender-300);
+        color: var(--white);
+        padding: 3px 10px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--lavender-400);
+          }
+        }
+      }
+    }
   }
   &_container {
     display: flex;
@@ -221,6 +245,30 @@
       padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
+      display: flex;
+      gap: 5px;
+      &_edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 5px;
+          border-radius: 5px;
+          svg {
+            width: 15px;
+            height: 15px;
+          }
+          @media (hover:hover) and (pointer:fine) {
+            &:hover {
+              filter: hue-rotate(45deg);
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -242,4 +290,16 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+}
+.delete_tag {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  div {
+    display: flex;
+    gap: 5px;
+    button[extra-css="btn-ask-tag"] {
+      width: 50%;
+    }
+  }
 }
