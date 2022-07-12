@@ -11,6 +11,12 @@ export const getUser = (req, res) => {
     data: {}
   };
   try {
+
+    if (!req.user) {
+      res.json(response);
+      return;
+    }
+
     const { password, ...userData } = req.user.toJSON();
 
     response.data = userData;

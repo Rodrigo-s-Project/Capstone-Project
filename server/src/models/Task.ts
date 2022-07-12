@@ -16,10 +16,10 @@ export const Task = sequelize.define(
       type: DataType.BOOLEAN
     },
     fromDate: {
-      type: DataType.INTEGER
+      type: DataType.BIGINT
     },
     toDate: {
-      type: DataType.INTEGER
+      type: DataType.BIGINT
     },
     description: {
       type: DataType.STRING

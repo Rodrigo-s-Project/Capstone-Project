@@ -72,9 +72,9 @@ export const setAssociations = () => {
   Task.belongsToMany(Notification, { through: "Notification_Unread_Tasks" });
 
   // ------------------------------ Task
-  // (Task) 1:Many (Tag)
-  Task.hasMany(Tag);
-  Tag.belongsTo(Task);
+  // (Task) Many:Many (Tag)
+  Task.belongsToMany(Tag, { through: "Task_Tags" });
+  Tag.belongsToMany(Task, { through: "Task_Tags" });
 
   // ------------------------------ Team
   // (Team) 1:1 (Calendar)
