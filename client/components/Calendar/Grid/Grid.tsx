@@ -16,7 +16,7 @@ const matrixStarter = {
   isOnHover: false,
   isResizing: false,
   dontShow: true
-}
+};
 
 const Grid = () => {
   // Context
@@ -33,7 +33,7 @@ const Grid = () => {
     Array(7).fill(matrixStarter),
     Array(7).fill(matrixStarter),
     Array(7).fill(matrixStarter),
-    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter)
   ]);
 
   // Hook
@@ -57,6 +57,21 @@ const Grid = () => {
     selectedTeam,
     refetchTasks
   ]);
+
+  useEffect(() => {
+    // To fix bug when changing from "day" or "week" to "month view"
+    // The row was shrinked to the prev view
+    if (calendarView == "Month" && matrixDates.length < 3) {
+      setMatrixDates([
+        Array(7).fill(matrixStarter),
+        Array(7).fill(matrixStarter),
+        Array(7).fill(matrixStarter),
+        Array(7).fill(matrixStarter),
+        Array(7).fill(matrixStarter),
+        Array(7).fill(matrixStarter)
+      ]);
+    }
+  }, [calendarView]);
 
   return (
     <div
