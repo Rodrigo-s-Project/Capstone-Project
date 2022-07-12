@@ -8,7 +8,8 @@ import {
   createTagCalendar,
   editTaskCalendar,
   editTagCalendar,
-  deleteTagCalendar
+  deleteTagCalendar,
+  deleteTaskCalendar
 } from "../controllers/calendar/index";
 
 // Protected route
@@ -27,6 +28,12 @@ router.put(
   authenticate,
   editTaskCalendar
 );
+router.delete(
+  "/delete-task/:teamId/:calendarId/:taskId",
+  authenticate,
+  deleteTaskCalendar
+);
+
 router.post("/create-tag/:teamId/:calendarId", authenticate, createTagCalendar);
 router.put(
   "/edit-tag/:teamId/:calendarId/:tagId",

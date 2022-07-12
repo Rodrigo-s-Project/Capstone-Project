@@ -6,6 +6,7 @@ import { Tag } from "../../models/Tag";
 import { Team } from "../../models/Team";
 import { Op } from "sequelize";
 import { BODY_CREATE_TASK, BODY_CREATE_TAG } from "./calendar.types";
+import { userInfo } from "os";
 
 export const getAllTasksCalendar = async (req, res) => {
   let response: RESPONSE = {
@@ -500,6 +501,75 @@ export const deleteTagCalendar = async (req, res) => {
 
     response.readMsg = false;
     response.typeMsg = "success";
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {
+      tasks: [],
+      calendar: {},
+      tagsCalendar: {}
+    };
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const deleteTaskCalendar = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+
+  try {
+    const { teamId, calendarId, taskId } = req.params;
+
+    // Checks
+    if (isNaN(teamId) || isNaN(taskId) || isNaN(calendarId)) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const calendarRef: any = await Calendar.findOne({
+      where: {
+        teamId
+      }
+    });
+
+    if (!calendarRef) {
+      response.message = "Calendar not found.";
+      res.json(response);
+      return;
+    }
+
+    const taskref: any = await Task.findByPk(taskId);
+
+    if (!taskref) {
+      response.message = "Task not found.";
+      res.json(response);
+      return;
+    }
+
+    // Unassociate with calendar
+    calendarRef.removeTask(taskref);
+
+    // Unassociate sith set()
+    await taskref.setUsers([]);
+    await taskref.setTags([]);
+
+    // Destroy
+    await taskref.destroy();
+
+    response.typeMsg = "success";
+    response.message = "Task deleted!";
     res.json(response);
   } catch (error) {
     console.error(error);

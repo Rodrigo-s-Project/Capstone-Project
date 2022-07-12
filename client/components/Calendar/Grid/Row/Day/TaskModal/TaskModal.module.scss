@@ -62,15 +62,30 @@
     }
   }
   &_create {
-    button[extra-css="btn-created-tag"] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    button[extra-css="btn-created-tag"],
+    button[extra-css="btn-delete-tag"] {
       margin-top: 7px;
-      width: 180px;
       height: 35px;
       font-size: 0.8rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: auto;
+      svg {
+        fill: var(--lavender-400);
+        width: 20px;
+        height: 20px;
+      }
+    }
+    button[extra-css="btn-created-tag"] {
+      width: 180px;
+    }
+    button[extra-css="btn-delete-tag"] {
+      width: fit-content;
+      padding: 0 10px;
     }
   }
   &_users {
@@ -262,7 +277,7 @@
             width: 15px;
             height: 15px;
           }
-          @media (hover:hover) and (pointer:fine) {
+          @media (hover: hover) and (pointer: fine) {
             &:hover {
               filter: hue-rotate(45deg);
             }
@@ -301,5 +316,10 @@
     button[extra-css="btn-ask-tag"] {
       width: 50%;
     }
+  }
+  &_title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: var(--lavender-300);
   }
 }

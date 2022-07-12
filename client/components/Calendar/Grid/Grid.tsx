@@ -71,7 +71,7 @@ const Grid = () => {
         Array(7).fill(matrixStarter)
       ]);
     }
-  }, [calendarView]);
+  }, [calendarView, matrixDates.length]);
 
   return (
     <div

@@ -107,3 +107,9 @@ export const deleteTag = {
     `${process.env.API_URL}/dashboard/calendar/delete-tag/${teamId}/${calendarId}/${tagId}`,
   method: "delete"
 };
+
+export const deleteTask = {
+  url: (teamId: any, calendarId: any, taskId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/delete-task/${teamId}/${calendarId}/${taskId}`,
+  method: "delete"
+};
