@@ -8,6 +8,16 @@ import RowElement, { RowHeader } from "./Row/Row";
 // Hooks
 import { useDates, DateCalendar } from "../../../hooks/useDates";
 
+const matrixStarter = {
+  date: new Date(),
+  weekday: "",
+  day: 0,
+  tasks: undefined,
+  isOnHover: false,
+  isResizing: false,
+  dontShow: true
+}
+
 const Grid = () => {
   // Context
   const {
@@ -15,11 +25,16 @@ const Grid = () => {
     year,
     calendarStretchRow,
     setCalendarStretchRow,
-    calendarView,
+    calendarView
   } = useContext(CalendarContext);
-  const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>(
-    []
-  );
+  const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>([
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+    Array(7).fill(matrixStarter),
+  ]);
 
   // Hook
   const { createMatrix, getNumberOfRows } = useDates();
@@ -63,7 +78,11 @@ const Grid = () => {
       {[...Array(getNumberOfRows())].map((_: any, index: number) => {
         return (
           <Fragment key={index}>
-            <RowElement datesRow={matrixDates[index]} />
+            <RowElement
+              matrixDates={matrixDates}
+              setMatrixDates={setMatrixDates}
+              datesRow={matrixDates[index]}
+            />
           </Fragment>
         );
       })}

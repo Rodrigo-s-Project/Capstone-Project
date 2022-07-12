@@ -12,7 +12,25 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
-
+  position: relative;
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+  }
+  &::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+  }
   &_tags {
     display: flex;
     flex-wrap: wrap;

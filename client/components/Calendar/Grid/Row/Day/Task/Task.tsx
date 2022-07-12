@@ -1,5 +1,5 @@
 import styles from "./Task.module.scss";
-import { useContext } from "react";
+import { useContext, Dispatch, SetStateAction } from "react";
 import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
@@ -8,9 +8,11 @@ import { invertColor } from "../../../../../../utils/invertColors";
 type Props = {
   task: TaskType;
   day: DateCalendar;
+  matrixDates: Array<Array<DateCalendar>>;
+  setMatrixDates: Dispatch<SetStateAction<Array<Array<DateCalendar>>>>;
 };
 
-const Task = ({ task, day }: Props) => {
+const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
   const {
     setModalPopUpCreateTask,
     setDayClick,
@@ -65,8 +67,44 @@ const Task = ({ task, day }: Props) => {
     }
   };
 
+  const dragStarts = () => {
+    // if (!matrixDates) return;
+    // let newMatrix: Array<Array<DateCalendar>> = [];
+
+    // for (let i = 0; i < matrixDates.length; i++) {
+    //   const rowElement = matrixDates[i];
+    //   let newMatrixRow: Array<DateCalendar> = [];
+
+    //   for (let j = 0; j < rowElement.length; j++) {
+    //     const element = rowElement[j];
+
+    //     if (element.day == day.day) {
+    //       // Ours
+    //       newMatrixRow.push({
+    //         ...element,
+    //         isResizing: true
+    //       });
+    //     } else {
+    //       newMatrixRow.push(element);
+    //     }
+    //   }
+
+    //   newMatrix.push(newMatrixRow);
+    // }
+
+    // setMatrixDates(newMatrix);
+  };
+
+  const dragFinishes = () => {};
+
   return (
-    <div onClick={openTask} className={styles.task} title="Open task">
+    <div
+      onMouseDown={dragStarts}
+      onMouseUp={dragFinishes}
+      onClick={openTask}
+      className={styles.task}
+      title="Open task"
+    >
       {task.taskRef.name}
       {task.tags.length > 0 && (
         <div className={styles.task_tags}>

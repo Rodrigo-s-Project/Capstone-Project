@@ -3,7 +3,7 @@ import { DateCalendar } from "../../../../hooks/useDates";
 import { StretchCalendarRows } from "../../Calendar";
 
 import DayComponent from "./Day/Day";
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, Dispatch, SetStateAction } from "react";
 import { CalendarContext } from "../../Calendar";
 
 import ChevronDown from "../../../Svgs/ChevronDown";
@@ -63,9 +63,11 @@ export const RowHeader = ({
 
 type PropsRow = {
   datesRow: Array<DateCalendar>;
+  matrixDates: Array<Array<DateCalendar>>;
+  setMatrixDates: Dispatch<SetStateAction<Array<Array<DateCalendar>>>>;
 };
 
-const Row = ({ datesRow }: PropsRow) => {
+const Row = ({ datesRow, matrixDates, setMatrixDates }: PropsRow) => {
   const getToday = (date: Date): boolean => {
     const today = new Date();
 
@@ -82,7 +84,12 @@ const Row = ({ datesRow }: PropsRow) => {
         datesRow.map((date: DateCalendar, index: number) => {
           return (
             <Fragment key={index}>
-              <DayComponent isToday={getToday(date.date)} day={date} />
+              <DayComponent
+                matrixDates={matrixDates}
+                setMatrixDates={setMatrixDates}
+                isToday={getToday(date.date)}
+                day={date}
+              />
             </Fragment>
           );
         })}
