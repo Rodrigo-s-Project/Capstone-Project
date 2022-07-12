@@ -6,6 +6,7 @@
       font-size: 2rem;
       width: 100%;
       background-color: transparent;
+      color: var(--black);
       &::placeholder {
         color: var(--gray-600);
       }
@@ -108,6 +109,7 @@
           fill: var(--gray-100);
         }
         img {
+          // TODO: img when user actually has url
         }
       }
       &_times {
@@ -148,4 +150,96 @@
       width: 100%;
     }
   }
+}
+.tags {
+  &_create {
+    display: flex;
+    flex-direction: column;
+    input {
+      display: block;
+    }
+    button[extra-css="btn-add-tag-task"] {
+      margin-top: 20px;
+    }
+    &_inputs {
+      display: flex;
+    }
+    &_prev {
+      margin-top: 20px;
+      &_title {
+        text-align: left;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      &_tag {
+        width: fit-content;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+    }
+    input[type="text"] {
+      width: calc(100% - 50px);
+      padding: 5px 10px;
+      color: var(--black);
+      background-color: var(--gray-100);
+    }
+    input[type="color"] {
+      width: 50px;
+      cursor: pointer;
+    }
+  }
+  &_title {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    color: var(--lavender-200);
+    width: fit-content;
+    cursor: pointer;
+    svg {
+      width: 10px;
+      justify-content: 10px;
+      fill: var(--lavender-200);
+      margin-right: 10px;
+    }
+    @media (hover: hover) and (pointer:fine) {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  &_subtitle {
+    font-size: 1.2rem;
+    color: var(--lavender-200);
+    margin-bottom: 10px;
+  }
+  &_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    &_tag {
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+}
+.no {
+  text-align: center;
+  width: 100%;
+  margin: 10px 0;
+}
+.wrapper {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--gray-200);
+  margin-bottom: 30px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.wrap_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
