@@ -25,9 +25,17 @@ type Props = {
 };
 
 const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
-  const { currDay, month, year, calendarView, isCalendarLoading } = useContext(
-    CalendarContext
-  );
+  const {
+    currDay,
+    month,
+    year,
+    calendarView,
+    isCalendarLoading,
+    isResizing,
+    setToTaskResizing,
+    setFromTaskResizing,
+    isResizingFromRight
+  } = useContext(CalendarContext);
   const { setModalPopUpCreateTask, setDayClick } = useContext(GlobalContext);
 
   const isAnotherMonth = useCallback(
@@ -57,8 +65,107 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
     }
   };
 
+  const createReplicas = useCallback(
+    (
+      matrixWithState: Array<Array<DateCalendar>>,
+      coordenatesToEdit: Array<Array<number>>
+    ) => {
+      let finalReplicaMatrix: Array<Array<DateCalendar>> = [];
+      for (let i = 0; i < coordenatesToEdit.length; i++) {
+        const c: Array<number> = coordenatesToEdit[i];
+        let row = matrixWithState[c[0]];
+        let singleDate = row[c[1]];
+        if (!singleDate.tasks) continue;
+
+        const refTask = singleDate.tasks[c[2]];
+        const fromAux: any = refTask.taskRef.fromDate;
+        const toAux: any = refTask.taskRef.toDate;
+
+        const fromSwap: any = Math.min(fromAux, toAux);
+        const toSwap: any = Math.max(fromAux, toAux);
+
+        const fromRefTask: number = parseInt(fromSwap);
+        const toRefTask: number = parseInt(toSwap);
+
+        // First clear all tasks related to refTask
+        let replicaMatrix: Array<Array<DateCalendar>> = [];
+        for (let j = 0; j < matrixWithState.length; j++) {
+          let newRowForReplica: Array<DateCalendar> = [];
+
+          for (let k = 0; k < matrixWithState[j].length; k++) {
+            // We are on a specific day
+            const currDayMatrix: DateCalendar = matrixWithState[j][k];
+            const currArrayTasksDayMatrix: Array<TaskType> | undefined =
+              currDayMatrix.tasks;
+            let newArrayTasksDayMatrix: Array<TaskType> = [];
+
+            if (!currArrayTasksDayMatrix) {
+              // Obviously we don't need to delete anything here
+              newArrayTasksDayMatrix = [];
+            } else {
+              // We need to delete that task
+              newArrayTasksDayMatrix = checkIfAlreadyTaskInDayAndDelete(
+                currArrayTasksDayMatrix,
+                refTask
+              );
+            }
+
+            newRowForReplica.push({
+              ...currDayMatrix,
+              tasks: newArrayTasksDayMatrix
+            });
+          }
+
+          replicaMatrix.push(newRowForReplica);
+        }
+
+        // Then create replicas of refTask
+        for (let j = 0; j < replicaMatrix.length; j++) {
+          let newRowForReplica: Array<DateCalendar> = [];
+
+          for (let k = 0; k < replicaMatrix[j].length; k++) {
+            // We are on a specific day
+            const currDayMatrix: DateCalendar = replicaMatrix[j][k];
+            const timeCurrDayMatrix: number = currDayMatrix.date.getTime();
+            let newArrayTasksReplicaDayMatrix: Array<TaskType> = [];
+
+            // This should be empty of ref task
+            if (currDayMatrix.tasks) {
+              newArrayTasksReplicaDayMatrix = [
+                ...newArrayTasksReplicaDayMatrix,
+                ...currDayMatrix.tasks
+              ];
+            }
+
+            if (
+              fromRefTask <= timeCurrDayMatrix &&
+              timeCurrDayMatrix <= toRefTask
+            ) {
+              // This date needs to be in between in order to create replica
+              newArrayTasksReplicaDayMatrix = [
+                ...newArrayTasksReplicaDayMatrix,
+                refTask
+              ];
+            }
+
+            newRowForReplica.push({
+              ...currDayMatrix,
+              tasks: newArrayTasksReplicaDayMatrix
+            });
+          }
+
+          finalReplicaMatrix.push(newRowForReplica);
+        }
+      }
+      // finalReplicaMatrix should be ready
+      setMatrixDates(finalReplicaMatrix);
+    },
+    [setMatrixDates]
+  );
+
   const onHoverEditToDateTask = useCallback(() => {
     if (!matrixDates) return;
+    if (!isResizing) return;
     let newMatrix: Array<Array<DateCalendar>> = [];
     let coordenatesToEdit: Array<Array<number>> = [];
     let coordenatesToEditArrayIds: Array<number> = [];
@@ -79,15 +186,34 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
 
             if (taskRefLoop.isResizing) {
               // Task that is resizing
-              newArrayTasks.push({
-                ...element.tasks[k],
-                taskRef: {
-                  ...element.tasks[k].taskRef,
-                  toDate: day.date.getTime(),
-                  singleDate:
-                    day.date.getTime() == element.tasks[k].taskRef.fromDate
-                }
-              });
+              if (isResizingFromRight) {
+                // To
+                newArrayTasks.push({
+                  ...element.tasks[k],
+                  taskRef: {
+                    ...element.tasks[k].taskRef,
+                    toDate: day.date.getTime(),
+                    singleDate:
+                      day.date.getTime() == element.tasks[k].taskRef.fromDate
+                  }
+                });
+
+                if (setToTaskResizing) setToTaskResizing(day.date.getTime());
+              } else {
+                // From
+                newArrayTasks.push({
+                  ...element.tasks[k],
+                  taskRef: {
+                    ...element.tasks[k].taskRef,
+                    fromDate: day.date.getTime(),
+                    singleDate:
+                      day.date.getTime() == element.tasks[k].taskRef.fromDate
+                  }
+                });
+
+                if (setFromTaskResizing)
+                  setFromTaskResizing(day.date.getTime());
+              }
 
               if (
                 !coordenatesToEditArrayIds.includes(element.tasks[k].taskRef.id)
@@ -118,150 +244,29 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
     }
 
     createReplicas(newMatrix, coordenatesToEdit);
-  }, [matrixDates, setMatrixDates]);
+  }, [
+    matrixDates,
+    isResizing,
+    setToTaskResizing,
+    setFromTaskResizing,
+    isResizingFromRight,
+    createReplicas,
+    day.date
+  ]);
 
-  const checkIfAlreadytaskInDay = (
+  const checkIfAlreadyTaskInDayAndDelete = (
     includesArr: Array<TaskType>,
     task: TaskType
-  ): boolean => {
-    let isThere: boolean = false;
+  ): Array<TaskType> => {
+    let newArray: Array<TaskType> = [];
 
     for (let i = 0; i < includesArr.length; i++) {
-      if (includesArr[i].taskRef.id == task.taskRef.id) {
-        isThere = true;
-        break;
+      if (includesArr[i].taskRef.id != task.taskRef.id) {
+        newArray.push(includesArr[i]);
       }
     }
 
-    return isThere;
-  };
-  const createReplicas = (
-    matrixWithState: Array<Array<DateCalendar>>,
-    coordenatesToEdit: Array<Array<number>>
-  ) => {
-    let replicaMatrix: Array<Array<DateCalendar>> = matrixWithState;
-
-    for (let i = 0; i < coordenatesToEdit.length; i++) {
-      const c: Array<number> = coordenatesToEdit[i];
-      let row = matrixWithState[c[0]];
-      let singleDate = row[c[1]];
-      if (!singleDate.tasks) continue;
-
-      let taskToEditToReplicate: TaskType | undefined = singleDate.tasks[c[2]];
-      let toDateTaskForReference: number = taskToEditToReplicate.taskRef.toDate;
-      let fromDateTaskForReference: number =
-        taskToEditToReplicate.taskRef.fromDate;
-
-      let isSwap = false;
-      let areEqual = false;
-      if (fromDateTaskForReference > toDateTaskForReference) {
-        isSwap = true;
-      }
-
-      if (fromDateTaskForReference == toDateTaskForReference) {
-        areEqual = true;
-      }
-
-      // Start running to matrixWithState
-      // We are going to start at our current indexes
-      for (let j = 0; j < matrixWithState.length; j++) {
-        for (let k = 0; k < matrixWithState[j].length; k++) {
-          // Delete all tasks and then add final if are equal
-          if (areEqual) {
-            let currTasksOnState: Array<TaskType> | undefined =
-              matrixWithState[j][k].tasks;
-            let auxArr: Array<TaskType> = [];
-            if (currTasksOnState) {
-              auxArr = [...auxArr, ...currTasksOnState];
-            }
-            let currDate: number = matrixWithState[j][k].date.getTime();
-            if (currDate != fromDateTaskForReference) {
-              // Destroy it
-              let newAuxArr: Array<TaskType> = [];
-              for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
-                if (
-                  auxArr[indexAux].taskRef.id !=
-                  taskToEditToReplicate.taskRef.id
-                ) {
-                  newAuxArr.push(auxArr[indexAux]);
-                }
-              }
-              auxArr = newAuxArr;
-            }
-            replicaMatrix[j][k].tasks = auxArr;
-          } else {
-            let singleDateNext = matrixWithState[j][k];
-            if (
-              (!isSwap &&
-                singleDateNext.date.getTime() >= fromDateTaskForReference) ||
-              (isSwap &&
-                singleDateNext.date.getTime() <= fromDateTaskForReference)
-            ) {
-              const toDateNow: number = singleDateNext.date.getTime();
-              // Start making or deleting tasks
-
-              // ---------------- Create
-              if (
-                (!isSwap && toDateTaskForReference >= toDateNow) ||
-                (isSwap && toDateTaskForReference <= toDateNow)
-              ) {
-                // We are still between or in the tail
-                // replicate taskToEditToReplicate in this location
-                let currTasksOnState: Array<TaskType> | undefined =
-                  matrixWithState[j][k].tasks;
-                let auxArr: Array<TaskType> = [];
-                if (currTasksOnState) {
-                  auxArr = [...auxArr, ...currTasksOnState];
-                }
-
-                // We need to add this before current state
-                // Check if it is already there or not
-                if (
-                  taskToEditToReplicate &&
-                  !checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)
-                ) {
-                  auxArr = [taskToEditToReplicate, ...auxArr];
-                }
-
-                replicaMatrix[j][k].tasks = auxArr;
-              }
-
-              // ---------------- Delete
-              if (
-                (!isSwap && toDateTaskForReference < toDateNow) ||
-                (isSwap && toDateTaskForReference > toDateNow)
-              ) {
-                // We are further
-                // This means that we dont need further tasks with this id
-                let currTasksOnState: Array<TaskType> | undefined =
-                  matrixWithState[j][k].tasks;
-                let auxArr: Array<TaskType> = [];
-                if (currTasksOnState) {
-                  auxArr = [...auxArr, ...currTasksOnState];
-                }
-                if (checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)) {
-                  // It is inside
-                  // Destroy it
-                  let newAuxArr: Array<TaskType> = [];
-                  for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
-                    if (
-                      auxArr[indexAux].taskRef.id !=
-                      taskToEditToReplicate.taskRef.id
-                    ) {
-                      newAuxArr.push(auxArr[indexAux]);
-                    }
-                  }
-                  auxArr = newAuxArr;
-                }
-                replicaMatrix[j][k].tasks = auxArr;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    setMatrixDates(replicaMatrix);
+    return newArray;
   };
 
   return (

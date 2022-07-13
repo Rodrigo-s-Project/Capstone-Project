@@ -145,8 +145,8 @@ export const createTaskCalendar = async (req, res) => {
     const newTask: any = await Task.create({
       name,
       singleDate,
-      fromDate,
-      toDate,
+      fromDate: parseInt(fromDate),
+      toDate: parseInt(toDate),
       description
     });
 
@@ -313,11 +313,10 @@ export const editTaskCalendar = async (req, res) => {
 
     if (!name || !description) {
       // Only dates
-      console.log("update here");
       await taskRef.update({
         singleDate,
-        fromDate,
-        toDate
+        fromDate: parseInt(fromDate),
+        toDate: parseInt(toDate)
       });
       response.readMsg = false;
     } else {
@@ -330,8 +329,8 @@ export const editTaskCalendar = async (req, res) => {
       await taskRef.update({
         name,
         singleDate,
-        fromDate,
-        toDate,
+        fromDate: parseInt(fromDate),
+        toDate: parseInt(toDate),
         description
       });
 

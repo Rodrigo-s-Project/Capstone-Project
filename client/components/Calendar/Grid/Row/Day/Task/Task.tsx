@@ -1,20 +1,10 @@
 import styles from "./Task.module.scss";
-import {
-  useContext,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect
-} from "react";
+import { useContext, Dispatch, SetStateAction, useCallback } from "react";
 import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
 import { invertColor } from "../../../../../../utils/invertColors";
-
-// Routes
-import { editTask } from "../../../../../../routes/calendar.routes";
-import axios from "axios";
-import { RESPONSE } from "../../../../../../routes/index.routes";
+import { CalendarContext } from "../../../../Calendar";
 
 type Props = {
   task: TaskType;
@@ -35,12 +25,15 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     setIdTask,
     setIsSingleDateTask,
     setFromTask,
-    setToTask,
-    selectedTeam,
-    selectedCompany,
-    setArrayMsgs,
-    setRefetchTasks
+    setToTask
   } = useContext(GlobalContext);
+
+  const {
+    setIsResizing,
+    setTaskIdResizing,
+    setFromTaskResizing,
+    setIsResizingFromRight
+  } = useContext(CalendarContext);
 
   const openTask = () => {
     if (
@@ -82,195 +75,132 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     }
   };
 
-  const dragStarts = useCallback(() => {
-    if (!matrixDates) return;
-    let newMatrix: Array<Array<DateCalendar>> = [];
+  const dragStarts = useCallback(
+    (isResFromRight: boolean) => {
+      if (!matrixDates) return;
+      let newMatrix: Array<Array<DateCalendar>> = [];
 
-    for (let i = 0; i < matrixDates.length; i++) {
-      const rowElement = matrixDates[i];
-      let newMatrixRow: Array<DateCalendar> = [];
+      for (let i = 0; i < matrixDates.length; i++) {
+        const rowElement = matrixDates[i];
+        let newMatrixRow: Array<DateCalendar> = [];
 
-      for (let j = 0; j < rowElement.length; j++) {
-        let element = rowElement[j];
+        for (let j = 0; j < rowElement.length; j++) {
+          let element = rowElement[j];
 
-        if (element.tasks) {
-          // Ours, so we need to go deeper
-          let newArrayTasks: Array<TaskType> | undefined = [];
+          if (element.tasks) {
+            // Ours, so we need to go deeper
+            let newArrayTasks: Array<TaskType> | undefined = [];
 
-          for (let k = 0; k < element.tasks.length; k++) {
-            const taskRefLoop: TaskType = element.tasks[k];
+            for (let k = 0; k < element.tasks.length; k++) {
+              const taskRefLoop: TaskType = element.tasks[k];
 
-            if (taskRefLoop.taskRef.id == task.taskRef.id) {
-              // Our task... finally
-              // So we need to edit its resizing
-              newArrayTasks.push({
-                ...element.tasks[k],
-                isResizing: true
-              });
-            } else {
-              newArrayTasks.push(taskRefLoop);
+              if (taskRefLoop.taskRef.id == task.taskRef.id) {
+                // Our task... finally
+                // So we need to edit its resizing
+                newArrayTasks.push({
+                  ...element.tasks[k],
+                  isResizing: true
+                });
+
+                if (
+                  setIsResizing &&
+                  setTaskIdResizing &&
+                  setFromTaskResizing &&
+                  setIsResizingFromRight
+                ) {
+                  setIsResizing(true);
+                  setIsResizingFromRight(isResFromRight);
+                  setTaskIdResizing(element.tasks[k].taskRef.id);
+                  setFromTaskResizing(element.tasks[k].taskRef.fromDate);
+                }
+              } else {
+                newArrayTasks.push(taskRefLoop);
+              }
             }
-          }
-          newMatrixRow.push({
-            date: rowElement[j].date,
-            weekday: rowElement[j].weekday,
-            day: rowElement[j].day,
-            dontShow: rowElement[j].dontShow,
-            tasks: newArrayTasks
-          });
-        } else {
-          newMatrixRow.push(element);
-        }
-      }
-      newMatrix.push(newMatrixRow);
-    }
-
-    setMatrixDates(newMatrix);
-  }, [matrixDates, setMatrixDates]);
-
-  const editTaskFetch = useCallback(async () => {
-    try {
-      if (!selectedTeam || !selectedCompany || !task) return;
-
-      const body: any = {
-        singleDate: task.taskRef.singleDate,
-        fromDate: Math.min(task.taskRef.fromDate, task.taskRef.toDate),
-        toDate: Math.max(task.taskRef.fromDate, task.taskRef.toDate)
-      };
-
-      console.log(body);
-
-      const response = await axios.put(
-        editTask.url(selectedTeam.id, selectedCompany.id, task.taskRef.id),
-        body,
-        {
-          withCredentials: true
-        }
-      );
-
-      const data: RESPONSE = response.data;
-      if (data.readMsg && setArrayMsgs) {
-        setArrayMsgs(prev => [
-          {
-            type: data.typeMsg,
-            text: data.message
-          },
-          ...prev
-        ]);
-      }
-      // Refetch
-      if (setRefetchTasks) setRefetchTasks(prev => !prev);
-    } catch (error) {
-      console.error(error);
-      if (setArrayMsgs) {
-        setArrayMsgs(prev => [
-          {
-            type: "danger",
-            text: "Error on edit task!"
-          },
-          ...prev
-        ]);
-      }
-    }
-  }, [
-    selectedTeam,
-    selectedCompany,
-    setArrayMsgs,
-    setModalPopUpCreateTask,
-    setRefetchTasks,
-    setNameTask,
-    setDescriptionTask,
-    setTagsTask,
-    setUsersTask,
-    setIdTask,
-    setIsSingleDateTask,
-    setFromTask,
-    setToTask
-  ]);
-
-  const dragFinishes = useCallback(async () => {
-    // In this case we want to stablish all the tasks resizing to false
-    if (task.isResizing) {
-      await editTaskFetch();
-    }
-
-    if (!matrixDates) return;
-    let newMatrix: Array<Array<DateCalendar>> = [];
-    for (let i = 0; i < matrixDates.length; i++) {
-      const rowElement = matrixDates[i];
-      let newMatrixRow: Array<DateCalendar> = [];
-
-      for (let j = 0; j < rowElement.length; j++) {
-        let element = rowElement[j];
-        if (element.tasks) {
-          // Stablish to false
-          for (let k = 0; k < element.tasks.length; k++) {
-            element.tasks[k].isResizing = false;
+            newMatrixRow.push({
+              date: rowElement[j].date,
+              weekday: rowElement[j].weekday,
+              day: rowElement[j].day,
+              dontShow: rowElement[j].dontShow,
+              tasks: newArrayTasks
+            });
+          } else {
+            newMatrixRow.push(element);
           }
         }
-        newMatrixRow.push(element);
+        newMatrix.push(newMatrixRow);
       }
-      newMatrix.push(newMatrixRow);
-    }
-    setMatrixDates(newMatrix);
-  }, [matrixDates, setMatrixDates]);
 
-  useEffect(() => {
-    window.addEventListener("mouseup", dragFinishes);
-    return () => {
-      window.removeEventListener("mouseup", dragFinishes);
-    };
-  }, [matrixDates]);
+      setMatrixDates(newMatrix);
+    },
+    [
+      matrixDates,
+      setMatrixDates,
+      setIsResizing,
+      setTaskIdResizing,
+      setFromTaskResizing,
+      setIsResizingFromRight,
+      task.taskRef.id
+    ]
+  );
+
+  const hasControls = (): boolean => {
+    return (
+      task.taskRef.fromDate == day.date.getTime() ||
+      task.taskRef.toDate == day.date.getTime()
+    );
+  };
 
   return (
-    <div
-      onClick={e => {
-        if (e.target === e.currentTarget) {
-          openTask();
-        }
-      }}
-      className={`${styles.task} ${task.isResizing && styles.resize}`}
-      title="Open task"
-    >
+    <div className={`${styles.task_all}`}>
+      {hasControls() && (
+        <div
+          onMouseDown={() => {
+            dragStarts(false);
+          }}
+          className={styles.resizer_left}
+        ></div>
+      )}
       <div
-        onMouseDown={dragStarts}
-        onMouseUp={dragFinishes}
-        className={styles.resizer_left}
-      ></div>
-      <div
-        onMouseDown={dragStarts}
-        onMouseUp={dragFinishes}
-        className={styles.resizer_right}
-      ></div>
-
-      {task.taskRef.name}
-      <div>{task.taskRef.fromDate}</div>
-      <div>{task.taskRef.toDate}</div>
-      {task.tags.length > 0 && (
-        <div onClick={openTask} className={styles.task_tags}>
-          {task.tags.map(
-            (
-              tag: {
-                text: string;
-                id: number;
-                color: string;
-              },
-              index: number
-            ) => {
-              return (
-                <div
-                  style={{
-                    backgroundColor: tag.color,
-                    color: invertColor(tag.color, true)
-                  }}
-                  key={index}
-                >
-                  {tag.text}
-                </div>
-              );
-            }
-          )}
-        </div>
+        onClick={openTask}
+        className={`${styles.task} ${task.isResizing && styles.resize}`}
+        title="Open task"
+      >
+        <div>{task.taskRef.name}</div>
+        {task.tags.length > 0 && (
+          <div onClick={openTask} className={styles.task_tags}>
+            {task.tags.map(
+              (
+                tag: {
+                  text: string;
+                  id: number;
+                  color: string;
+                },
+                index: number
+              ) => {
+                return (
+                  <div
+                    style={{
+                      backgroundColor: tag.color,
+                      color: invertColor(tag.color, true)
+                    }}
+                    key={index}
+                  >
+                    {tag.text}
+                  </div>
+                );
+              }
+            )}
+          </div>
+        )}
+      </div>
+      {hasControls() && (
+        <div
+          onMouseDown={() => {
+            dragStarts(true);
+          }}
+          className={styles.resizer_right}
+        ></div>
       )}
     </div>
   );
