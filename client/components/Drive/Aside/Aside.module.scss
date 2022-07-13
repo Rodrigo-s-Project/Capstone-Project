@@ -1,0 +1,55 @@
+.aside {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 15px;
+  &_array {
+    position: relative;
+    &_list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    &_top {
+      position: sticky;
+      top: -1px;
+      left: 0;
+      padding: 10px 10px;
+      background-color: var(--primary);
+      padding-top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &_title {
+        color: var(--lavender-200);
+      }
+      button[extra-css="btn-add-workspace"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 10px;
+        height: fit-content;
+        div {
+          width: 15px !important;
+          height: 15px !important;
+        }
+      }
+      svg {
+        width: 15px;
+        height: 15px;
+        fill: var(--lavender-400);
+      }
+    }
+  }
+  &_bucket {
+    background-color: var(--gray-200);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--gray-300);
+      }
+    }
+  }
+}
