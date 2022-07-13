@@ -82,11 +82,12 @@ export const useDates = () => {
 
   const getTaskType = (allTasks: DATA_GET_TASKS, fromDate: number) => {
     let res: Array<TaskType> = [];
-
     if (!allTasks.tasks) return [];
-
     for (let i = 0; i < allTasks.tasks.length; i++) {
-      if (allTasks.tasks[i].taskRef.fromDate <= fromDate && fromDate <= allTasks.tasks[i].taskRef.toDate) {
+      if (
+        allTasks.tasks[i].taskRef.fromDate <= fromDate &&
+        fromDate <= allTasks.tasks[i].taskRef.toDate
+      ) {
         res.push(allTasks.tasks[i]);
       }
     }
@@ -179,9 +180,10 @@ export const useDates = () => {
       return [];
 
     let date: Date = new Date(_year, _month, _day);
-    let date2: Date = new Date(_year, _month, _day + 7);
+    let dateFetch: Date = new Date(_year, _month, _day - 30);
+    let date2: Date = new Date(_year, _month, _day + 10);
     const allTasks: DATA_GET_TASKS | undefined = await fetchTasks(
-      date.getTime(),
+      dateFetch.getTime(),
       date2.getTime()
     );
 
@@ -265,8 +267,8 @@ export const useDates = () => {
     // Get day
     let thisDate: Date = new Date(_year, _month, _day);
 
-    let date: Date = new Date(_year, _month, _day - 1);
-    let date2: Date = new Date(_year, _month, _day + 1);
+    let date: Date = new Date(_year, _month, _day - 30);
+    let date2: Date = new Date(_year, _month, _day + 3);
     const allTasks: DATA_GET_TASKS | undefined = await fetchTasks(
       date.getTime(),
       date2.getTime()
