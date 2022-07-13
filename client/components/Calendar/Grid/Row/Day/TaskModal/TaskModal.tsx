@@ -363,6 +363,7 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
       setAreYouSureYouWantToDeleteTag(false);
       setAreYouSureYouWantToDeleteTask(false);
       setIdTagForEdit(0);
@@ -410,7 +411,8 @@ const TaskModal = () => {
     setIsEditingTags,
     setIdTagForEdit,
     setAreYouSureYouWantToDeleteTag,
-    setAreYouSureYouWantToDeleteTask
+    setAreYouSureYouWantToDeleteTask,
+    setIsTaskModalOnEditing
   ]);
 
   const editTaskFetch = useCallback(async () => {
@@ -467,6 +469,7 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
       setAreYouSureYouWantToDeleteTask(false);
       setAreYouSureYouWantToDeleteTag(false);
       setIdTagForEdit(0);
@@ -518,7 +521,8 @@ const TaskModal = () => {
     setIsEditingTags,
     setIdTagForEdit,
     setAreYouSureYouWantToDeleteTag,
-    setAreYouSureYouWantToDeleteTask
+    setAreYouSureYouWantToDeleteTask,
+    setIsTaskModalOnEditing
   ]);
 
   const deleteTaskFetch = async () => {
