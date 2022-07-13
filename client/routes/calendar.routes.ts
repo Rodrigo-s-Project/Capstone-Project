@@ -24,6 +24,7 @@ export type TaskType = {
     calendarId: number;
     taskId: number;
   }>;
+  isResizing: boolean;
 };
 
 export type DATA_GET_TASKS = {

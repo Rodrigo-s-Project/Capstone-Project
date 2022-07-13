@@ -1,9 +1,10 @@
 import styles from "./Task.module.scss";
-import { useContext, Dispatch, SetStateAction } from "react";
+import { useContext, Dispatch, SetStateAction, useCallback } from "react";
 import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
 import { invertColor } from "../../../../../../utils/invertColors";
+import { CalendarContext } from "../../../../Calendar";
 
 type Props = {
   task: TaskType;
@@ -26,6 +27,13 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     setFromTask,
     setToTask
   } = useContext(GlobalContext);
+
+  const {
+    setIsResizing,
+    setTaskIdResizing,
+    setFromTaskResizing,
+    setIsResizingFromRight
+  } = useContext(CalendarContext);
 
   const openTask = () => {
     if (
@@ -67,70 +75,132 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     }
   };
 
-  const dragStarts = () => {
-    // if (!matrixDates) return;
-    // let newMatrix: Array<Array<DateCalendar>> = [];
+  const dragStarts = useCallback(
+    (isResFromRight: boolean) => {
+      if (!matrixDates) return;
+      let newMatrix: Array<Array<DateCalendar>> = [];
 
-    // for (let i = 0; i < matrixDates.length; i++) {
-    //   const rowElement = matrixDates[i];
-    //   let newMatrixRow: Array<DateCalendar> = [];
+      for (let i = 0; i < matrixDates.length; i++) {
+        const rowElement = matrixDates[i];
+        let newMatrixRow: Array<DateCalendar> = [];
 
-    //   for (let j = 0; j < rowElement.length; j++) {
-    //     const element = rowElement[j];
+        for (let j = 0; j < rowElement.length; j++) {
+          let element = rowElement[j];
 
-    //     if (element.day == day.day) {
-    //       // Ours
-    //       newMatrixRow.push({
-    //         ...element,
-    //         isResizing: true
-    //       });
-    //     } else {
-    //       newMatrixRow.push(element);
-    //     }
-    //   }
+          if (element.tasks) {
+            // Ours, so we need to go deeper
+            let newArrayTasks: Array<TaskType> | undefined = [];
 
-    //   newMatrix.push(newMatrixRow);
-    // }
+            for (let k = 0; k < element.tasks.length; k++) {
+              const taskRefLoop: TaskType = element.tasks[k];
 
-    // setMatrixDates(newMatrix);
+              if (taskRefLoop.taskRef.id == task.taskRef.id) {
+                // Our task... finally
+                // So we need to edit its resizing
+                newArrayTasks.push({
+                  ...element.tasks[k],
+                  isResizing: true
+                });
+
+                if (
+                  setIsResizing &&
+                  setTaskIdResizing &&
+                  setFromTaskResizing &&
+                  setIsResizingFromRight
+                ) {
+                  setIsResizing(true);
+                  setIsResizingFromRight(isResFromRight);
+                  setTaskIdResizing(element.tasks[k].taskRef.id);
+                  setFromTaskResizing(element.tasks[k].taskRef.fromDate);
+                }
+              } else {
+                newArrayTasks.push(taskRefLoop);
+              }
+            }
+            newMatrixRow.push({
+              date: rowElement[j].date,
+              weekday: rowElement[j].weekday,
+              day: rowElement[j].day,
+              dontShow: rowElement[j].dontShow,
+              tasks: newArrayTasks
+            });
+          } else {
+            newMatrixRow.push(element);
+          }
+        }
+        newMatrix.push(newMatrixRow);
+      }
+
+      setMatrixDates(newMatrix);
+    },
+    [
+      matrixDates,
+      setMatrixDates,
+      setIsResizing,
+      setTaskIdResizing,
+      setFromTaskResizing,
+      setIsResizingFromRight,
+      task.taskRef.id
+    ]
+  );
+
+  const hasControls = (): boolean => {
+    return (
+      task.taskRef.fromDate == day.date.getTime() ||
+      task.taskRef.toDate == day.date.getTime()
+    );
   };
 
-  const dragFinishes = () => {};
-
   return (
-    <div
-      onMouseDown={dragStarts}
-      onMouseUp={dragFinishes}
-      onClick={openTask}
-      className={styles.task}
-      title="Open task"
-    >
-      {task.taskRef.name}
-      {task.tags.length > 0 && (
-        <div className={styles.task_tags}>
-          {task.tags.map(
-            (
-              tag: {
-                text: string;
-                id: number;
-                color: string;
-              },
-              index: number
-            ) => {
-              return (
-                <div
-                  style={{
-                    backgroundColor: tag.color,
-                    color: invertColor(tag.color, true)
-                  }}
-                  key={index}
-                >
-                  {tag.text}
-                </div>
-              );
-            }
-          )}
-        </div>
+    <div className={`${styles.task_all}`}>
+      {hasControls() && (
+        <div
+          onMouseDown={() => {
+            dragStarts(false);
+          }}
+          className={styles.resizer_left}
+        ></div>
+      )}
+      <div
+        onClick={openTask}
+        className={`${styles.task} ${task.isResizing && styles.resize}`}
+        title="Open task"
+      >
+        <div>{task.taskRef.name}</div>
+        {task.tags.length > 0 && (
+          <div onClick={openTask} className={styles.task_tags}>
+            {task.tags.map(
+              (
+                tag: {
+                  text: string;
+                  id: number;
+                  color: string;
+                },
+                index: number
+              ) => {
+                return (
+                  <div
+                    style={{
+                      backgroundColor: tag.color,
+                      color: invertColor(tag.color, true)
+                    }}
+                    key={index}
+                  >
+                    {tag.text}
+                  </div>
+                );
+              }
+            )}
+          </div>
+        )}
+      </div>
+      {hasControls() && (
+        <div
+          onMouseDown={() => {
+            dragStarts(true);
+          }}
+          className={styles.resizer_right}
+        ></div>
       )}
     </div>
   );

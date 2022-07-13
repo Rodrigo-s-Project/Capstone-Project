@@ -40,8 +40,8 @@ export type DATA_GET_TASKS = {
 export type BODY_CREATE_TASK = {
   name: string;
   singleDate: boolean;
-  fromDate: number;
-  toDate: number;
+  fromDate: any;
+  toDate: any;
   description: string;
   arrayUsers: Array<string>;
   arrayTags: Array<string>;

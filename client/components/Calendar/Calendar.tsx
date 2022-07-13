@@ -28,6 +28,17 @@ interface CalendarAppProvide {
 
   setIsCalendarLoading: Dispatch<SetStateAction<boolean>>;
   isCalendarLoading: boolean;
+
+  isResizing: boolean;
+  setIsResizing: Dispatch<SetStateAction<boolean>>;
+  taskIdResizing: number;
+  setTaskIdResizing: Dispatch<SetStateAction<number>>;
+  fromTaskResizing: number;
+  setFromTaskResizing: Dispatch<SetStateAction<number>>;
+  toTaskResizing: number;
+  setToTaskResizing: Dispatch<SetStateAction<number>>;
+  isResizingFromRight: boolean;
+  setIsResizingFromRight: Dispatch<SetStateAction<boolean>>;
 }
 
 // Components
@@ -48,6 +59,12 @@ const Calendar = () => {
 
   const [calendarView, setCalendarView] = useState<CalendarViews>("Month");
   const [isCalendarLoading, setIsCalendarLoading] = useState<boolean>(false);
+
+  const [isResizing, setIsResizing] = useState<boolean>(false);
+  const [taskIdResizing, setTaskIdResizing] = useState<number>(0);
+  const [fromTaskResizing, setFromTaskResizing] = useState<number>(0);
+  const [toTaskResizing, setToTaskResizing] = useState<number>(0);
+  const [isResizingFromRight, setIsResizingFromRight] = useState<boolean>(true);
 
   useEffect(() => {
     changeCalendarForPhone();
@@ -74,7 +91,17 @@ const Calendar = () => {
         currDay,
         setCurrDay,
         setIsCalendarLoading,
-        isCalendarLoading
+        isCalendarLoading,
+        isResizing,
+        setIsResizing,
+        taskIdResizing,
+        setTaskIdResizing,
+        fromTaskResizing,
+        setFromTaskResizing,
+        toTaskResizing,
+        setToTaskResizing,
+        isResizingFromRight,
+        setIsResizingFromRight
       }}
     >
       <div className={styles.calendar}>
