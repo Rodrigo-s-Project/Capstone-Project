@@ -3,12 +3,60 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 15px;
+  &_user {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    &_img {
+      width: 30px;
+      height: 30px;
+      background-color: var(--gray-400);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        // TODO: handle absolute
+      }
+      svg {
+        width: 45%;
+        height: 45%;
+        fill: var(--primary);
+      }
+    }
+    &_name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: calc(100% - 40px);
+    }
+  }
+  &_group {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    &_wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+    &_title {
+      margin-bottom: 10px;
+      display: flex;
+      font-size: 1.1rem;
+    }
+  }
   &_array {
     position: relative;
+    &_users {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
     &_list {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 15px;
     }
     &_top {
       position: sticky;
@@ -21,7 +69,37 @@
       justify-content: space-between;
       align-items: center;
       &_title {
-        color: var(--lavender-200);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        div {
+          color: var(--lavender-200);
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          svg {
+            width: 15px;
+            height: 15px;
+            fill: var(--lavender-200);
+          }
+        }
+        &_text {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          display: block !important;
+        }
+        &_return {
+          border-radius: 5px;
+          padding: 5px;
+          cursor: pointer;
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background-color: var(--gray-400);
+            }
+          }
+        }
       }
       button[extra-css="btn-add-workspace"] {
         display: flex;

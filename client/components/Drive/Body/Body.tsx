@@ -53,9 +53,12 @@ const BodyDrive = () => {
             className={styles.body_wrapper}
           >
             {!selectedBucket && <NotBucket />}
-            {selectedBucket && arrayDocuments && arrayDocuments.length == 0 && (
-              <NotDocuments />
-            )}
+            {selectedBucket &&
+              arrayDocuments &&
+              arrayDocuments.folders &&
+              arrayDocuments.files &&
+              arrayDocuments.files.length + arrayDocuments.folders.length ==
+                0 && <NotDocuments />}
           </motion.div>
         )}
       </AnimatePresence>

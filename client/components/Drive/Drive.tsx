@@ -17,11 +17,17 @@ import AsideDrive from "./Aside/Aside";
 import BodyDrive from "./Body/Body";
 
 // Routes
-import { getAllBuckets, DATA_GET_BUCKETS } from "../../routes/drive.routes";
+import {
+  getAllBuckets,
+  DATA_GET_BUCKETS,
+  getAllDocumentsFromBucket,
+  DATA_GET_DOCUMENTS,
+  DOCUMENT_DATA as DOCUMENT
+} from "../../routes/drive.routes";
 import { RESPONSE } from "../../routes/index.routes";
 
 // Types
-import { BUCKET, DOCUMENT, USER_BUCKET, FOLDER_TIMELINE } from "./drive.types";
+import { BUCKET, USER_BUCKET, FOLDER_TIMELINE } from "./drive.types";
 
 export const DriveContext = createContext<Partial<DriveContextApp>>({});
 
@@ -30,14 +36,13 @@ interface DriveContextApp {
   setSelectedBucket: Dispatch<SetStateAction<BUCKET | undefined>>;
   arrayBuckets: Array<BUCKET>;
   setArrayBuckets: Dispatch<SetStateAction<Array<BUCKET>>>;
-  arrayDocuments: Array<DOCUMENT>;
-  setArrayDocuments: Dispatch<SetStateAction<Array<DOCUMENT>>>;
+  arrayDocuments: Partial<DATA_GET_DOCUMENTS>;
+  setArrayDocuments: Dispatch<SetStateAction<Partial<DATA_GET_DOCUMENTS>>>;
   arrayUsersInBucket: Array<USER_BUCKET>;
   setArrayUsersInBucket: Dispatch<SetStateAction<Array<USER_BUCKET>>>;
   arrayFoldersTimeLine: Array<FOLDER_TIMELINE>;
   setArrayFoldersTimeLine: Dispatch<SetStateAction<Array<FOLDER_TIMELINE>>>;
-  refetchDocuments: boolean;
-  setRefetchDocuments: Dispatch<SetStateAction<boolean>>;
+  refetchDocuments: (bucket: BUCKET) => any;
   isLoadingBody: boolean;
   setIsLoadingBody: Dispatch<SetStateAction<boolean>>;
 }
@@ -52,7 +57,9 @@ const Drive = () => {
     undefined
   );
   const [arrayBuckets, setArrayBuckets] = useState<Array<BUCKET>>([]);
-  const [arrayDocuments, setArrayDocuments] = useState<Array<DOCUMENT>>([]);
+  const [arrayDocuments, setArrayDocuments] = useState<
+    Partial<DATA_GET_DOCUMENTS>
+  >({});
   const [arrayUsersInBucket, setArrayUsersInBucket] = useState<
     Array<USER_BUCKET>
   >([]);
@@ -60,7 +67,6 @@ const Drive = () => {
   const [arrayFoldersTimeLine, setArrayFoldersTimeLine] = useState<
     Array<FOLDER_TIMELINE>
   >([]);
-  const [refetchDocuments, setRefetchDocuments] = useState<boolean>(false);
   const [isLoadingBody, setIsLoadingBody] = useState<boolean>(true);
 
   const fetchBuckets = useCallback(async () => {
@@ -101,6 +107,47 @@ const Drive = () => {
     fetchBuckets();
   }, [selectedCompany, selectedTeam, fetchBuckets]);
 
+  const fetchDocuments = useCallback(
+    async (bucket: BUCKET) => {
+      try {
+        setIsLoadingBody(true);
+
+        if (!selectedCompany || !selectedTeam) return;
+
+        const response = await axios.get(
+          getAllDocumentsFromBucket.url(selectedTeam.id, bucket.id),
+          {
+            withCredentials: true
+          }
+        );
+
+        const data: RESPONSE = response.data;
+        const dataDocuments: DATA_GET_DOCUMENTS = data.data;
+
+        setArrayDocuments({
+          files: dataDocuments.files,
+          folders: dataDocuments.folders,
+          users: dataDocuments.users
+        });
+        setIsLoadingBody(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoadingBody(false);
+
+        // Put a message
+        if (setArrayMsgs)
+          setArrayMsgs(prev => [
+            {
+              type: "danger",
+              text: "Server error"
+            },
+            ...prev
+          ]);
+      }
+    },
+    [selectedCompany, selectedTeam, setArrayMsgs]
+  );
+
   return (
     <DriveContext.Provider
       value={{
@@ -112,8 +159,7 @@ const Drive = () => {
         setArrayUsersInBucket,
         arrayFoldersTimeLine,
         setArrayFoldersTimeLine,
-        refetchDocuments,
-        setRefetchDocuments,
+        refetchDocuments: fetchDocuments,
         isLoadingBody,
         setIsLoadingBody,
         arrayBuckets,

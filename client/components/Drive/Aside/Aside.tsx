@@ -1,21 +1,200 @@
 import styles from "./Aside.module.scss";
-import { useContext } from "react";
+import { useContext, Fragment } from "react";
 import { DriveContext } from "../Drive";
 import { GlobalContext } from "../../../pages/_app";
 import { BUCKET } from "../drive.types";
-import PlusIcon from "../../Svgs/Plus";
+import { USER_WORKSPACE_ASIDE } from "../../../routes/drive.routes";
 import BtnChildren from "../../Buttons/BtnChildren/BtnChildren";
 
+// Icons
+import PlusIcon from "../../Svgs/Plus";
+import ChevronLeftIcon from "../../Svgs/ChevronLeft";
+import CameraIcon from "../../Svgs/Camera";
+
+// Routes
+import { getImage } from "../../../routes/cdn.routes";
+
+const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
+  return (
+    <div className={styles.aside_user}>
+      <div className={styles.aside_user_img}>
+        <CameraIcon />
+        {userRef.profilePictureURL && (
+          <img
+            src={`${getImage.url(userRef.profilePictureURL)}`}
+            alt={userRef.username}
+          />
+        )}
+      </div>
+      <div className={styles.aside_user_name}>{userRef.username}</div>
+    </div>
+  );
+};
+
+const YouAreAnEmployee = () => {
+  const { arrayDocuments } = useContext(DriveContext);
+  const { user } = useContext(GlobalContext);
+
+  return (
+    <div className={styles.aside_group}>
+      {/* Here are the teammates */}
+      <div className={styles.aside_group_wrapper}>
+        <div className={styles.aside_group_title}>Teammates</div>
+        <div className={styles.aside_array_list}>
+          {arrayDocuments &&
+            arrayDocuments.users &&
+            arrayDocuments.users.map(
+              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
+                if (user && userRef.id == user.id) return null;
+                if (
+                  userRef.typeUser == "Admin" ||
+                  userRef.typeUser == "Employee"
+                ) {
+                  return (
+                    <Fragment key={index}>
+                      <User userRef={userRef} />
+                    </Fragment>
+                  );
+                }
+                return null;
+              }
+            )}
+        </div>
+      </div>
+
+      {/* Here are the clients */}
+      <div className={styles.aside_group_wrapper}>
+        <div className={styles.aside_group_title}>Clients</div>
+        <div className={styles.aside_array_list}>
+          {arrayDocuments &&
+            arrayDocuments.users &&
+            arrayDocuments.users.map(
+              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
+                if (user && userRef.id == user.id) return null;
+                if (userRef.typeUser == "Client") {
+                  return (
+                    <Fragment key={index}>
+                      <User userRef={userRef} />
+                    </Fragment>
+                  );
+                }
+                return null;
+              }
+            )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const YouAreAClient = () => {
+  const { arrayDocuments } = useContext(DriveContext);
+  const { user, selectedTeam } = useContext(GlobalContext);
+
+  return (
+    <div className={styles.aside_group}>
+      {/* Here are the employees */}
+      <div className={styles.aside_group_wrapper}>
+        <div className={styles.aside_group_title}>
+          {selectedTeam && selectedTeam.name}
+        </div>
+        <div className={styles.aside_array_list}>
+          {arrayDocuments &&
+            arrayDocuments.users &&
+            arrayDocuments.users.map(
+              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
+                if (user && userRef.id == user.id) return null;
+                if (
+                  userRef.typeUser == "Admin" ||
+                  userRef.typeUser == "Employee"
+                ) {
+                  return (
+                    <Fragment key={index}>
+                      <User userRef={userRef} />
+                    </Fragment>
+                  );
+                }
+                return null;
+              }
+            )}
+        </div>
+      </div>
+
+      {/* Here are the teammates */}
+      <div className={styles.aside_group_wrapper}>
+        <div className={styles.aside_group_title}>Teammates</div>
+        <div className={styles.aside_array_list}>
+          {arrayDocuments &&
+            arrayDocuments.users &&
+            arrayDocuments.users.map(
+              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
+                if (user && userRef.id == user.id) return null;
+                if (userRef.typeUser == "Client") {
+                  return (
+                    <Fragment key={index}>
+                      <User userRef={userRef} />
+                    </Fragment>
+                  );
+                }
+                return null;
+              }
+            )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Teammates = () => {
-  return <div>Teammates</div>;
+  const { selectedBucket, setSelectedBucket } = useContext(DriveContext);
+  const { selectedCompany } = useContext(GlobalContext);
+
+  const returnToNoWorkspace = () => {
+    if (setSelectedBucket) {
+      setSelectedBucket(undefined);
+    }
+  };
+
+  return (
+    <div className={styles.aside_array_users}>
+      <div className={styles.aside_array_top_title}>
+        <div
+          onClick={returnToNoWorkspace}
+          className={styles.aside_array_top_title_return}
+        >
+          <ChevronLeftIcon />
+        </div>
+        <div className={styles.aside_array_top_title_text}>
+          {selectedBucket && selectedBucket.name}
+        </div>
+      </div>
+      {selectedCompany &&
+        (selectedCompany.User_Company.typeUser == "Admin" ||
+          selectedCompany.User_Company.typeUser == "Employee") && (
+          <YouAreAnEmployee />
+        )}
+      {selectedCompany && selectedCompany.User_Company.typeUser == "Client" && (
+        <YouAreAClient />
+      )}
+    </div>
+  );
 };
 
 const Buckets = () => {
-  const { arrayBuckets } = useContext(DriveContext);
+  const { arrayBuckets, refetchDocuments, setSelectedBucket } = useContext(
+    DriveContext
+  );
   const { selectedCompany } = useContext(GlobalContext);
 
   const addAWorkspace = () => {
     // TODO: add a workspace
+  };
+
+  const clickWorkspace = (bucket: BUCKET) => {
+    if (setSelectedBucket && refetchDocuments) {
+      setSelectedBucket(bucket);
+      refetchDocuments(bucket);
+    }
   };
 
   return (
@@ -44,6 +223,9 @@ const Buckets = () => {
                 title="Select workspace"
                 className={styles.aside_bucket}
                 key={index}
+                onClick={() => {
+                  clickWorkspace(bucket);
+                }}
               >
                 {bucket.name}
               </div>
