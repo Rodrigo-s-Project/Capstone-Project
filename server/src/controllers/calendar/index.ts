@@ -302,12 +302,6 @@ export const editTaskCalendar = async (req, res) => {
       return;
     }
 
-    if (name.trim() == "" || description.trim() == "") {
-      response.message = "Incomplete information.";
-      res.json(response);
-      return;
-    }
-
     // Edit task
     const taskRef: any = await Task.findByPk(taskId);
 
@@ -317,36 +311,52 @@ export const editTaskCalendar = async (req, res) => {
       return;
     }
 
-    await taskRef.update({
-      name,
-      singleDate,
-      fromDate,
-      toDate,
-      description
-    });
+    if (!name || !description) {
+      // Only dates
+      console.log("update here");
+      await taskRef.update({
+        singleDate,
+        fromDate,
+        toDate
+      });
+      response.readMsg = false;
+    } else {
+      if (name.trim() == "" || description.trim() == "") {
+        response.message = "Incomplete information.";
+        res.json(response);
+        return;
+      }
 
-    // Edit related users
-    let arrayUsersRefs: Array<any> = [];
-    for (let i = 0; i < arrayUsers.length; i++) {
-      const userRef: any = await User.findByPk(arrayUsers[i]);
+      await taskRef.update({
+        name,
+        singleDate,
+        fromDate,
+        toDate,
+        description
+      });
 
-      if (!userRef) continue;
-      arrayUsersRefs.push(userRef);
+      // Edit related users
+      let arrayUsersRefs: Array<any> = [];
+      for (let i = 0; i < arrayUsers.length; i++) {
+        const userRef: any = await User.findByPk(arrayUsers[i]);
+
+        if (!userRef) continue;
+        arrayUsersRefs.push(userRef);
+      }
+      await taskRef.setUsers(arrayUsersRefs);
+
+      // Edit related tags
+      let arrayTagsRefs: Array<any> = [];
+      for (let i = 0; i < arrayTags.length; i++) {
+        const tagRef: any = await Tag.findByPk(arrayTags[i]);
+
+        if (!tagRef) continue;
+        arrayTagsRefs.push(tagRef);
+      }
+      await taskRef.setTags(arrayTagsRefs);
+      response.typeMsg = "success";
+      response.message = "Task edited successfully!";
     }
-    await taskRef.setUsers(arrayUsersRefs);
-
-    // Edit related tags
-    let arrayTagsRefs: Array<any> = [];
-    for (let i = 0; i < arrayTags.length; i++) {
-      const tagRef: any = await Tag.findByPk(arrayTags[i]);
-
-      if (!tagRef) continue;
-      arrayTagsRefs.push(tagRef);
-    }
-    await taskRef.setTags(arrayTagsRefs);
-
-    response.typeMsg = "success";
-    response.message = "Task edited successfully!";
 
     res.json(response);
   } catch (error) {

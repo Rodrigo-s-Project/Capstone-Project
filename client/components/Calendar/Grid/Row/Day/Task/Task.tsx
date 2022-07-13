@@ -11,6 +11,11 @@ import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
 import { invertColor } from "../../../../../../utils/invertColors";
 
+// Routes
+import { editTask } from "../../../../../../routes/calendar.routes";
+import axios from "axios";
+import { RESPONSE } from "../../../../../../routes/index.routes";
+
 type Props = {
   task: TaskType;
   day: DateCalendar;
@@ -30,7 +35,11 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     setIdTask,
     setIsSingleDateTask,
     setFromTask,
-    setToTask
+    setToTask,
+    selectedTeam,
+    selectedCompany,
+    setArrayMsgs,
+    setRefetchTasks
   } = useContext(GlobalContext);
 
   const openTask = () => {
@@ -119,8 +128,72 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     setMatrixDates(newMatrix);
   }, [matrixDates, setMatrixDates]);
 
-  const dragFinishes = useCallback(() => {
-    // In this case we want to stablich all the tasks resizing to false
+  const editTaskFetch = useCallback(async () => {
+    try {
+      if (!selectedTeam || !selectedCompany || !task) return;
+
+      const body: any = {
+        singleDate: task.taskRef.singleDate,
+        fromDate: Math.min(task.taskRef.fromDate, task.taskRef.toDate),
+        toDate: Math.max(task.taskRef.fromDate, task.taskRef.toDate)
+      };
+
+      console.log(body);
+
+      const response = await axios.put(
+        editTask.url(selectedTeam.id, selectedCompany.id, task.taskRef.id),
+        body,
+        {
+          withCredentials: true
+        }
+      );
+
+      const data: RESPONSE = response.data;
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+      // Refetch
+      if (setRefetchTasks) setRefetchTasks(prev => !prev);
+    } catch (error) {
+      console.error(error);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on edit task!"
+          },
+          ...prev
+        ]);
+      }
+    }
+  }, [
+    selectedTeam,
+    selectedCompany,
+    setArrayMsgs,
+    setModalPopUpCreateTask,
+    setRefetchTasks,
+    setNameTask,
+    setDescriptionTask,
+    setTagsTask,
+    setUsersTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask
+  ]);
+
+  const dragFinishes = useCallback(async () => {
+    // In this case we want to stablish all the tasks resizing to false
+    if (task.isResizing) {
+      await editTaskFetch();
+    }
+
     if (!matrixDates) return;
     let newMatrix: Array<Array<DateCalendar>> = [];
     for (let i = 0; i < matrixDates.length; i++) {
@@ -159,7 +232,11 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
       className={`${styles.task} ${task.isResizing && styles.resize}`}
       title="Open task"
     >
-      <div className={styles.resizer_left}></div>
+      <div
+        onMouseDown={dragStarts}
+        onMouseUp={dragFinishes}
+        className={styles.resizer_left}
+      ></div>
       <div
         onMouseDown={dragStarts}
         onMouseUp={dragFinishes}
@@ -167,6 +244,8 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
       ></div>
 
       {task.taskRef.name}
+      <div>{task.taskRef.fromDate}</div>
+      <div>{task.taskRef.toDate}</div>
       {task.tags.length > 0 && (
         <div onClick={openTask} className={styles.task_tags}>
           {task.tags.map(

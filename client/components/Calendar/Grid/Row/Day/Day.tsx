@@ -90,7 +90,6 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
               });
 
               if (
-                day.date.getTime() >= element.tasks[k].taskRef.fromDate &&
                 !coordenatesToEditArrayIds.includes(element.tasks[k].taskRef.id)
               ) {
                 // Multiple task
@@ -153,58 +152,109 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
       let fromDateTaskForReference: number =
         taskToEditToReplicate.taskRef.fromDate;
 
+      let isSwap = false;
+      let areEqual = false;
+      if (fromDateTaskForReference > toDateTaskForReference) {
+        isSwap = true;
+      }
+
+      if (fromDateTaskForReference == toDateTaskForReference) {
+        areEqual = true;
+      }
+
       // Start running to matrixWithState
       // We are going to start at our current indexes
       for (let j = 0; j < matrixWithState.length; j++) {
         for (let k = 0; k < matrixWithState[j].length; k++) {
-          let singleDateNext = matrixWithState[j][k];
-          if (singleDateNext.date.getTime() >= fromDateTaskForReference) {
-            const toDateNow: number = singleDateNext.date.getTime();
-            if (toDateTaskForReference >= toDateNow) {
-              // We are still between or in the tail
-              // replicate taskToEditToReplicate in this location
-              let currTasksOnState: Array<TaskType> | undefined =
-                matrixWithState[j][k].tasks;
-              let auxArr: Array<TaskType> = [];
-              if (currTasksOnState) {
-                auxArr = [...auxArr, ...currTasksOnState];
-              }
-
-              // We need to add this before current state
-              // Check if it is already there or not
-              if (
-                taskToEditToReplicate &&
-                !checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)
-              ) {
-                auxArr = [taskToEditToReplicate, ...auxArr];
-              }
-
-              replicaMatrix[j][k].tasks = auxArr;
+          // Delete all tasks and then add final if are equal
+          if (areEqual) {
+            let currTasksOnState: Array<TaskType> | undefined =
+              matrixWithState[j][k].tasks;
+            let auxArr: Array<TaskType> = [];
+            if (currTasksOnState) {
+              auxArr = [...auxArr, ...currTasksOnState];
             }
-            if (toDateTaskForReference < toDateNow) {
-              // We are further
-              // This means that we dont need further tasks with this id
-              let currTasksOnState: Array<TaskType> | undefined =
-                matrixWithState[j][k].tasks;
-              let auxArr: Array<TaskType> = [];
-              if (currTasksOnState) {
-                auxArr = [...auxArr, ...currTasksOnState];
-              }
-              if (checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)) {
-                // It is inside
-                // Destroy it
-                let newAuxArr: Array<TaskType> = [];
-                for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
-                  if (
-                    auxArr[indexAux].taskRef.id !=
-                    taskToEditToReplicate.taskRef.id
-                  ) {
-                    newAuxArr.push(auxArr[indexAux]);
-                  }
+            let currDate: number = matrixWithState[j][k].date.getTime();
+            if (currDate != fromDateTaskForReference) {
+              // Destroy it
+              let newAuxArr: Array<TaskType> = [];
+              for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
+                if (
+                  auxArr[indexAux].taskRef.id !=
+                  taskToEditToReplicate.taskRef.id
+                ) {
+                  newAuxArr.push(auxArr[indexAux]);
                 }
-                auxArr = newAuxArr;
               }
-              replicaMatrix[j][k].tasks = auxArr;
+              auxArr = newAuxArr;
+            }
+            replicaMatrix[j][k].tasks = auxArr;
+          } else {
+            let singleDateNext = matrixWithState[j][k];
+            if (
+              (!isSwap &&
+                singleDateNext.date.getTime() >= fromDateTaskForReference) ||
+              (isSwap &&
+                singleDateNext.date.getTime() <= fromDateTaskForReference)
+            ) {
+              const toDateNow: number = singleDateNext.date.getTime();
+              // Start making or deleting tasks
+
+              // ---------------- Create
+              if (
+                (!isSwap && toDateTaskForReference >= toDateNow) ||
+                (isSwap && toDateTaskForReference <= toDateNow)
+              ) {
+                // We are still between or in the tail
+                // replicate taskToEditToReplicate in this location
+                let currTasksOnState: Array<TaskType> | undefined =
+                  matrixWithState[j][k].tasks;
+                let auxArr: Array<TaskType> = [];
+                if (currTasksOnState) {
+                  auxArr = [...auxArr, ...currTasksOnState];
+                }
+
+                // We need to add this before current state
+                // Check if it is already there or not
+                if (
+                  taskToEditToReplicate &&
+                  !checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)
+                ) {
+                  auxArr = [taskToEditToReplicate, ...auxArr];
+                }
+
+                replicaMatrix[j][k].tasks = auxArr;
+              }
+
+              // ---------------- Delete
+              if (
+                (!isSwap && toDateTaskForReference < toDateNow) ||
+                (isSwap && toDateTaskForReference > toDateNow)
+              ) {
+                // We are further
+                // This means that we dont need further tasks with this id
+                let currTasksOnState: Array<TaskType> | undefined =
+                  matrixWithState[j][k].tasks;
+                let auxArr: Array<TaskType> = [];
+                if (currTasksOnState) {
+                  auxArr = [...auxArr, ...currTasksOnState];
+                }
+                if (checkIfAlreadytaskInDay(auxArr, taskToEditToReplicate)) {
+                  // It is inside
+                  // Destroy it
+                  let newAuxArr: Array<TaskType> = [];
+                  for (let indexAux = 0; indexAux < auxArr.length; indexAux++) {
+                    if (
+                      auxArr[indexAux].taskRef.id !=
+                      taskToEditToReplicate.taskRef.id
+                    ) {
+                      newAuxArr.push(auxArr[indexAux]);
+                    }
+                  }
+                  auxArr = newAuxArr;
+                }
+                replicaMatrix[j][k].tasks = auxArr;
+              }
             }
           }
         }

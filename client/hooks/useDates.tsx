@@ -86,7 +86,7 @@ export const useDates = () => {
     if (!allTasks.tasks) return [];
 
     for (let i = 0; i < allTasks.tasks.length; i++) {
-      if (fromDate == allTasks.tasks[i].taskRef.fromDate) {
+      if (allTasks.tasks[i].taskRef.fromDate <= fromDate && fromDate <= allTasks.tasks[i].taskRef.toDate) {
         res.push(allTasks.tasks[i]);
       }
     }
