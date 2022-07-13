@@ -160,6 +160,7 @@ const Teammates = () => {
       <div className={styles.aside_array_top_title}>
         <div
           onClick={returnToNoWorkspace}
+          title="Return"
           className={styles.aside_array_top_title_return}
         >
           <ChevronLeftIcon />

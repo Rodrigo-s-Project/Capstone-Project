@@ -1,11 +1,13 @@
 import styles from "./Body.module.scss";
 import BodySvg from "../../Svgs/DriveNotFound";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DriveContext } from "../Drive";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { fadeVariants } from "../../../animations/fade";
+import { ownStaggerVariants } from "../../../animations/stagger";
 import Loader from "../../Loader/Spinner/Spinner";
+import PlusIcon from "../../Svgs/Plus";
 
 const NotBucket = () => {
   return (
@@ -22,6 +24,60 @@ const NotDocuments = () => {
       <BodySvg />
       <div>You don&apos;t have any files in this workspace!</div>
     </div>
+  );
+};
+
+const AddDocumentsBtn = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const open = () => {
+    setIsOpen(true);
+  };
+
+  const close = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <>
+      <div
+        onBlur={close}
+        tabIndex={-1}
+        onClick={open}
+        title="Add document"
+        className={styles.body_add}
+      >
+        <PlusIcon />
+      </div>
+      <AnimatePresence exitBeforeEnter>
+        {isOpen ? (
+          <motion.div
+            variants={ownStaggerVariants(0)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            key="btn-add-folder"
+            className={`${styles.body_add_folder} ${styles.body_add}`}
+          >
+            <PlusIcon />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
+        {isOpen ? (
+          <motion.div
+            variants={ownStaggerVariants(0.05)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            key="btn-add-file"
+            className={`${styles.body_add_file} ${styles.body_add}`}
+          >
+            <PlusIcon />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 };
 
@@ -59,6 +115,8 @@ const BodyDrive = () => {
               arrayDocuments.files &&
               arrayDocuments.files.length + arrayDocuments.folders.length ==
                 0 && <NotDocuments />}
+
+            {selectedBucket && <AddDocumentsBtn />}
           </motion.div>
         )}
       </AnimatePresence>
