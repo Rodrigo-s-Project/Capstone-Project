@@ -3,6 +3,9 @@ import { Team } from "../../../models/Team";
 import { Folder } from "../../../models/Folder";
 import { BODY_CREATE_FOLDER } from "./documents.types";
 
+// Helpers
+import { isNameRepeatedDocuments } from "../../helpers/index";
+
 export const getDocumentsFromBucket = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,
@@ -177,12 +180,23 @@ export const createFolder = async (req, res) => {
       companyId
     }: BODY_CREATE_FOLDER = req.body;
 
-    // TODO: check trim of name
-    // TODO: check same name folder
-    
     if (isNaN(bucketId) || isNaN(folderId) || isNaN(companyId)) {
       response.readMsg = true;
       response.message = "Invalid credentials.";
+      res.json(response);
+      return;
+    }
+
+    if (name.trim() == "") {
+      response.readMsg = true;
+      response.message = "Invalid name.";
+      res.json(response);
+      return;
+    }
+
+    if (await isNameRepeatedDocuments(name, folderId, bucketId)) {
+      response.readMsg = true;
+      response.message = "Name is repeated.";
       res.json(response);
       return;
     }
