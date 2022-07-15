@@ -9,6 +9,7 @@ type Props = {
   name?: string;
   type: "text" | "email" | "password";
   onChange?: () => any;
+  additionalClass?: string;
 };
 
 const InputText = ({
@@ -18,7 +19,8 @@ const InputText = ({
   id,
   name,
   type,
-  onChange
+  onChange,
+  additionalClass = ""
 }: Props) => {
   const [open, setOpen] = useState(false);
   const [hasClicked, setHasClicked] = useState(false);
@@ -53,6 +55,7 @@ const InputText = ({
         }
       }}
       className={styles.input}
+      extra-css={additionalClass}
     >
       <label
         className={`${styles.input_label} ${open && styles.open}`}

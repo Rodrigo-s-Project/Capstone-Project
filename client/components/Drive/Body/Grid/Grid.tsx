@@ -12,15 +12,13 @@ const GridDocuments = () => {
     <div className={styles.grid}>
       {arrayDocuments && arrayDocuments.folders && arrayDocuments.files && (
         <>
-          {arrayDocuments.folders.map(
-            (documentRef: DOCUMENT_DATA, index: number) => {
-              return (
-                <Fragment key={index}>
-                  <FolderComponent folderRef={documentRef} />
-                </Fragment>
-              );
-            }
-          )}
+          {arrayDocuments.folders.map((documentRef: DOCUMENT_DATA) => {
+            return (
+              <Fragment key={`${documentRef.id}-${documentRef.name}`}>
+                <FolderComponent folderRef={documentRef} />
+              </Fragment>
+            );
+          })}
           {arrayDocuments.files.map(
             (document: DOCUMENT_DATA, index: number) => {
               return <div key={index}>{document.name}</div>;

@@ -176,6 +176,9 @@ export const createFolder = async (req, res) => {
       bucketId,
       companyId
     }: BODY_CREATE_FOLDER = req.body;
+
+    // TODO: check trim of name
+    // TODO: check same name folder
     
     if (isNaN(bucketId) || isNaN(folderId) || isNaN(companyId)) {
       response.readMsg = true;
