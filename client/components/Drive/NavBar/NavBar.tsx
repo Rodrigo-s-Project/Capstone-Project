@@ -1,8 +1,8 @@
 import styles from "./NavBar.module.scss";
-import { useContext } from "react";
+import { useContext, Fragment } from "react";
 import { DriveContext } from "../Provider";
-import { FOLDER_TIMELINE } from "../drive.types";
 import ChevronRightIcon from "../../Svgs/ChevronRight";
+import { DOCUMENT_DATA } from "../../../routes/drive.routes";
 
 const NoBucket = () => {
   return (
@@ -11,24 +11,67 @@ const NoBucket = () => {
 };
 
 const TimeLine = () => {
-  const { arrayFoldersTimeLine, selectedBucket } = useContext(DriveContext);
+  const {
+    arrayFoldersTimeLine,
+    selectedBucket,
+    setSelectedBucket,
+    setArrayFoldersTimeLine,
+    fetchDocuments
+  } = useContext(DriveContext);
+
+  const clickLinkBucket = () => {
+    if (
+      setSelectedBucket &&
+      setArrayFoldersTimeLine &&
+      fetchDocuments &&
+      selectedBucket
+    ) {
+      setArrayFoldersTimeLine([]);
+      setSelectedBucket(selectedBucket);
+      fetchDocuments({
+        bucket: selectedBucket,
+        arrayFoldersTimeLine: []
+      });
+    }
+  };
+
+  const clickLink = (index: number) => {
+    if (
+      setArrayFoldersTimeLine &&
+      fetchDocuments &&
+      selectedBucket &&
+      arrayFoldersTimeLine
+    ) {
+      fetchDocuments({
+        bucket: selectedBucket,
+        arrayFoldersTimeLine: [...arrayFoldersTimeLine.slice(0, index + 1)]
+      });
+      setArrayFoldersTimeLine(prev => [...prev.slice(0, index + 1)]);
+    }
+  };
 
   return (
     <div className={styles.nav_timeline}>
-      <div className={styles.nav_timeline_bucket}>
+      <div onClick={clickLinkBucket} className={styles.nav_timeline_bucket}>
         {selectedBucket && selectedBucket.name}
       </div>
       {arrayFoldersTimeLine &&
-        arrayFoldersTimeLine.map((folder: FOLDER_TIMELINE, index: number) => {
+        arrayFoldersTimeLine.map((folder: DOCUMENT_DATA, index: number) => {
           return (
-            <>
+            <Fragment key={index}>
               <div className={styles.nav_timeline_folder_svg}>
                 <ChevronRightIcon />
               </div>
-              <div className={styles.nav_timeline_folder} key={index}>
-                Name
+              <div
+                onClick={() => {
+                  clickLink(index);
+                }}
+                className={styles.nav_timeline_folder}
+                key={index}
+              >
+                {folder.name}
               </div>
-            </>
+            </Fragment>
           );
         })}
     </div>

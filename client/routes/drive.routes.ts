@@ -42,8 +42,8 @@ export type DATA_GET_DOCUMENTS = {
 };
 
 export const getAllDocumentsFromBucket = {
-  url: (teamId: any, bucketId: any) =>
-    `${process.env.API_URL}/dashboard/drive/get-documents/${teamId}/${bucketId}`,
+  url: (teamId: any, bucketId: any, folderId: any) =>
+    `${process.env.API_URL}/dashboard/drive/get-documents/${teamId}/${bucketId}/${folderId}`,
   method: "get"
 };
 

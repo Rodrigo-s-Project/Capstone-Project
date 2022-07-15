@@ -148,10 +148,17 @@ const YouAreAClient = () => {
 const Teammates = () => {
   const { selectedCompany } = useContext(GlobalContext);
 
-  const { setSelectedBucket, selectedBucket } = useContext(DriveContext);
+  const {
+    setSelectedBucket,
+    selectedBucket,
+    setArrayFoldersTimeLine,
+    setArrayDocuments
+  } = useContext(DriveContext);
 
   const returnToNoWorkspace = () => {
-    if (setSelectedBucket) {
+    if (setSelectedBucket && setArrayFoldersTimeLine && setArrayDocuments) {
+      setArrayFoldersTimeLine([]);
+      setArrayDocuments({});
       setSelectedBucket(undefined);
     }
   };
@@ -183,9 +190,12 @@ const Teammates = () => {
 };
 
 const Buckets = () => {
-  const { arrayBuckets, setSelectedBucket, fetchDocuments } = useContext(
-    DriveContext
-  );
+  const {
+    arrayBuckets,
+    setSelectedBucket,
+    fetchDocuments,
+    arrayFoldersTimeLine
+  } = useContext(DriveContext);
 
   const { selectedCompany } = useContext(GlobalContext);
 
@@ -194,9 +204,9 @@ const Buckets = () => {
   };
 
   const clickWorkspace = (bucket: BUCKET) => {
-    if (fetchDocuments && setSelectedBucket) {
+    if (fetchDocuments && setSelectedBucket && arrayFoldersTimeLine) {
       setSelectedBucket(bucket);
-      fetchDocuments({ bucket });
+      fetchDocuments({ bucket, arrayFoldersTimeLine });
     }
   };
 

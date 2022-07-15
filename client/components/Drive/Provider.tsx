@@ -15,15 +15,17 @@ import {
   getAllBuckets,
   DATA_GET_BUCKETS,
   DATA_GET_DOCUMENTS,
-  getAllDocumentsFromBucket
+  getAllDocumentsFromBucket,
+  DOCUMENT_DATA
 } from "../../routes/drive.routes";
 import { RESPONSE } from "../../routes/index.routes";
 
 // Types
-import { BUCKET, USER_BUCKET, FOLDER_TIMELINE } from "./drive.types";
+import { BUCKET, USER_BUCKET } from "./drive.types";
 
 type ParamsFetcherDocuments = {
   bucket: BUCKET;
+  arrayFoldersTimeLine: Array<DOCUMENT_DATA>;
 };
 
 export const DriveContext = createContext<Partial<DriveContextApp>>({});
@@ -35,8 +37,8 @@ interface DriveContextApp {
   setArrayDocuments: Dispatch<SetStateAction<Partial<DATA_GET_DOCUMENTS>>>;
   arrayUsersInBucket: Array<USER_BUCKET>;
   setArrayUsersInBucket: Dispatch<SetStateAction<Array<USER_BUCKET>>>;
-  arrayFoldersTimeLine: Array<FOLDER_TIMELINE>;
-  setArrayFoldersTimeLine: Dispatch<SetStateAction<Array<FOLDER_TIMELINE>>>;
+  arrayFoldersTimeLine: Array<DOCUMENT_DATA>;
+  setArrayFoldersTimeLine: Dispatch<SetStateAction<Array<DOCUMENT_DATA>>>;
   isLoadingBody: boolean;
   setIsLoadingBody: Dispatch<SetStateAction<boolean>>;
 
@@ -67,7 +69,7 @@ const Provider = ({ children }: Props) => {
   >([]);
 
   const [arrayFoldersTimeLine, setArrayFoldersTimeLine] = useState<
-    Array<FOLDER_TIMELINE>
+    Array<DOCUMENT_DATA>
   >([]);
   const [isLoadingBody, setIsLoadingBody] = useState<boolean>(true);
 
@@ -120,14 +122,25 @@ const Provider = ({ children }: Props) => {
   }, [selectedCompany, selectedTeam, fetchBuckets]);
 
   const fetchDocuments = useCallback(
-    async ({ bucket }: ParamsFetcherDocuments) => {
+    async ({
+      bucket,
+      arrayFoldersTimeLine: arrayFolders
+    }: ParamsFetcherDocuments) => {
       try {
         setIsLoadingBody(true);
-
         if (!selectedCompany || !selectedTeam) return;
+        let folderIdParent: any = null;
+
+        if (arrayFolders.length > 0) {
+          folderIdParent = arrayFolders[arrayFolders.length - 1].id;
+        }
 
         const response = await axios.get(
-          getAllDocumentsFromBucket.url(selectedTeam.id, bucket.id),
+          getAllDocumentsFromBucket.url(
+            selectedTeam.id,
+            bucket.id,
+            folderIdParent
+          ),
           {
             withCredentials: true
           }

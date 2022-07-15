@@ -28,11 +28,11 @@ const AddFolder = () => {
   const [nameFolder, setNameFolder] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const getFolderIdParent = (): number => {
+  const getFolderIdParent = useCallback((): number => {
     if (!arrayFoldersTimeLine) return 0;
     if (arrayFoldersTimeLine.length == 0) return 0;
     return arrayFoldersTimeLine[arrayFoldersTimeLine.length - 1].id;
-  };
+  }, [arrayFoldersTimeLine]);
 
   const fetchAddFolder = useCallback(async () => {
     try {
@@ -65,7 +65,8 @@ const AddFolder = () => {
         ]);
       }
 
-      if (fetchDocuments) fetchDocuments({ bucket: selectedBucket });
+      if (fetchDocuments && arrayFoldersTimeLine)
+        fetchDocuments({ bucket: selectedBucket, arrayFoldersTimeLine });
       if (setModalPopUpAddFolder) setModalPopUpAddFolder(false);
       clean();
     } catch (error) {
@@ -87,7 +88,10 @@ const AddFolder = () => {
     selectedCompany,
     nameFolder,
     setModalPopUpAddFolder,
-    fetchDocuments
+    fetchDocuments,
+    arrayFoldersTimeLine,
+    getFolderIdParent,
+    setArrayMsgs
   ]);
 
   const clean = () => {
@@ -101,25 +105,31 @@ const AddFolder = () => {
       setIsModal={setModalPopUpAddFolder}
       callbackClose={clean}
     >
-      <div className={styles.folder_title}>Add folder</div>
-      <InpuText
-        text="Folder name"
-        value={nameFolder}
-        setValue={setNameFolder}
-        id="input-folder-name"
-        name="Folder name"
-        type="text"
-      />
-      <div className={styles.folder}>
-        <BtnSpinner
-          text="Create"
-          callback={fetchAddFolder}
-          color="lavender-300"
-          border="round_5"
-          additionalClass="btn-add-folder"
-          isLoading={isLoading}
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+        }}
+      >
+        <div className={styles.folder_title}>Add folder</div>
+        <InpuText
+          text="Folder name"
+          value={nameFolder}
+          setValue={setNameFolder}
+          id="input-folder-name"
+          name="Folder name"
+          type="text"
         />
-      </div>
+        <div className={styles.folder}>
+          <BtnSpinner
+            text="Create"
+            callback={fetchAddFolder}
+            color="lavender-300"
+            border="round_5"
+            additionalClass="btn-add-folder"
+            isLoading={isLoading}
+          />
+        </div>
+      </form>
     </PopUpModal>
   );
 };

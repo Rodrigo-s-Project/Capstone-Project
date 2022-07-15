@@ -22,7 +22,7 @@ export const isNameRepeated = async (
       return arrayModels.length != 0;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return true; // Just to prevent update when error
   }
 };

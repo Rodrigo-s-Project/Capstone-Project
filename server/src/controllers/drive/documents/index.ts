@@ -12,7 +12,7 @@ export const getDocumentsFromBucket = async (req, res) => {
     data: {}
   };
   try {
-    const { bucketId, teamId } = req.params;
+    const { bucketId, teamId, folderId } = req.params;
 
     if (isNaN(bucketId) || isNaN(teamId)) {
       response.readMsg = true;
@@ -43,7 +43,22 @@ export const getDocumentsFromBucket = async (req, res) => {
     }
 
     let arrayFinalFolders: Array<any> = [];
-    const arrayFolders: Array<any> = await bucket.getFolders();
+    let config: any;
+
+    if (folderId != "null") {
+      config = {
+        hasParent: true,
+        folderId
+      };
+    } else {
+      config = {
+        hasParent: false
+      };
+    }
+
+    const arrayFolders: Array<any> = await bucket.getFolders({
+      where: config
+    });
 
     for (let i = 0; i < arrayFolders.length; i++) {
       const { ...folderData } = arrayFolders[i].toJSON();
@@ -56,7 +71,9 @@ export const getDocumentsFromBucket = async (req, res) => {
     }
 
     let arrayFinalFiles: Array<any> = [];
-    const arrayFiles: Array<any> = await bucket.getFiles();
+    const arrayFiles: Array<any> = await bucket.getFiles({
+      where: config
+    });
 
     for (let i = 0; i < arrayFiles.length; i++) {
       const usersRef: Array<any> = await arrayFiles[i].getUsers();
@@ -159,7 +176,7 @@ export const createFolder = async (req, res) => {
       bucketId,
       companyId
     }: BODY_CREATE_FOLDER = req.body;
-
+    
     if (isNaN(bucketId) || isNaN(folderId) || isNaN(companyId)) {
       response.readMsg = true;
       response.message = "Invalid credentials.";
@@ -199,12 +216,17 @@ export const createFolder = async (req, res) => {
       name,
       isProtected:
         companyRef.User_Company.typeUser == "Admin" ||
-        companyRef.User_Company.typeUser == "Employee"
+        companyRef.User_Company.typeUser == "Employee",
+      hasParent: folderId != 0
     });
 
     // Add to parent
     if (folderId != 0) {
-      console.log("xd");
+      const parentFolder: any = await Folder.findByPk(folderId);
+
+      if (parentFolder) {
+        await parentFolder.addFolder(newFolder);
+      }
     }
 
     // Add to bucket

@@ -17,6 +17,9 @@ export const File = sequelize.define(
     },
     type: {
       type: DataType.STRING
+    },
+    hasParent: {
+      type: DataType.BOOLEAN
     }
   },
   {
