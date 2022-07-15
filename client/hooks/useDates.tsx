@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { CalendarContext } from "../components/Calendar/Calendar";
+import { CalendarContext } from "../components/Calendar/Provider";
 import { GlobalContext } from "../components/../pages/_app";
 import {
   TaskType,
@@ -24,14 +24,11 @@ export const useDates = () => {
     year,
     calendarView,
     currDay,
-    setIsCalendarLoading
-  } = useContext(CalendarContext);
-  const {
-    setArrayMsgs,
-    selectedTeam,
+    setIsCalendarLoading,
     setAllUsersCalendar,
     setAllTagsCalendar
-  } = useContext(GlobalContext);
+  } = useContext(CalendarContext);
+  const { setArrayMsgs, selectedTeam } = useContext(GlobalContext);
 
   const fetchTasks = useCallback(
     async (

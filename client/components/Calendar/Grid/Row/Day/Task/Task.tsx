@@ -4,7 +4,7 @@ import { TaskType } from "../../../../../../routes/calendar.routes";
 import { GlobalContext } from "../../../../../../pages/_app";
 import { DateCalendar } from "../../../../../../hooks/useDates";
 import { invertColor } from "../../../../../../utils/invertColors";
-import { CalendarContext } from "../../../../Calendar";
+import { CalendarContext } from "../../../../Provider";
 
 type Props = {
   task: TaskType;
@@ -14,8 +14,13 @@ type Props = {
 };
 
 const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
+  const { setModalPopUpCreateTask } = useContext(GlobalContext);
+
   const {
-    setModalPopUpCreateTask,
+    setIsResizing,
+    setTaskIdResizing,
+    setFromTaskResizing,
+    setIsResizingFromRight,
     setDayClick,
     setNameTask,
     setDescriptionTask,
@@ -26,13 +31,6 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     setIsSingleDateTask,
     setFromTask,
     setToTask
-  } = useContext(GlobalContext);
-
-  const {
-    setIsResizing,
-    setTaskIdResizing,
-    setFromTaskResizing,
-    setIsResizingFromRight
   } = useContext(CalendarContext);
 
   const openTask = () => {

@@ -46,13 +46,29 @@ export const setAssociations = () => {
   Message.belongsTo(Connection);
 
   // ------------------------------ Folder
-  // (Folder) 1:Many (File)
-  Folder.hasMany(File);
-  File.belongsTo(Folder);
+  // (Folder) 1:Many (File) allowNull true
+  Folder.hasMany(File, {
+    foreignKey: {
+      allowNull: true
+    }
+  });
+  File.belongsTo(Folder, {
+    foreignKey: {
+      allowNull: true
+    }
+  });
 
-  // (Folder) 1:Many (Folder)
-  Folder.hasMany(Folder);
-  Folder.belongsTo(Folder);
+  // (Folder) 1:Many (Folder) allowNull true
+  Folder.hasMany(Folder, {
+    foreignKey: {
+      allowNull: true
+    }
+  });
+  Folder.belongsTo(Folder, {
+    foreignKey: {
+      allowNull: true
+    }
+  });
 
   // ------------------------------ Notification
   // (Notification) Many:Many (Message)

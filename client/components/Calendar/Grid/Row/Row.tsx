@@ -1,10 +1,9 @@
 import styles from "./Row.module.scss";
 import { DateCalendar } from "../../../../hooks/useDates";
-import { StretchCalendarRows } from "../../Calendar";
 
 import DayComponent from "./Day/Day";
 import { Fragment, useContext, Dispatch, SetStateAction } from "react";
-import { CalendarContext } from "../../Calendar";
+import { CalendarContext, StretchCalendarRows } from "../../Provider";
 
 import ChevronDown from "../../../Svgs/ChevronDown";
 
