@@ -199,9 +199,13 @@ export const createFolder = async (req, res) => {
       name,
       isProtected:
         companyRef.User_Company.typeUser == "Admin" ||
-        companyRef.User_Company.typeUser == "Employee",
-      folderId // Add to parent folder
+        companyRef.User_Company.typeUser == "Employee"
     });
+
+    // Add to parent
+    if (folderId != 0) {
+      console.log("xd");
+    }
 
     // Add to bucket
     await bucket.addFolder(newFolder);

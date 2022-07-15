@@ -54,7 +54,7 @@ export type BODY_CREATE_FOLDER = {
   companyId: number;
 };
 
-export const createDocument = {
+export const createFolder = {
   url: `${process.env.API_URL}/dashboard/drive/create-folder`,
   method: "post"
 };

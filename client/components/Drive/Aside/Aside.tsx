@@ -1,6 +1,6 @@
 import styles from "./Aside.module.scss";
 import { useContext, Fragment } from "react";
-import { DriveContext } from "../Drive";
+import { DriveContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 import { BUCKET } from "../drive.types";
 import { USER_WORKSPACE_ASIDE } from "../../../routes/drive.routes";
@@ -146,8 +146,9 @@ const YouAreAClient = () => {
 };
 
 const Teammates = () => {
-  const { selectedBucket, setSelectedBucket } = useContext(DriveContext);
   const { selectedCompany } = useContext(GlobalContext);
+
+  const { setSelectedBucket, selectedBucket } = useContext(DriveContext);
 
   const returnToNoWorkspace = () => {
     if (setSelectedBucket) {
@@ -182,9 +183,10 @@ const Teammates = () => {
 };
 
 const Buckets = () => {
-  const { arrayBuckets, refetchDocuments, setSelectedBucket } = useContext(
+  const { arrayBuckets, setSelectedBucket, fetchDocuments } = useContext(
     DriveContext
   );
+
   const { selectedCompany } = useContext(GlobalContext);
 
   const addAWorkspace = () => {
@@ -192,9 +194,9 @@ const Buckets = () => {
   };
 
   const clickWorkspace = (bucket: BUCKET) => {
-    if (setSelectedBucket && refetchDocuments) {
+    if (fetchDocuments && setSelectedBucket) {
       setSelectedBucket(bucket);
-      refetchDocuments(bucket);
+      fetchDocuments({ bucket });
     }
   };
 

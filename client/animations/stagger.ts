@@ -33,13 +33,13 @@ export const ownStaggerVariants = (delay: number) => {
       opacity: 1,
       y: 0,
       scale: 0.85,
-      transition: { type: "spring", stiffness: 150, delay, duration: 0.5 }
+      transition: { delay, duration: 0.3 }
     },
     exit: {
       opacity: 0,
       y: 30,
       scale: 0.85,
-      transition: { type: "spring", stiffness: 150, delay, duration: 0.5 }
+      transition: { delay, duration: 0.3 }
     }
   };
 };

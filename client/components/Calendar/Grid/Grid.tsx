@@ -1,7 +1,7 @@
 import styles from "./Grid.module.scss";
 import { useContext, Fragment, useState, useEffect, useCallback } from "react";
 
-import { CalendarContext } from "../Calendar";
+import { CalendarContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 import RowElement, { RowHeader } from "./Row/Row";
 import axios from "axios";
@@ -37,7 +37,9 @@ const Grid = () => {
     setTaskIdResizing,
     setFromTaskResizing,
     isResizing,
-    setIsResizingFromRight
+    setIsResizingFromRight,
+    setRefetchTasks,
+    refetchTasks
   } = useContext(CalendarContext);
   const [matrixDates, setMatrixDates] = useState<Array<Array<DateCalendar>>>([
     Array(7).fill(matrixStarter),
@@ -50,13 +52,9 @@ const Grid = () => {
 
   // Hook
   const { createMatrix, getNumberOfRows } = useDates();
-  const {
-    selectedTeam,
-    refetchTasks,
-    selectedCompany,
-    setArrayMsgs,
-    setRefetchTasks
-  } = useContext(GlobalContext);
+  const { selectedTeam, selectedCompany, setArrayMsgs } = useContext(
+    GlobalContext
+  );
 
   const generateMatrix = useCallback(async () => {
     const matrix = await createMatrix();

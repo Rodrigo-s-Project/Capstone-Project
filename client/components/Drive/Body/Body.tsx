@@ -1,13 +1,17 @@
 import styles from "./Body.module.scss";
 import BodySvg from "../../Svgs/DriveNotFound";
 import { useContext, useState } from "react";
-import { DriveContext } from "../Drive";
+import { DriveContext } from "../Provider";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { fadeVariants } from "../../../animations/fade";
+import { fadeVariants, fadeVariantsDelayExit } from "../../../animations/fade";
 import { ownStaggerVariants } from "../../../animations/stagger";
 import Loader from "../../Loader/Spinner/Spinner";
 import PlusIcon from "../../Svgs/Plus";
+import FileIcon from "../../Svgs/File";
+import FolderOpenIcon from "../../Svgs/FolderOpen";
+
+import GridBody from "./Grid/Grid";
 
 const NotBucket = () => {
   return (
@@ -29,6 +33,7 @@ const NotDocuments = () => {
 
 const AddDocumentsBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { setModalPopUpAddFolder } = useContext(DriveContext);
 
   const open = () => {
     setIsOpen(true);
@@ -36,6 +41,10 @@ const AddDocumentsBtn = () => {
 
   const close = () => {
     setIsOpen(false);
+  };
+
+  const addFolder = () => {
+    if (setModalPopUpAddFolder) setModalPopUpAddFolder(true);
   };
 
   return (
@@ -58,22 +67,23 @@ const AddDocumentsBtn = () => {
             exit="exit"
             key="btn-add-folder"
             className={`${styles.body_add_folder} ${styles.body_add}`}
+            onClick={addFolder}
           >
-            <PlusIcon />
+            <FolderOpenIcon />
           </motion.div>
         ) : null}
       </AnimatePresence>
       <AnimatePresence exitBeforeEnter>
         {isOpen ? (
           <motion.div
-            variants={ownStaggerVariants(0.05)}
+            variants={ownStaggerVariants(0.1)}
             initial="hidden"
             animate="visible"
             exit="exit"
             key="btn-add-file"
             className={`${styles.body_add_file} ${styles.body_add}`}
           >
-            <PlusIcon />
+            <FileIcon />
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -82,16 +92,15 @@ const AddDocumentsBtn = () => {
 };
 
 const BodyDrive = () => {
-  const { isLoadingBody, selectedBucket, arrayDocuments } = useContext(
+  const { isLoadingBody, arrayDocuments, selectedBucket } = useContext(
     DriveContext
   );
-
   return (
     <div className={styles.body}>
       <AnimatePresence exitBeforeEnter>
         {isLoadingBody ? (
           <motion.div
-            variants={fadeVariants}
+            variants={fadeVariantsDelayExit}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -115,7 +124,12 @@ const BodyDrive = () => {
               arrayDocuments.files &&
               arrayDocuments.files.length + arrayDocuments.folders.length ==
                 0 && <NotDocuments />}
-
+            {selectedBucket &&
+              arrayDocuments &&
+              arrayDocuments.folders &&
+              arrayDocuments.files &&
+              arrayDocuments.files.length + arrayDocuments.folders.length >
+                0 && <GridBody />}
             {selectedBucket && <AddDocumentsBtn />}
           </motion.div>
         )}

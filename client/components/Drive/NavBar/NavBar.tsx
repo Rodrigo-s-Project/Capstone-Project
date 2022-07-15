@@ -1,6 +1,6 @@
 import styles from "./NavBar.module.scss";
 import { useContext } from "react";
-import { DriveContext } from "../Drive";
+import { DriveContext } from "../Provider";
 import { FOLDER_TIMELINE } from "../drive.types";
 import ChevronRightIcon from "../../Svgs/ChevronRight";
 
@@ -11,7 +11,7 @@ const NoBucket = () => {
 };
 
 const TimeLine = () => {
-  const { selectedBucket, arrayFoldersTimeLine } = useContext(DriveContext);
+  const { arrayFoldersTimeLine, selectedBucket } = useContext(DriveContext);
 
   return (
     <div className={styles.nav_timeline}>

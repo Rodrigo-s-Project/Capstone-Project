@@ -2,7 +2,7 @@ import styles from "./Top.module.scss";
 
 import BtnChildren from "../../Buttons/BtnChildren/BtnChildren";
 import { useContext, useCallback } from "react";
-import { CalendarContext } from "../Calendar";
+import { CalendarContext } from "../Provider";
 
 // Icons
 import ChevronLeft from "../../Svgs/ChevronLeft";
