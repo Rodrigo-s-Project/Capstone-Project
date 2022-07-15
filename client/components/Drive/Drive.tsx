@@ -8,6 +8,8 @@ import NavBarDrive from "./NavBar/NavBar";
 import AsideDrive from "./Aside/Aside";
 import BodyDrive from "./Body/Body";
 
+// TODO: issue between companies having same workspace
+
 const Drive = () => {
   const { selectedTeam } = useContext(GlobalContext);
   // const {  } = useContext(DriveContext);
