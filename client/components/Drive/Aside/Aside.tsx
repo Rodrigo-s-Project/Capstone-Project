@@ -197,10 +197,18 @@ const Buckets = () => {
     arrayFoldersTimeLine
   } = useContext(DriveContext);
 
-  const { selectedCompany } = useContext(GlobalContext);
+  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
 
   const addAWorkspace = () => {
     // TODO: add a workspace
+    if (setArrayMsgs)
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
   };
 
   const clickWorkspace = (bucket: BUCKET) => {

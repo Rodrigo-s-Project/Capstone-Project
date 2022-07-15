@@ -1,10 +1,11 @@
 import { RESPONSE } from "../../controllers.types";
 import { Team } from "../../../models/Team";
 import { Folder } from "../../../models/Folder";
-import { BODY_CREATE_FOLDER } from "./documents.types";
+import { BODY_CREATE_FOLDER, BODY_EDIT_FOLDER } from "./documents.types";
 
 // Helpers
 import { isNameRepeatedDocuments } from "../../helpers/index";
+import { shiftChildrenToParent } from "../../helpers/documents";
 
 export const getDocumentsFromBucket = async (req, res) => {
   let response: RESPONSE = {
@@ -194,7 +195,7 @@ export const createFolder = async (req, res) => {
       return;
     }
 
-    if (await isNameRepeatedDocuments(name, folderId, bucketId)) {
+    if (await isNameRepeatedDocuments(name, folderId, bucketId, false)) {
       response.readMsg = true;
       response.message = "Name is repeated.";
       res.json(response);
@@ -250,6 +251,191 @@ export const createFolder = async (req, res) => {
     await bucket.addFolder(newFolder);
 
     response.message = "Folder created successfully!";
+    response.typeMsg = "success";
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const editFolder = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+  try {
+    const {
+      name,
+      folderId,
+      bucketId,
+      companyId,
+      isProtected
+    }: BODY_EDIT_FOLDER = req.body;
+
+    if (isNaN(folderId)) {
+      response.readMsg = true;
+      response.message = "Invalid credentials.";
+      res.json(response);
+      return;
+    }
+
+    if (name.trim() == "") {
+      response.readMsg = true;
+      response.message = "Invalid name.";
+      res.json(response);
+      return;
+    }
+
+    const buckets: Array<any> = await req.user.getBuckets({
+      where: {
+        id: bucketId
+      }
+    });
+
+    if (buckets.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const companiesUserRef: Array<any> = await req.user.getCompanies({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (companiesUserRef.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const companyRef: any = companiesUserRef[0];
+
+    // Edit folder
+    const folderRef: any = await Folder.findByPk(folderId);
+
+    if (
+      await isNameRepeatedDocuments(name, folderRef.folderId, bucketId, name == folderRef.name)
+    ) {
+      response.readMsg = true;
+      response.message = "Name is repeated.";
+      res.json(response);
+      return;
+    }
+
+    if (!folderRef) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Check if you have permission
+    if (companyRef.User_Company.typeUser == "Client" && folderRef.isProtected) {
+      response.message = "You don't have the permission to edit this document.";
+      res.json(response);
+      return;
+    }
+
+    await folderRef.update({
+      name,
+      isProtected
+    });
+
+    response.message = "Folder edited successfully!";
+    response.typeMsg = "success";
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const deleteFolder = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+  try {
+    const { folderId, bucketId, companyId } = req.params;
+
+    if (isNaN(folderId)) {
+      response.readMsg = true;
+      response.message = "Invalid credentials.";
+      res.json(response);
+      return;
+    }
+
+    const buckets: Array<any> = await req.user.getBuckets({
+      where: {
+        id: bucketId
+      }
+    });
+
+    if (buckets.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const companiesUserRef: Array<any> = await req.user.getCompanies({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (companiesUserRef.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const companyRef: any = companiesUserRef[0];
+
+    const folderRef: any = await Folder.findByPk(folderId);
+
+    if (!folderRef) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Check if you have permission
+    if (companyRef.User_Company.typeUser == "Client" && folderRef.isProtected) {
+      response.message =
+        "You don't have the permission to delete this document.";
+      res.json(response);
+      return;
+    }
+
+    // Delete connections
+    await shiftChildrenToParent(folderRef);
+
+    // Destroy folder
+    await folderRef.destroy();
+
+    response.message = "Folder deleted successfully!";
     response.typeMsg = "success";
     res.json(response);
   } catch (error) {

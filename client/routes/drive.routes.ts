@@ -58,3 +58,22 @@ export const createFolder = {
   url: `${process.env.API_URL}/dashboard/drive/create-folder`,
   method: "post"
 };
+
+export type BODY_EDIT_FOLDER = {
+  name: string;
+  folderId: number;
+  bucketId: number;
+  companyId: number;
+  isProtected: boolean;
+};
+
+export const editFolder = {
+  url: `${process.env.API_URL}/dashboard/drive/edit-folder`,
+  method: "put"
+};
+
+export const deleteFolder = {
+  url: (companyId: any, bucketId: any, folderId: any) =>
+    `${process.env.API_URL}/dashboard/drive/delete-folder/${companyId}/${bucketId}/${folderId}`,
+  method: "delete"
+};

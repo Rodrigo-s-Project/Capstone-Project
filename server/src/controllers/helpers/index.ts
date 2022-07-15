@@ -32,12 +32,14 @@ export const isNameRepeated = async (
 
 export const isNameRepeatedDocuments = async (
   name: string,
-  folderId: number,
-  bucketId: number
+  folderId: any,
+  bucketId: number,
+  allowSelf: boolean
 ): Promise<boolean> => {
   try {
     let config: any = {};
-    if (folderId != 0) {
+
+    if (folderId != 0 && folderId != "null" && folderId != null) {
       config = {
         hasParent: true,
         folderId,
@@ -51,6 +53,7 @@ export const isNameRepeatedDocuments = async (
         name
       };
     }
+
     const arrayFolders: Array<any> = await Folder.findAll({
       where: config
     });
@@ -59,7 +62,7 @@ export const isNameRepeatedDocuments = async (
       where: config
     });
 
-    return arrayFolders.length + arrayFiles.length > 0;
+    return arrayFolders.length + arrayFiles.length > (allowSelf ? 1 : 0);
   } catch (error) {
     console.error(error);
     return true; // Just to prevent update when error

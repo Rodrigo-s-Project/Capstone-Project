@@ -7,6 +7,8 @@ import FolderIcon from "../../../../Svgs/Folder";
 import FolderOpenIcon from "../../../../Svgs/FolderOpen";
 import EditIcon from "../../../../Svgs/Edit";
 import TimesIcon from "../../../../Svgs/Times";
+import LockIcon from "../../../../Svgs/Lock";
+import LockOpenIcon from "../../../../Svgs/LockOpen";
 
 // Context
 import { DriveContext } from "../../../Provider";
@@ -15,6 +17,15 @@ import { GlobalContext } from "../../../../../pages/_app";
 // Components
 import InputText from "../../../../Input/Text/InputText";
 import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
+
+// Routes
+import axios from "axios";
+import {
+  editFolder,
+  BODY_EDIT_FOLDER,
+  deleteFolder
+} from "../../../../../routes/drive.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
 
 type Props = {
   folderRef: DOCUMENT_DATA;
@@ -28,11 +39,13 @@ const Folder = ({ folderRef }: Props) => {
     arrayFoldersTimeLine
   } = useContext(DriveContext);
 
-  const { selectedCompany } = useContext(GlobalContext);
+  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOnDeleting, setIsOnDeleting] = useState(false);
   const [nameFolder, setNameFolder] = useState<string>("");
+  const [isProtectedFolder, setIsProtectedFolder] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const openFolder = () => {
     if (
@@ -60,25 +73,132 @@ const Folder = ({ folderRef }: Props) => {
     return !folderRef.isProtected;
   };
 
-  const editFolderFetch = () => {};
+  const clean = () => {
+    setIsOpen(false);
+    setNameFolder("");
+    setIsProtectedFolder(true);
+    setIsOnDeleting(false);
+  };
 
-  const deleteFolderFetch = () => {};
+  const editFolderFetch = async () => {
+    try {
+      if (!selectedBucket || !selectedCompany) return;
+
+      setIsLoading(true);
+
+      const body: BODY_EDIT_FOLDER = {
+        name: nameFolder,
+        folderId: folderRef.id,
+        bucketId: selectedBucket.id,
+        companyId: selectedCompany.id,
+        isProtected: isProtectedFolder
+      };
+      const response = await axios.put(editFolder.url, body, {
+        withCredentials: true
+      });
+
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      clean();
+
+      if (fetchDocuments && selectedBucket && arrayFoldersTimeLine) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine: arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
+
+  const deleteFolderFetch = async () => {
+    try {
+      if (!selectedBucket || !selectedCompany) return;
+
+      setIsLoading(true);
+
+      const response = await axios.delete(
+        deleteFolder.url(selectedCompany.id, selectedBucket.id, folderRef.id),
+        {
+          withCredentials: true
+        }
+      );
+
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      clean();
+
+      if (fetchDocuments && selectedBucket && arrayFoldersTimeLine) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine: arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
 
   return (
     <div className={`${styles.folder} ${isOpen && styles.folder_open}`}>
       <div className={styles.presentation}>
-        {isFolderEditable() && (
-          <div
-            onClick={() => {
-              setIsOpen(true);
-              setNameFolder(folderRef.name);
-            }}
-            className={styles.folder_edit}
-            title="Edit folder"
-          >
-            <EditIcon />
-          </div>
-        )}
+        <div
+          onClick={() => {
+            if (!isFolderEditable()) return;
+            setIsOpen(true);
+            setNameFolder(folderRef.name);
+            setIsProtectedFolder(folderRef.isProtected);
+          }}
+          className={styles.folder_edit}
+          title="Edit folder"
+        >
+          {isFolderEditable() && <EditIcon />}
+        </div>
 
         <div onClick={openFolder} className={styles.folder_svgs}>
           <div className={styles.folder_svgs_close}>
@@ -86,6 +206,10 @@ const Folder = ({ folderRef }: Props) => {
           </div>
           <div className={styles.folder_svgs_open}>
             <FolderOpenIcon />
+          </div>
+          <div className={styles.folder_svgs_protection}>
+            {folderRef.isProtected && <LockIcon />}
+            {!folderRef.isProtected && <LockOpenIcon />}
           </div>
         </div>
         <div className={styles.folder_name}>{folderRef.name}</div>
@@ -97,13 +221,7 @@ const Folder = ({ folderRef }: Props) => {
             <>
               <div className={styles.open_top}>
                 <div className={styles.open_title}>Edit</div>
-                <div
-                  onClick={() => {
-                    setIsOpen(false);
-                    setNameFolder("");
-                  }}
-                  className={styles.open_times}
-                >
+                <div onClick={clean} className={styles.open_times}>
                   <TimesIcon />
                 </div>
               </div>
@@ -117,16 +235,31 @@ const Folder = ({ folderRef }: Props) => {
                   type="text"
                   additionalClass="input-edit-folder"
                 />
+
                 <div className={styles.open_container_type}>
                   Protection:
-                  <span>{folderRef.isProtected ? "Enabled" : "Disabled"}</span>
+                  <span
+                    onClick={() => {
+                      if (
+                        selectedCompany &&
+                        (selectedCompany.User_Company.typeUser == "Admin" ||
+                          selectedCompany.User_Company.typeUser == "Employee")
+                      ) {
+                        setIsProtectedFolder(prev => !prev);
+                      }
+                    }}
+                  >
+                    {isProtectedFolder ? "Enabled" : "Disabled"}
+                  </span>
                 </div>
+
                 <BtnSpinner
                   text="Save changes"
                   callback={editFolderFetch}
                   color="lavender-300"
                   border="round_5"
                   additionalClass="btn-edit-folder"
+                  isLoading={isLoading}
                 />
                 <div
                   onClick={() => {
@@ -141,7 +274,9 @@ const Folder = ({ folderRef }: Props) => {
           )}
           {isOnDeleting && (
             <>
-              <div className={styles.open_container_ask}>Are you sure you want to delete this folder?</div>
+              <div className={styles.open_container_ask}>
+                Are you sure you want to delete this folder?
+              </div>
               <BtnSpinner
                 text="Cancel"
                 callback={() => {
@@ -157,6 +292,7 @@ const Folder = ({ folderRef }: Props) => {
                 color="lavender-300"
                 border="round_5"
                 additionalClass="btn-ask-folder"
+                isLoading={isLoading}
               />
             </>
           )}

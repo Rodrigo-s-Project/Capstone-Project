@@ -13,3 +13,10 @@ export type BODY_CREATE_FOLDER = {
   bucketId: number;
   companyId: number;
 };
+export type BODY_EDIT_FOLDER = {
+  name: string;
+  folderId: number;
+  bucketId: number;
+  companyId: number;
+  isProtected: boolean;
+};

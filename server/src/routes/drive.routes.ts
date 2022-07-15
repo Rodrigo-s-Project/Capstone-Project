@@ -5,7 +5,9 @@ import { authenticate } from "../middlewares/auth/index";
 import { getBucketsFromTeam } from "../controllers/drive/buckets/index";
 import {
   createFolder,
-  getDocumentsFromBucket
+  getDocumentsFromBucket,
+  editFolder,
+  deleteFolder
 } from "../controllers/drive/documents/index";
 
 // Protected route
@@ -16,5 +18,12 @@ router.get(
   getDocumentsFromBucket
 );
 router.post("/create-folder", authenticate, createFolder);
+
+router.put("/edit-folder", authenticate, editFolder);
+router.delete(
+  "/delete-folder/:companyId/:bucketId/:folderId",
+  authenticate,
+  deleteFolder
+);
 
 export default router;

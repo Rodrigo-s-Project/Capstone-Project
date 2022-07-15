@@ -12,6 +12,7 @@ import FileIcon from "../../Svgs/File";
 import FolderOpenIcon from "../../Svgs/FolderOpen";
 
 import GridBody from "./Grid/Grid";
+import { GlobalContext } from "../../../pages/_app";
 
 const NotBucket = () => {
   return (
@@ -34,6 +35,7 @@ const NotDocuments = () => {
 const AddDocumentsBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { setModalPopUpAddFolder } = useContext(DriveContext);
+  const { setArrayMsgs } = useContext(GlobalContext);
 
   const open = () => {
     setIsOpen(true);
@@ -45,6 +47,18 @@ const AddDocumentsBtn = () => {
 
   const addFolder = () => {
     if (setModalPopUpAddFolder) setModalPopUpAddFolder(true);
+  };
+
+  const addFiles = () => {
+    // TODO: add files fetch
+    if (setArrayMsgs)
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
   };
 
   return (
@@ -82,6 +96,7 @@ const AddDocumentsBtn = () => {
             exit="exit"
             key="btn-add-file"
             className={`${styles.body_add_file} ${styles.body_add}`}
+            onClick={addFiles}
           >
             <FileIcon />
           </motion.div>
@@ -103,7 +118,6 @@ const BodyDrive = () => {
             variants={fadeVariantsDelayExit}
             initial="hidden"
             animate="visible"
-            exit="exit"
             key="loader-body-drive"
             className={styles.body_loader}
           >
@@ -114,7 +128,6 @@ const BodyDrive = () => {
             variants={fadeVariants}
             initial="hidden"
             animate="visible"
-            exit="exit"
             className={styles.body_wrapper}
           >
             {!selectedBucket && <NotBucket />}
