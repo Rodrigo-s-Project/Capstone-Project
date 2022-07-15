@@ -1,6 +1,7 @@
 import styles from "./TaskModal.module.scss";
 import { useContext, useCallback, useState } from "react";
 import { GlobalContext } from "../../../../../../pages/_app";
+import { CalendarContext } from "../../../../Provider";
 import PopUpModal from "../../../../../Modals/PopUp/PopUp";
 import BtnSpinner from "../../../../../Buttons/BtnClick/BtnClick";
 import BtnChildren from "../../../../../Buttons/BtnChildren/BtnChildren";
@@ -34,10 +35,23 @@ const TaskModal = () => {
   const {
     modalPopUpCreateTask,
     setModalPopUpCreateTask,
-    dayClick,
     setArrayMsgs,
     selectedTeam,
     selectedCompany,
+    user
+  } = useContext(GlobalContext);
+
+  const {
+    dayClick,
+    setTagsTask,
+    idTask,
+    isSingleDateTask,
+    fromTask,
+    toTask,
+    setIdTask,
+    setIsSingleDateTask,
+    setFromTask,
+    setToTask,
     setRefetchTasks,
 
     nameTask,
@@ -54,18 +68,8 @@ const TaskModal = () => {
 
     allTagsCalendar,
     allUsersCalendar,
-    setUsersTask,
-    user,
-    setTagsTask,
-    idTask,
-    isSingleDateTask,
-    fromTask,
-    toTask,
-    setIdTask,
-    setIsSingleDateTask,
-    setFromTask,
-    setToTask
-  } = useContext(GlobalContext);
+    setUsersTask
+  } = useContext(CalendarContext);
 
   const [isEditingTags, setIsEditingTags] = useState<boolean>(false);
   const [
@@ -363,6 +367,7 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
       setAreYouSureYouWantToDeleteTag(false);
       setAreYouSureYouWantToDeleteTask(false);
       setIdTagForEdit(0);
@@ -410,7 +415,8 @@ const TaskModal = () => {
     setIsEditingTags,
     setIdTagForEdit,
     setAreYouSureYouWantToDeleteTag,
-    setAreYouSureYouWantToDeleteTask
+    setAreYouSureYouWantToDeleteTask,
+    setIsTaskModalOnEditing
   ]);
 
   const editTaskFetch = useCallback(async () => {
@@ -467,6 +473,7 @@ const TaskModal = () => {
       if (setIsSingleDateTask) setIsSingleDateTask(false);
       if (setFromTask) setFromTask(0);
       if (setToTask) setToTask(0);
+      if (setIsTaskModalOnEditing) setIsTaskModalOnEditing(false);
       setAreYouSureYouWantToDeleteTask(false);
       setAreYouSureYouWantToDeleteTag(false);
       setIdTagForEdit(0);
@@ -518,7 +525,8 @@ const TaskModal = () => {
     setIsEditingTags,
     setIdTagForEdit,
     setAreYouSureYouWantToDeleteTag,
-    setAreYouSureYouWantToDeleteTask
+    setAreYouSureYouWantToDeleteTask,
+    setIsTaskModalOnEditing
   ]);
 
   const deleteTaskFetch = async () => {

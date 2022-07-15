@@ -25,6 +25,7 @@ import JoinCompanyModal from "../components/Dashboard/Body/Creation/Company/Moda
 import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 import EditSectionModal from "../components/Controls/Modals/EditSection";
 import UploadImageModal from "../components/Modals/Images/UploadImage";
+import AddFolderModal from "../components/Drive/Modals/AddFolder/AddFolder";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -33,11 +34,12 @@ import { fadeVariantsLongerExit } from "../animations/fade";
 export const GlobalContext = createContext<Partial<ValueAppProvider>>({});
 import { DATA_GET_USER } from "../routes/main.routes";
 import { BODY_EDIT_SECTION } from "../routes/dashboard.controls.routes";
+import DriveProvider from "../components/Drive/Provider";
+import CalendarProvider from "../components/Calendar/Provider";
 
 // Hooks
 import { useAuth } from "../hooks/useAuth";
 import { useColorTheme } from "../hooks/useColorTheme";
-import { DateCalendar } from "../hooks/useDates";
 
 // Routes
 import { COMPANY } from "../routes/dashboard.company.routes";
@@ -82,42 +84,11 @@ interface ValueAppProvider {
   selectedTeam: TEAM | undefined;
   setSelectedTeam: Dispatch<SetStateAction<TEAM | undefined>>;
 
-  dayClick: DateCalendar | undefined;
-  setDayClick: Dispatch<SetStateAction<DateCalendar | undefined>>;
   isMenuToggled: boolean;
   setIsMenuToggled: Dispatch<SetStateAction<boolean>>;
-  refetchTasks: boolean;
-  setRefetchTasks: Dispatch<SetStateAction<boolean>>;
-
   controlModalState: BODY_EDIT_SECTION | undefined;
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
-
   callBackImages: any;
-  idTask: number;
-  setIdTask: Dispatch<SetStateAction<number>>;
-  isSingleDateTask: boolean;
-  setIsSingleDateTask: Dispatch<SetStateAction<boolean>>;
-  fromTask: number;
-  setFromTask: Dispatch<SetStateAction<number>>;
-  toTask: number;
-  setToTask: Dispatch<SetStateAction<number>>;
-  nameTask: string;
-  setNameTask: Dispatch<SetStateAction<string>>;
-  descriptionTask: string;
-  setDescriptionTask: Dispatch<SetStateAction<string>>;
-  usersTask: Array<string>;
-  setUsersTask: Dispatch<SetStateAction<Array<string>>>;
-  tagsTask: Array<string>;
-  setTagsTask: Dispatch<SetStateAction<Array<string>>>;
-  allUsersCalendar: Array<DATA_GET_USER>;
-  setAllUsersCalendar: Dispatch<SetStateAction<Array<DATA_GET_USER>>>;
-  allTagsCalendar: Array<any>;
-  setAllTagsCalendar: Dispatch<SetStateAction<Array<any>>>;
-
-  isLoadingTask: boolean;
-  setIsLoadingTask: Dispatch<SetStateAction<boolean>>;
-  isTaskModalOnEditing: boolean;
-  setIsTaskModalOnEditing: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -187,10 +158,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (setIsDarkMode) setIsDarkMode(newTheme == "NIGHT");
   }, [updateColors]);
 
-  // Create tasks
-  const [dayClick, setDayClick] = useState<DateCalendar | undefined>(undefined);
-  const [refetchTasks, setRefetchTasks] = useState<boolean>(false);
-
   // Modal edit controls
   const [controlModalState, setControlModalState] = useState<
     BODY_EDIT_SECTION | undefined
@@ -198,25 +165,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // Modal images callback
   const callBackImages = useRef<any>(null);
-
-  // Tasks modal state
-  const [idTask, setIdTask] = useState<number>(0);
-  const [isSingleDateTask, setIsSingleDateTask] = useState<boolean>(false);
-  const [fromTask, setFromTask] = useState<number>(0);
-  const [toTask, setToTask] = useState<number>(0);
-  const [nameTask, setNameTask] = useState<string>("");
-  const [descriptionTask, setDescriptionTask] = useState<string>("");
-  const [usersTask, setUsersTask] = useState<Array<string>>([]);
-  const [tagsTask, setTagsTask] = useState<Array<string>>([]);
-  const [isLoadingTask, setIsLoadingTask] = useState<boolean>(false);
-  const [isTaskModalOnEditing, setIsTaskModalOnEditing] = useState<boolean>(
-    false
-  );
-
-  const [allUsersCalendar, setAllUsersCalendar] = useState<
-    Array<DATA_GET_USER>
-  >([]);
-  const [allTagsCalendar, setAllTagsCalendar] = useState<Array<any>>([]);
 
   return (
     <GlobalContext.Provider
@@ -255,87 +203,64 @@ function MyApp({ Component, pageProps }: AppProps) {
         setRefetchTeams,
         selectedTeam,
         setSelectedTeam,
-        dayClick,
-        setDayClick,
         isMenuToggled,
         setIsMenuToggled,
         controlModalState,
         setControlModalState,
-        callBackImages,
-        refetchTasks,
-        setRefetchTasks,
-        idTask,
-        isSingleDateTask,
-        setIsSingleDateTask,
-        fromTask,
-        setFromTask,
-        toTask,
-        setToTask,
-        setIdTask,
-        nameTask,
-        setNameTask,
-        descriptionTask,
-        setDescriptionTask,
-        usersTask,
-        setUsersTask,
-        tagsTask,
-        setTagsTask,
-        allUsersCalendar,
-        setAllUsersCalendar,
-        allTagsCalendar,
-        setAllTagsCalendar,
-        isLoadingTask,
-        setIsLoadingTask,
-        isTaskModalOnEditing,
-        setIsTaskModalOnEditing
+        callBackImages
       }}
     >
-      <Head>
-        <title>Teamplace</title>
-      </Head>
-      <AnimatePresence
-        exitBeforeEnter
-        initial={false}
-        onExitComplete={() => window.scrollTo(0, 0)}
-      >
-        {isLoading ? (
-          <motion.div
-            variants={fadeVariantsLongerExit}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="app-loader"
-            key="loader-app-container"
+      <CalendarProvider>
+        <DriveProvider>
+          <Head>
+            <title>Teamplace</title>
+          </Head>
+          <AnimatePresence
+            exitBeforeEnter
+            initial={false}
+            onExitComplete={() => window.scrollTo(0, 0)}
           >
-            <Loader additionalClass="loader-app" color="lavender-200" />
-          </motion.div>
-        ) : (
-          <>
-            <Nav />
-            <CreateTeamModal />
-            <JoinTeamModal />
-            <CreateCompanyModal />
-            <JoinCompanyModal />
-            <TaskModal />
-            <EditSectionModal />
-            <UploadImageModal
-              callback={data => {
-                if (!callBackImages) return;
-                if (!callBackImages.current) return;
-                try {
-                  callBackImages.current(data);
-                } catch (error) {
-                  console.error(error);
-                }
-              }}
-            />
-            <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
-            <main className="main-content">
-              <Component {...pageProps} />
-            </main>
-          </>
-        )}
-      </AnimatePresence>
+            {isLoading ? (
+              <motion.div
+                variants={fadeVariantsLongerExit}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="app-loader"
+                key="loader-app-container"
+              >
+                <Loader additionalClass="loader-app" color="lavender-200" />
+              </motion.div>
+            ) : (
+              <>
+                <Nav />
+                <CreateTeamModal />
+                <JoinTeamModal />
+                <CreateCompanyModal />
+                <JoinCompanyModal />
+                <TaskModal />
+                <AddFolderModal />
+                <EditSectionModal />
+                <UploadImageModal
+                  callback={data => {
+                    if (!callBackImages) return;
+                    if (!callBackImages.current) return;
+                    try {
+                      callBackImages.current(data);
+                    } catch (error) {
+                      console.error(error);
+                    }
+                  }}
+                />
+                <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
+                <main className="main-content">
+                  <Component {...pageProps} />
+                </main>
+              </>
+            )}
+          </AnimatePresence>
+        </DriveProvider>
+      </CalendarProvider>
     </GlobalContext.Provider>
   );
 }

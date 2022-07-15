@@ -1,0 +1,125 @@
+.body {
+  padding: 15px 25px 25px 25px;
+  height: calc(100% - 20px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  &_add {
+    position: fixed;
+    z-index: 10;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--lavender-200);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    bottom: 80px;
+    right: 280px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--white);
+    }
+    &_folder {
+      background-color: var(--lavender-300);
+      bottom: 130px;
+      z-index: 5;
+      &::before {
+        content: "Add folder";
+        top: 8px;
+        left: -110px;
+        background-color: var(--gray-300);
+        padding: 3px 10px;
+        position: absolute;
+        z-index: 5;
+        white-space: nowrap;
+        border-radius: 5px;
+        visibility: hidden;
+      }
+    }
+    &_file {
+      background-color: var(--lavender-300);
+      bottom: 175px;
+      &::before {
+        content: "Add files";
+        top: 8px;
+        left: -96px;
+        background-color: var(--gray-300);
+        padding: 3px 10px;
+        position: absolute;
+        z-index: 5;
+        white-space: nowrap;
+        border-radius: 5px;
+        visibility: hidden;
+      }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--lavender-400);
+        &::before {
+          visibility: visible;
+        }
+      }
+    }
+
+    @media screen and (min-width: 1520px) {
+      right: calc(280px + 50vw - 760px);
+    }
+    @media screen and (max-width: 1000px) {
+      right: 60px;
+      bottom: 60px;
+      &_folder {
+        bottom: 110px;
+      }
+      &_file {
+        bottom: 155px;
+      }
+    }
+    @media screen and (max-width: 590px) {
+      right: 50px;
+    }
+    @media screen and (max-height: 666px) {
+      display: none;
+    }
+  }
+  &_loader {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div[extra-css="loader-drive-body"] {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  &_wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 5;
+  }
+  &_not_files {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    div {
+      color: var(--lavender-200);
+      text-align: center;
+    }
+    svg {
+      width: 30%;
+      max-width: 500px;
+      min-width: 200px;
+      display: block;
+    }
+  }
+}

@@ -11,6 +11,7 @@ type Props = {
   additionalClass?: string;
   isLoading?: boolean;
   isDiv?: boolean;
+  role?: string;
 };
 
 const BtnClick = ({
@@ -20,7 +21,8 @@ const BtnClick = ({
   border,
   additionalClass = "",
   isLoading,
-  isDiv = false
+  isDiv = false,
+  role = ""
 }: Props) => {
   const getColorLoader = ():
     | "lavender-300"
@@ -56,6 +58,7 @@ const BtnClick = ({
           }}
           className={`${styles.btn} ${styles[color]} ${styles[border]}`}
           tabIndex={-1}
+          role={role}
         >
           {!isLoading && text}
           {isLoading && (

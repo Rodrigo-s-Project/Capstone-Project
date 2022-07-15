@@ -8,7 +8,7 @@ import {
   SetStateAction
 } from "react";
 
-import { CalendarContext } from "../../../Calendar";
+import { CalendarContext } from "../../../Provider";
 import { GlobalContext } from "../../../../../pages/_app";
 
 import { TaskType } from "../../../../../routes/calendar.routes";
@@ -34,9 +34,10 @@ const Day = ({ day, isToday, matrixDates, setMatrixDates }: Props) => {
     isResizing,
     setToTaskResizing,
     setFromTaskResizing,
-    isResizingFromRight
+    isResizingFromRight,
+    setDayClick
   } = useContext(CalendarContext);
-  const { setModalPopUpCreateTask, setDayClick } = useContext(GlobalContext);
+  const { setModalPopUpCreateTask } = useContext(GlobalContext);
 
   const isAnotherMonth = useCallback(
     (day: Date): boolean => {

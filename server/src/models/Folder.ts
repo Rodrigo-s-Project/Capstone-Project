@@ -14,6 +14,9 @@ export const Folder = sequelize.define(
     },
     isProtected: {
       type: DataType.BOOLEAN
+    },
+    hasParent: {
+      type: DataType.BOOLEAN
     }
   },
   {

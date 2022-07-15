@@ -1,13 +1,29 @@
 import { useContext } from "react";
 import { GlobalContext } from "../../pages/_app";
+// import { DriveContext } from "./Provider";
 import styles from "./Drive.module.scss";
+
+// Components
+import NavBarDrive from "./NavBar/NavBar";
+import AsideDrive from "./Aside/Aside";
+import BodyDrive from "./Body/Body";
 
 const Drive = () => {
   const { selectedTeam } = useContext(GlobalContext);
+  // const {  } = useContext(DriveContext);
 
   return (
     <div className={styles.drive}>
-      <div>{selectedTeam && selectedTeam.name} drive</div>
+      <h1>{selectedTeam && selectedTeam.name}&apos;s Workspace</h1>
+      <div className={styles.drive_wrapper}>
+        <div className={styles.drive_container}>
+          <NavBarDrive />
+          <BodyDrive />
+        </div>
+        <div className={styles.drive_aside}>
+          <AsideDrive />
+        </div>
+      </div>
     </div>
   );
 };

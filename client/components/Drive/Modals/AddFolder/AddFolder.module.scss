@@ -1,0 +1,12 @@
+.folder {
+  &_title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--lavender-300);
+    margin-bottom: 30px;
+  }
+  button[extra-css="btn-add-folder"] {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
