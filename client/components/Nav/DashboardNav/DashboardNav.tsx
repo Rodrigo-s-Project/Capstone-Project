@@ -5,6 +5,7 @@ import Link from "next/link";
 
 // Context
 import { GlobalContext } from "../../../pages/_app";
+import { DriveContext } from "../../../components/Drive/Provider";
 
 // Animations
 import { fadeVariants } from "../../../animations/fade";
@@ -27,13 +28,34 @@ export const DashBoardNavControls = ({ rules }: Props) => {
   // State dropdown
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
+  // Cleaning
+  const {
+    setArrayBuckets,
+    setArrayDocuments,
+    setArrayFoldersTimeLine,
+    setArrayUsersInBucket,
+    setIsLoadingBody,
+    setSelectedBucket
+  } = useContext(DriveContext);
+  const cleanDrivesChache = () => {
+    if (setArrayBuckets) setArrayBuckets([]);
+    if (setArrayDocuments) setArrayDocuments({});
+    if (setArrayFoldersTimeLine) setArrayFoldersTimeLine([]);
+    if (setArrayUsersInBucket) setArrayUsersInBucket([]);
+    if (setIsLoadingBody) setIsLoadingBody(false);
+    if (setSelectedBucket) setSelectedBucket(undefined);
+  };
+
   return (
     <div className={rules.nav_controls}>
       <div className={rules.nav_controls_cmd}>
         <Cmd />
       </div>
       <div className={rules.nav_controls_info}>
-        <div className={rules.nav_controls_info_bell}>
+        <div
+          onClick={cleanDrivesChache}
+          className={rules.nav_controls_info_bell}
+        >
           <Bell />
         </div>
         <div className={rules.nav_controls_info_types}>
@@ -48,6 +70,7 @@ export const DashBoardNavControls = ({ rules }: Props) => {
           <Link href="/dashboard/profile">
             <a
               title="Go to Profile"
+              onClick={cleanDrivesChache}
               className={rules.nav_controls_info_user_profile}
             >
               <div className={rules.nav_controls_info_user_profile_img}>
@@ -84,6 +107,24 @@ export const DashBoardNavControls = ({ rules }: Props) => {
 const DashboardNav = () => {
   const { isMenuOpen, setIsMenuOpen } = useContext(GlobalContext);
 
+  // Cleaning
+  const {
+    setArrayBuckets,
+    setArrayDocuments,
+    setArrayFoldersTimeLine,
+    setArrayUsersInBucket,
+    setIsLoadingBody,
+    setSelectedBucket
+  } = useContext(DriveContext);
+  const cleanDrivesChache = () => {
+    if (setArrayBuckets) setArrayBuckets([]);
+    if (setArrayDocuments) setArrayDocuments({});
+    if (setArrayFoldersTimeLine) setArrayFoldersTimeLine([]);
+    if (setArrayUsersInBucket) setArrayUsersInBucket([]);
+    if (setIsLoadingBody) setIsLoadingBody(false);
+    if (setSelectedBucket) setSelectedBucket(undefined);
+  };
+
   return (
     <motion.nav
       variants={fadeVariants}
@@ -94,7 +135,7 @@ const DashboardNav = () => {
     >
       <div className={styles.nav_logo}>
         <Link href="/">
-          <a>Teamplace</a>
+          <a onClick={cleanDrivesChache}>Teamplace</a>
         </Link>
         <div
           onClick={() => {

@@ -9,6 +9,7 @@ import { RESPONSE } from "../../../../routes/index.routes";
 
 // Contexts
 import { GlobalContext } from "../../../../pages/_app";
+import { DriveContext } from "../../../../components/Drive/Provider";
 
 // Loader
 import Loader from "../../../Loader/Spinner/Spinner";
@@ -72,12 +73,31 @@ const DropDown = ({ isOpen }: Props) => {
     }
   };
 
+  // Cleaning
+  const {
+    setArrayBuckets,
+    setArrayDocuments,
+    setArrayFoldersTimeLine,
+    setArrayUsersInBucket,
+    setIsLoadingBody,
+    setSelectedBucket
+  } = useContext(DriveContext);
+  const cleanDrivesChache = () => {
+    if (setArrayBuckets) setArrayBuckets([]);
+    if (setArrayDocuments) setArrayDocuments({});
+    if (setArrayFoldersTimeLine) setArrayFoldersTimeLine([]);
+    if (setArrayUsersInBucket) setArrayUsersInBucket([]);
+    if (setIsLoadingBody) setIsLoadingBody(false);
+    if (setSelectedBucket) setSelectedBucket(undefined);
+  };
+
   return (
     <div className={`${styles.drop} ${isOpen && styles.drop_open}`}>
       <div
         title="Log out"
         onClick={() => {
           if (!isLoading) logOut();
+          cleanDrivesChache();
         }}
         className={styles.drop_link}
       >
@@ -87,6 +107,7 @@ const DropDown = ({ isOpen }: Props) => {
       <div
         onClick={() => {
           router.replace("/dashboard/profile");
+          cleanDrivesChache();
         }}
         className={styles.drop_link}
         title="Go to profile"
