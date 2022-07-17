@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { GlobalContext } from "../../pages/_app";
-// import { DriveContext } from "./Provider";
 import styles from "./Drive.module.scss";
 
 // Components
@@ -10,8 +9,6 @@ import BodyDrive from "./Body/Body";
 
 const Drive = () => {
   const { selectedTeam } = useContext(GlobalContext);
-  // const {  } = useContext(DriveContext);
-
   return (
     <div className={styles.drive}>
       <h1>{selectedTeam && selectedTeam.name}&apos;s Workspace</h1>

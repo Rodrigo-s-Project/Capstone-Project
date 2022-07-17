@@ -1,5 +1,5 @@
 import { Folder } from "../../models/Folder";
-import { isNameRepeatedDocuments } from "../helpers/index";
+import { getNewNameForDocument } from "../helpers/index";
 
 export const shiftChildrenToParent = async (
   folderRef: any
@@ -20,17 +20,12 @@ export const shiftChildrenToParent = async (
       // So update the (hasParent) of the children -> false
       for (let i = 0; i < childrenFolders.length; i++) {
         const doc: any = childrenFolders[i];
-        const isNameRepeated: boolean = await isNameRepeatedDocuments(
+        const newName: string = await getNewNameForDocument(
+          doc.name,
           doc.name,
           null,
-          folderRef.bucketId,
-          false
+          folderRef.bucketId
         );
-        let newName: string = doc.name;
-        if (isNameRepeated) {
-          newName = `${folderRef.name}_${newName}`;
-        }
-
         await doc.update({
           hasParent: false,
           name: newName
@@ -38,16 +33,12 @@ export const shiftChildrenToParent = async (
       }
       for (let i = 0; i < childrenFiles.length; i++) {
         const doc: any = childrenFiles[i];
-        const isNameRepeated: boolean = await isNameRepeatedDocuments(
+        const newName: string = await getNewNameForDocument(
+          doc.name,
           doc.name,
           null,
-          folderRef.bucketId,
-          false
+          folderRef.bucketId
         );
-        let newName: string = doc.name;
-        if (isNameRepeated) {
-          newName = `${folderRef.name}_${newName}`;
-        }
         await doc.update({
           hasParent: false,
           name: newName
@@ -62,34 +53,25 @@ export const shiftChildrenToParent = async (
     // Move to its folder parent
     for (let i = 0; i < childrenFolders.length; i++) {
       const doc: any = childrenFolders[i];
-      const isNameRepeated: boolean = await isNameRepeatedDocuments(
+      const newName: string = await getNewNameForDocument(
+        doc.name,
         doc.name,
         folderParent.id,
-        folderParent.bucketId,
-        false
+        folderRef.bucketId
       );
-      let newName: string = doc.name;
-      if (isNameRepeated) {
-        newName = `${folderRef.name}_${newName}`;
-      }
       await folderParent.addFolder(doc);
-
       await doc.update({
         name: newName
       });
     }
     for (let i = 0; i < childrenFiles.length; i++) {
       const doc: any = childrenFiles[i];
-      const isNameRepeated: boolean = await isNameRepeatedDocuments(
+      const newName: string = await getNewNameForDocument(
+        doc.name,
         doc.name,
         folderParent.id,
-        folderParent.bucketId,
-        false
+        folderRef.bucketId
       );
-      let newName: string = doc.name;
-      if (isNameRepeated) {
-        newName = `${folderRef.name}_${newName}`;
-      }
       await folderParent.addFile(doc);
       await doc.update({
         name: newName

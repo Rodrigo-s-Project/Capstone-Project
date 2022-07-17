@@ -10,11 +10,35 @@ import BtnChildren from "../../Buttons/BtnChildren/BtnChildren";
 import PlusIcon from "../../Svgs/Plus";
 import ChevronLeftIcon from "../../Svgs/ChevronLeft";
 import CameraIcon from "../../Svgs/Camera";
+import TrashAltIcon from "../../Svgs/TrashAlt";
 
 // Routes
 import { getImage } from "../../../routes/cdn.routes";
 
 const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
+  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
+
+  const canEdit = (): boolean => {
+    if (!selectedCompany) return false;
+    if (userRef.typeUser == "Admin" || userRef.typeUser == "Employee")
+      return false;
+    return (
+      selectedCompany.User_Company.typeUser == "Admin" ||
+      selectedCompany.User_Company.typeUser == "Employee"
+    );
+  };
+
+  const kickUser = () => {
+    if (setArrayMsgs)
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
+  };
+
   return (
     <div className={styles.aside_user}>
       <div className={styles.aside_user_img}>
@@ -27,120 +51,90 @@ const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
         )}
       </div>
       <div className={styles.aside_user_name}>{userRef.username}</div>
+      {canEdit() && (
+        <div
+          title="Kick user from workspace"
+          className={styles.aside_user_delete}
+          onClick={kickUser}
+        >
+          <TrashAltIcon />
+        </div>
+      )}
+    </div>
+  );
+};
+
+type Props = {
+  typeUser: Array<string>;
+  title: string;
+};
+
+const ListAside = ({ typeUser, title }: Props) => {
+  const { arrayDocuments } = useContext(DriveContext);
+  const { user } = useContext(GlobalContext);
+
+  const getList = () => {
+    let aux: Array<USER_WORKSPACE_ASIDE> = [];
+    if (!arrayDocuments || !arrayDocuments.users) return [];
+    if (!user) return [];
+
+    for (let i = 0; i < arrayDocuments.users.length; i++) {
+      if (
+        typeUser.includes(arrayDocuments.users[i].typeUser) &&
+        user.id != arrayDocuments.users[i].id
+      ) {
+        aux.push(arrayDocuments.users[i]);
+      }
+    }
+    return aux;
+  };
+
+  return (
+    <div className={styles.aside_group_wrapper}>
+      <div className={styles.aside_group_title}>{title}</div>
+      {getList().length == 0 && (
+        <div className={styles.aside_array_zero}>
+          <div></div>
+        </div>
+      )}
+      {getList().length > 0 && (
+        <div className={styles.aside_array_list}>
+          {getList().map((userRef: USER_WORKSPACE_ASIDE, index: number) => {
+            return (
+              <Fragment key={index}>
+                <User userRef={userRef} />
+              </Fragment>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
 
 const YouAreAnEmployee = () => {
-  const { arrayDocuments } = useContext(DriveContext);
-  const { user } = useContext(GlobalContext);
-
   return (
     <div className={styles.aside_group}>
       {/* Here are the teammates */}
-      <div className={styles.aside_group_wrapper}>
-        <div className={styles.aside_group_title}>Teammates</div>
-        <div className={styles.aside_array_list}>
-          {arrayDocuments &&
-            arrayDocuments.users &&
-            arrayDocuments.users.map(
-              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
-                if (user && userRef.id == user.id) return null;
-                if (
-                  userRef.typeUser == "Admin" ||
-                  userRef.typeUser == "Employee"
-                ) {
-                  return (
-                    <Fragment key={index}>
-                      <User userRef={userRef} />
-                    </Fragment>
-                  );
-                }
-                return null;
-              }
-            )}
-        </div>
-      </div>
-
+      <ListAside title="Teammates" typeUser={["Admin", "Employee"]} />
       {/* Here are the clients */}
-      <div className={styles.aside_group_wrapper}>
-        <div className={styles.aside_group_title}>Clients</div>
-        <div className={styles.aside_array_list}>
-          {arrayDocuments &&
-            arrayDocuments.users &&
-            arrayDocuments.users.map(
-              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
-                if (user && userRef.id == user.id) return null;
-                if (userRef.typeUser == "Client") {
-                  return (
-                    <Fragment key={index}>
-                      <User userRef={userRef} />
-                    </Fragment>
-                  );
-                }
-                return null;
-              }
-            )}
-        </div>
-      </div>
+      <ListAside title="Clients" typeUser={["Client"]} />
     </div>
   );
 };
 
 const YouAreAClient = () => {
-  const { arrayDocuments } = useContext(DriveContext);
-  const { user, selectedTeam } = useContext(GlobalContext);
+  const { selectedTeam } = useContext(GlobalContext);
 
   return (
     <div className={styles.aside_group}>
       {/* Here are the employees */}
-      <div className={styles.aside_group_wrapper}>
-        <div className={styles.aside_group_title}>
-          {selectedTeam && selectedTeam.name}
-        </div>
-        <div className={styles.aside_array_list}>
-          {arrayDocuments &&
-            arrayDocuments.users &&
-            arrayDocuments.users.map(
-              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
-                if (user && userRef.id == user.id) return null;
-                if (
-                  userRef.typeUser == "Admin" ||
-                  userRef.typeUser == "Employee"
-                ) {
-                  return (
-                    <Fragment key={index}>
-                      <User userRef={userRef} />
-                    </Fragment>
-                  );
-                }
-                return null;
-              }
-            )}
-        </div>
-      </div>
-
+      <ListAside
+        title={selectedTeam ? selectedTeam.name : "Team"}
+        typeUser={["Admin", "Employee"]}
+      />
       {/* Here are the teammates */}
-      <div className={styles.aside_group_wrapper}>
-        <div className={styles.aside_group_title}>Teammates</div>
-        <div className={styles.aside_array_list}>
-          {arrayDocuments &&
-            arrayDocuments.users &&
-            arrayDocuments.users.map(
-              (userRef: USER_WORKSPACE_ASIDE, index: number) => {
-                if (user && userRef.id == user.id) return null;
-                if (userRef.typeUser == "Client") {
-                  return (
-                    <Fragment key={index}>
-                      <User userRef={userRef} />
-                    </Fragment>
-                  );
-                }
-                return null;
-              }
-            )}
-        </div>
-      </div>
+      <ListAside title="Teammates" typeUser={["Client"]} />
     </div>
   );
 };
@@ -165,16 +159,18 @@ const Teammates = () => {
 
   return (
     <div className={styles.aside_array_users}>
-      <div className={styles.aside_array_top_title}>
-        <div
-          onClick={returnToNoWorkspace}
-          title="Return"
-          className={styles.aside_array_top_title_return}
-        >
-          <ChevronLeftIcon />
-        </div>
-        <div className={styles.aside_array_top_title_text}>
-          {selectedBucket && selectedBucket.name}
+      <div className={styles.aside_array_top}>
+        <div className={styles.aside_array_top_title}>
+          <div
+            onClick={returnToNoWorkspace}
+            title="Return"
+            className={styles.aside_array_top_title_return}
+          >
+            <ChevronLeftIcon />
+          </div>
+          <div className={styles.aside_array_top_title_text}>
+            {selectedBucket && selectedBucket.name}
+          </div>
         </div>
       </div>
       {selectedCompany &&

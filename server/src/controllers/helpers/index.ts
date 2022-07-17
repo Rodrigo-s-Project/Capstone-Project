@@ -68,3 +68,38 @@ export const isNameRepeatedDocuments = async (
     return true; // Just to prevent update when error
   }
 };
+
+export const getNewNameForDocument = async (
+  name: string,
+  originalName: string,
+  parentFolderId: any,
+  bucketId: number,
+  iterationCount = 0
+): Promise<string> => {
+  try {
+    const isNameRepeated: boolean = await isNameRepeatedDocuments(
+      name,
+      parentFolderId,
+      bucketId,
+      false
+    );
+
+    if (isNameRepeated) {
+      const newName: string = `${originalName}(${iterationCount + 1})`;
+      iterationCount += 1;
+
+      return await getNewNameForDocument(
+        newName,
+        originalName,
+        parentFolderId,
+        bucketId,
+        iterationCount
+      );
+    }
+
+    return name;
+  } catch (error) {
+    console.error(error);
+    return name;
+  }
+};

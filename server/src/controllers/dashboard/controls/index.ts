@@ -22,33 +22,39 @@ export const editSection = async (req, res) => {
       isUpdateOnSingleModel
     }: BODY_EDIT_SECTION = req.body;
 
+    if (isNaN(companyId)) {
+      response.message = "Invalid company ID.";
+      res.json(response);
+      return;
+    }
+
+    const allCompanies: any = await req.user.getCompanies({
+      where: {
+        id: companyId
+      }
+    });
+
+    if (!allCompanies || allCompanies.length == 0) {
+      response.message = "Invalid company ID.";
+      res.json(response);
+      return;
+    }
+
+    const company = allCompanies[0];
+
+    if (!company) {
+      response.message = "Company not found.";
+      res.json(response);
+      return;
+    }
+
+    if (identifier != "username" && company.adminId != req.user.id) {
+      response.message = "Unauthorized.";
+      res.json(response);
+      return;
+    }
+
     if (typeEdit == "company") {
-      if (isNaN(companyId)) {
-        response.message = "Invalid company ID.";
-        res.json(response);
-        return;
-      }
-
-      const allCompanies: any = await req.user.getCompanies({
-        where: {
-          id: companyId
-        }
-      });
-
-      if (!allCompanies || allCompanies.length == 0) {
-        response.message = "Invalid company ID.";
-        res.json(response);
-        return;
-      }
-
-      const company = allCompanies[0];
-
-      if (!company) {
-        response.message = "Company not found.";
-        res.json(response);
-        return;
-      }
-
       // Get update object
       let updateObj = {};
 
