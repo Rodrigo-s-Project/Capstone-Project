@@ -8,6 +8,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
+    width: 100%;
     &_img {
       width: 30px;
       height: 30px;
@@ -29,13 +30,34 @@
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      width: calc(100% - 40px);
+      width: calc(100% - 80px);
+    }
+    &_delete {
+      margin-left: auto;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      svg {
+        width: 17.5px;
+        height: 17.5px;
+        fill: var(--lavender-300);
+      }
+      @media (hover:hover) and (pointer:fine) {
+        &:hover {
+          svg {
+            fill: var(--lavender-400);
+          }
+        }
+      }
     }
   }
   &_group {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 30px;
     &_wrapper {
       display: flex;
       flex-direction: column;
@@ -49,10 +71,18 @@
   }
   &_array {
     position: relative;
+    &_zero {
+      div {
+        width: 100%;
+        height: 2px;
+        background-color: var(--gray-300);
+        margin-top: 15px;
+      }
+    }
     &_users {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 10px;
     }
     &_list {
       display: flex;
