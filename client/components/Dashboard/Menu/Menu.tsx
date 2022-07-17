@@ -7,6 +7,7 @@ import { fadeVariants } from "../../../animations/fade";
 
 // Context
 import { GlobalContext } from "../../../pages/_app";
+import { DriveContext } from "../../../components/Drive/Provider";
 
 // Components
 import { DashBoardNavControls } from "../../Nav/DashboardNav/DashboardNav";
@@ -59,6 +60,23 @@ const MenuDashboard = ({
   } = useContext(GlobalContext);
   const router = useRouter();
 
+  const {
+    setArrayBuckets,
+    setArrayDocuments,
+    setArrayFoldersTimeLine,
+    setArrayUsersInBucket,
+    setIsLoadingBody,
+    setSelectedBucket
+  } = useContext(DriveContext);
+  const cleanDrivesChache = () => {
+    if (setArrayBuckets) setArrayBuckets([]);
+    if (setArrayDocuments) setArrayDocuments({});
+    if (setArrayFoldersTimeLine) setArrayFoldersTimeLine([]);
+    if (setArrayUsersInBucket) setArrayUsersInBucket([]);
+    if (setIsLoadingBody) setIsLoadingBody(false);
+    if (setSelectedBucket) setSelectedBucket(undefined);
+  };
+
   return (
     <aside
       className={`${styles.menu} ${isMenuOpen &&
@@ -90,6 +108,7 @@ const MenuDashboard = ({
 
             if (setSelectedCompany) setSelectedCompany(undefined);
             if (setSelectedTeam) setSelectedTeam(undefined);
+            cleanDrivesChache();
           }}
         >
           <BriefcaseIcon />
@@ -117,6 +136,7 @@ const MenuDashboard = ({
                     router.replace(`/dashboard/${selectedCompany.id}`);
 
                     if (setSelectedTeam) setSelectedTeam(undefined);
+                    cleanDrivesChache();
                   }}
                 >
                   {selectedCompany.name}
@@ -128,6 +148,7 @@ const MenuDashboard = ({
                     router.replace(`/dashboard/${selectedCompany.id}/teams`);
 
                     if (setSelectedTeam) setSelectedTeam(undefined);
+                    cleanDrivesChache();
                   }}
                 >
                   <BriefcaseIcon />
@@ -205,6 +226,10 @@ const MenuDashboard = ({
           text="Settings"
           click={() => {
             router.replace(`/dashboard/settings`);
+
+            if (setSelectedCompany) setSelectedCompany(undefined);
+            if (setSelectedTeam) setSelectedTeam(undefined);
+            cleanDrivesChache();
           }}
         >
           <CogIcon />

@@ -8,7 +8,7 @@ import { sequelize } from "./database/database";
 async function main() {
   try {
     setAssociations();
-    await sequelize.sync({ force: false });
+    await sequelize.sync();
     console.log(`Connection has been established successfully`);
 
     await app.listen(app.get("port"));
