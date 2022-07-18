@@ -26,6 +26,8 @@ import TaskModal from "../components/Calendar/Grid/Row/Day/TaskModal/TaskModal";
 import EditSectionModal from "../components/Controls/Modals/EditSection";
 import UploadImageModal from "../components/Modals/Images/UploadImage";
 import AddFolderModal from "../components/Drive/Modals/AddFolder/AddFolder";
+import EditUsernameProfileModal from "../components/Profile/Modals/Username/ModalUsername";
+import EditPasswordProfileModal from "../components/Profile/Modals/Password/ModalPassword";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -36,6 +38,7 @@ import { DATA_GET_USER } from "../routes/main.routes";
 import { BODY_EDIT_SECTION } from "../routes/dashboard.controls.routes";
 import DriveProvider from "../components/Drive/Provider";
 import CalendarProvider from "../components/Calendar/Provider";
+import ProfileProvider from "../components/Profile/Provider";
 
 // Hooks
 import { useAuth } from "../hooks/useAuth";
@@ -210,57 +213,61 @@ function MyApp({ Component, pageProps }: AppProps) {
         callBackImages
       }}
     >
-      <CalendarProvider>
-        <DriveProvider>
-          <Head>
-            <title>Teamplace</title>
-          </Head>
-          <AnimatePresence
-            exitBeforeEnter
-            initial={false}
-            onExitComplete={() => window.scrollTo(0, 0)}
-          >
-            {isLoading ? (
-              <motion.div
-                variants={fadeVariantsLongerExit}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="app-loader"
-                key="loader-app-container"
-              >
-                <Loader additionalClass="loader-app" color="lavender-200" />
-              </motion.div>
-            ) : (
-              <>
-                <Nav />
-                <CreateTeamModal />
-                <JoinTeamModal />
-                <CreateCompanyModal />
-                <JoinCompanyModal />
-                <TaskModal />
-                <AddFolderModal />
-                <EditSectionModal />
-                <UploadImageModal
-                  callback={data => {
-                    if (!callBackImages) return;
-                    if (!callBackImages.current) return;
-                    try {
-                      callBackImages.current(data);
-                    } catch (error) {
-                      console.error(error);
-                    }
-                  }}
-                />
-                <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
-                <main className="main-content">
-                  <Component {...pageProps} />
-                </main>
-              </>
-            )}
-          </AnimatePresence>
-        </DriveProvider>
-      </CalendarProvider>
+      <ProfileProvider>
+        <CalendarProvider>
+          <DriveProvider>
+            <Head>
+              <title>Teamplace</title>
+            </Head>
+            <AnimatePresence
+              exitBeforeEnter
+              initial={false}
+              onExitComplete={() => window.scrollTo(0, 0)}
+            >
+              {isLoading ? (
+                <motion.div
+                  variants={fadeVariantsLongerExit}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="app-loader"
+                  key="loader-app-container"
+                >
+                  <Loader additionalClass="loader-app" color="lavender-200" />
+                </motion.div>
+              ) : (
+                <>
+                  <Nav />
+                  <CreateTeamModal />
+                  <JoinTeamModal />
+                  <CreateCompanyModal />
+                  <JoinCompanyModal />
+                  <TaskModal />
+                  <AddFolderModal />
+                  <EditSectionModal />
+                  <EditUsernameProfileModal />
+                  <EditPasswordProfileModal />
+                  <UploadImageModal
+                    callback={data => {
+                      if (!callBackImages) return;
+                      if (!callBackImages.current) return;
+                      try {
+                        callBackImages.current(data);
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
+                  />
+                  <Messages arrayMsgs={arrayMsgs} setArrayMsgs={setArrayMsgs} />
+                  <main className="main-content">
+                    <Component {...pageProps} />
+                  </main>
+                </>
+              )}
+            </AnimatePresence>
+          </DriveProvider>
+        </CalendarProvider>
+      </ProfileProvider>
     </GlobalContext.Provider>
   );
 }

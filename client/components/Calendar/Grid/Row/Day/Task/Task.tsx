@@ -142,16 +142,16 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
     ]
   );
 
-  const hasControls = (): boolean => {
-    return (
-      task.taskRef.fromDate == day.date.getTime() ||
+  const hasControls = (): Array<boolean> => {
+    return [
+      task.taskRef.fromDate == day.date.getTime(),
       task.taskRef.toDate == day.date.getTime()
-    );
+    ];
   };
 
   return (
     <div className={`${styles.task_all}`}>
-      {hasControls() && (
+      {hasControls()[0] && (
         <div
           onMouseDown={() => {
             dragStarts(false);
@@ -192,7 +192,7 @@ const Task = ({ task, day, matrixDates, setMatrixDates }: Props) => {
           </div>
         )}
       </div>
-      {hasControls() && (
+      {hasControls()[1] && (
         <div
           onMouseDown={() => {
             dragStarts(true);
