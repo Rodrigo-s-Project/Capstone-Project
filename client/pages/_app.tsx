@@ -28,6 +28,7 @@ import UploadImageModal from "../components/Modals/Images/UploadImage";
 import AddFolderModal from "../components/Drive/Modals/AddFolder/AddFolder";
 import EditUsernameProfileModal from "../components/Profile/Modals/Username/ModalUsername";
 import EditPasswordProfileModal from "../components/Profile/Modals/Password/ModalPassword";
+import StripeModal from "../components/Modals/Stripe/Stripe";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -92,6 +93,8 @@ interface ValueAppProvider {
   controlModalState: BODY_EDIT_SECTION | undefined;
   setControlModalState: Dispatch<SetStateAction<BODY_EDIT_SECTION | undefined>>;
   callBackImages: any;
+  modalPopUpStripe: boolean;
+  setModalPopUpStripe: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -140,6 +143,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [modalPopUpCreateTask, setModalPopUpCreateTask] = useState<boolean>(
     false
   );
+  const [modalPopUpStripe, setModalPopUpStripe] = useState<boolean>(false);
 
   // Dashboard menu
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
@@ -210,7 +214,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         setIsMenuToggled,
         controlModalState,
         setControlModalState,
-        callBackImages
+        callBackImages,
+        modalPopUpStripe,
+        setModalPopUpStripe
       }}
     >
       <ProfileProvider>
@@ -247,6 +253,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <EditSectionModal />
                   <EditUsernameProfileModal />
                   <EditPasswordProfileModal />
+                  <StripeModal />
                   <UploadImageModal
                     callback={data => {
                       if (!callBackImages) return;
