@@ -77,3 +77,21 @@ export const deleteFolder = {
     `${process.env.API_URL}/dashboard/drive/delete-folder/${companyId}/${bucketId}/${folderId}`,
   method: "delete"
 };
+
+export type BODY_UPLOAD_FILE = {
+  name: string;
+  folderId: number;
+  bucketId: number;
+  companyId: number;
+  type: string;
+};
+
+export type PostFileData = {
+  url: string;
+  blobName: string;
+};
+
+export const addFile = {
+  url: `${process.env.API_URL}/dashboard/drive/add-file`,
+  method: "post"
+};

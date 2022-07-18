@@ -10,6 +10,8 @@ import {
   deleteFolder
 } from "../controllers/drive/documents/index";
 
+import { postFile } from "../controllers/drive/files/index";
+
 // Protected route
 router.get("/get-buckets/:companyId/:teamId", authenticate, getBucketsFromTeam);
 router.get(
@@ -25,5 +27,13 @@ router.delete(
   authenticate,
   deleteFolder
 );
+
+// Files
+// Own middleware
+import multer from "multer";
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post("/add-file", authenticate, upload.single("file"), postFile);
 
 export default router;

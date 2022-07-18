@@ -32,84 +32,87 @@ const FilesModal = () => {
   const arrayFilesNames = useRef<Array<string>>([]);
 
   // Drop Zone
-  const onDrop = useCallback((acceptedFiles: Array<File>) => {
-    let arrayFilesAux: Array<MyFile> = [];
-    let arrayFilesNamesAux: Array<string> = [];
-    let everythingFine: boolean = true;
+  const onDrop = useCallback(
+    (acceptedFiles: Array<File>) => {
+      let arrayFilesAux: Array<MyFile> = [];
+      let arrayFilesNamesAux: Array<string> = [];
+      let everythingFine: boolean = true;
 
-    for (let i = 0; i < acceptedFiles.length; i++) {
-      let type: string = "";
-      let hadBreak: boolean = false;
-      const file: File = acceptedFiles[i];
+      for (let i = 0; i < acceptedFiles.length; i++) {
+        let type: string = "";
+        let hadBreak: boolean = false;
+        const file: File = acceptedFiles[i];
 
-      // Type
-      for (let j = 1; j <= file.name.length; j++) {
-        const letter: string = file.name[file.name.length - j];
-        if (letter != ".") {
-          type = letter + type;
-        } else {
-          type = letter + type;
-          hadBreak = true;
+        // Type
+        for (let j = 1; j <= file.name.length; j++) {
+          const letter: string = file.name[file.name.length - j];
+          if (letter != ".") {
+            type = letter + type;
+          } else {
+            type = letter + type;
+            hadBreak = true;
+            break;
+          }
+        }
+
+        if (!hadBreak) {
+          // FAIL everything
+          everythingFine = false;
           break;
         }
+
+        arrayFilesNamesAux.push(file.name);
+        arrayFilesAux.push({
+          file,
+          type,
+          stageLoadingFile: "not-loading"
+        });
       }
 
-      if (!hadBreak) {
-        // FAIL everything
-        everythingFine = false;
-        break;
-      }
+      // Complete names in this round and before rounds
+      arrayFilesNamesAux = [...arrayFilesNamesAux, ...arrayFilesNames.current];
 
-      arrayFilesNamesAux.push(file.name);
-      arrayFilesAux.push({
-        file,
-        type,
-        stageLoadingFile: "not-loading"
-      });
-    }
+      // Check if is repeated
+      const noDuplicates = new Set(arrayFilesNamesAux);
 
-    // Complete names in this round and before rounds
-    arrayFilesNamesAux = [...arrayFilesNamesAux, ...arrayFilesNames.current];
-
-    // Check if is repeated
-    const noDuplicates = new Set(arrayFilesNamesAux);
-
-    if (arrayFilesNamesAux.length !== noDuplicates.size) {
-      // FAIL
-      if (setArrayMsgs) {
-        setArrayMsgs(prev => [
-          ...prev,
-          {
-            type: "danger",
-            text: "You cannot upload files with the same name."
-          }
-        ]);
-      }
-    } else {
-      if (everythingFine) {
-        // SUCCESS
-        arrayFilesNames.current = arrayFilesNamesAux;
-        setArrayFiles(prev => [...prev, ...arrayFilesAux]);
-      } else {
+      if (arrayFilesNamesAux.length !== noDuplicates.size) {
         // FAIL
         if (setArrayMsgs) {
           setArrayMsgs(prev => [
-            ...prev,
             {
               type: "danger",
-              text:
-                "Error while reading the files. Check the file type: (.png, .pdf, etc...)."
-            }
+              text: "You cannot upload files with the same name."
+            },
+            ...prev
           ]);
         }
+      } else {
+        if (everythingFine) {
+          // SUCCESS
+          arrayFilesNames.current = arrayFilesNamesAux;
+          setArrayFiles(prev => [...prev, ...arrayFilesAux]);
+        } else {
+          // FAIL
+          if (setArrayMsgs) {
+            setArrayMsgs(prev => [
+              {
+                type: "danger",
+                text:
+                  "Error while reading the files. Check the file type: (.png, .pdf, etc...)."
+              },
+              ...prev
+            ]);
+          }
 
-        // Clean files
-        setArrayFiles([]);
-        arrayFilesNames.current = [];
-        setIsLoading(false);
+          // Clean files
+          setArrayFiles([]);
+          arrayFilesNames.current = [];
+          setIsLoading(false);
+        }
       }
-    }
-  }, [setArrayMsgs]);
+    },
+    [setArrayMsgs]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const deleteFile = (index: number) => {
@@ -129,6 +132,7 @@ const FilesModal = () => {
     setArrayFiles([]);
     setIsLoading(false);
     arrayFilesNames.current = [];
+    if (setModalPopUpAddFiles) setModalPopUpAddFiles(false);
   };
 
   return (
@@ -158,7 +162,12 @@ const FilesModal = () => {
             );
           })}
         </div>
-        <SubmitEl show={arrayFiles.length > 0} />
+        <SubmitEl
+          clean={clean}
+          arrayFiles={arrayFiles}
+          setArrayFiles={setArrayFiles}
+          show={arrayFiles.length > 0}
+        />
       </div>
     </PopUpModal>
   );
