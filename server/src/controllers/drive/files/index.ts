@@ -1,6 +1,7 @@
 import { RESPONSE } from "../../controllers.types";
 import { File } from "../../../models/File";
 import { Folder } from "../../../models/Folder";
+import { createHmac } from "crypto";
 
 // Types
 import { BODY_UPLOAD_FILE, PostFileData } from "./files.types";
@@ -162,7 +163,7 @@ export const postFile = async (req, res) => {
   try {
     const ourFile: any = req.file;
 
-    const { name }: BODY_UPLOAD_FILE = req.body;
+    const { name, type }: BODY_UPLOAD_FILE = req.body;
 
     if (!ourFile) {
       response.message = "You need to upload a file!";
@@ -181,7 +182,10 @@ export const postFile = async (req, res) => {
 
     // Upload file to GCP
     // Create a new blobName
-    const blobName: string = `${idNewFile}_${name}`;
+
+    const blobName: string = `${createHmac("sha256", "keys")
+      .update(idNewFile.toString())
+      .digest("hex")}${type}`;
     const blob: FileType = bucket.file(blobName);
     const blobStream = blob.createWriteStream({
       resumable: true // They can be too large

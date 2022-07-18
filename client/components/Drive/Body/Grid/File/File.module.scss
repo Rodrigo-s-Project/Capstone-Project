@@ -1,0 +1,183 @@
+.presentation {
+  width: 100%;
+  height: 100%;
+
+  visibility: visible;
+  opacity: 1;
+
+  transition: visibility ease-out 300ms, opacity ease-out 300ms;
+}
+.data {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+
+  visibility: hidden;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: visibility ease-out 300ms, opacity ease-out 300ms;
+
+  button[extra-css="btn-ask-file"] {
+    height: 45px;
+    padding: 0;
+    width: 100%;
+  }
+}
+.file {
+  background-color: var(--primary-color);
+  border: 1px solid var(--gray-500);
+  padding: 20px;
+  height: 190px;
+  border-radius: 5px;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: transform ease-out 300ms;
+
+  &_open {
+    transform: rotateY(180deg);
+    .presentation {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .data {
+      visibility: visible;
+      opacity: 1;
+      transform: rotateY(180deg);
+    }
+  }
+
+  &_name {
+    height: 20px;
+    text-align: center;
+    color: var(--gray-800);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &_edit {
+    height: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: fit-content;
+    margin-left: auto;
+    cursor: pointer;
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--lavender-300);
+      cursor: pointer;
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          fill: var(--lavender-400);
+        }
+      }
+    }
+  }
+  &_types {
+    height: 95px;
+    position: relative;
+    padding: 0 5px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div {
+      width: 100%;
+      color: var(--lavender-300);
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+  }
+}
+.open {
+  &_top {
+    display: flex;
+    justify-content: space-between;
+  }
+  &_times {
+    height: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: fit-content;
+    margin-left: auto;
+    cursor: pointer;
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--lavender-300);
+      cursor: pointer;
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          fill: var(--lavender-400);
+        }
+      }
+    }
+  }
+  &_title {
+    font-size: 1.1rem;
+  }
+  &_container {
+    height: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    div[extra-css="input-edit-folder"] {
+      input {
+        padding: 8px 20px;
+      }
+    }
+    &_ask {
+      text-align: center;
+    }
+    &_type {
+      margin: 5px 0 7px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        background-color: var(--gray-300);
+        padding: 2px 10px;
+        border-radius: 100px; //Just a max
+        cursor: pointer;
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background-color: var(--gray-500);
+          }
+        }
+      }
+    }
+    &_delete {
+      text-align: center;
+      color: var(--lavender-100);
+      width: fit-content;
+      margin: 0 auto;
+      cursor: pointer;
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+    button[extra-css="btn-edit-file"] {
+      height: 30px;
+      padding: 0;
+      width: 100%;
+    }
+  }
+}
