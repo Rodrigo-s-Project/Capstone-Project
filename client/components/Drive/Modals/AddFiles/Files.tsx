@@ -2,7 +2,14 @@ import styles from "./files.module.scss";
 import PopUpModal from "../../../Modals/PopUp/PopUp";
 import { DriveContext } from "../../Provider";
 import { GlobalContext } from "../../../../pages/_app";
-import { useContext, useState, useRef, useCallback, Fragment } from "react";
+import {
+  useContext,
+  useState,
+  useRef,
+  useCallback,
+  Fragment,
+  useEffect
+} from "react";
 
 // Dropzone
 import { useDropzone } from "react-dropzone";
@@ -20,9 +27,11 @@ export interface MyFile {
 }
 
 const FilesModal = () => {
-  const { modalPopUpAddFiles, setModalPopUpAddFiles } = useContext(
-    DriveContext
-  );
+  const {
+    modalPopUpAddFiles,
+    setModalPopUpAddFiles,
+    arrayDocuments
+  } = useContext(DriveContext);
 
   const { setArrayMsgs } = useContext(GlobalContext);
 
@@ -30,6 +39,22 @@ const FilesModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [arrayFiles, setArrayFiles] = useState<Array<MyFile>>([]);
   const arrayFilesNames = useRef<Array<string>>([]);
+
+  const updateCurrNames = useCallback(() => {
+    let arrNames: Array<string> = [];
+    if (!arrayDocuments || !arrayDocuments.files) return;
+    for (let i = 0; i < arrayDocuments.files.length; i++) {
+      arrNames.push(arrayDocuments.files[i].name);
+    }
+
+    arrayFilesNames.current = arrNames;
+  }, [arrayDocuments]);
+
+  useEffect(() => {
+    if (arrayDocuments && arrayDocuments.files) {
+      updateCurrNames();
+    }
+  }, [arrayDocuments, updateCurrNames]);
 
   // Drop Zone
   const onDrop = useCallback(

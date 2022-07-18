@@ -10,7 +10,12 @@ import {
   deleteFolder
 } from "../controllers/drive/documents/index";
 
-import { postFile, getFile, downloadFileDeleteTemp } from "../controllers/drive/files/index";
+import {
+  postFile,
+  getFile,
+  downloadFileDeleteTemp
+} from "../controllers/drive/files/index";
+import { editFile, deleteFile } from "../controllers/drive/files/edits";
 
 // Protected route
 router.get("/get-buckets/:companyId/:teamId", authenticate, getBucketsFromTeam);
@@ -37,5 +42,12 @@ const upload = multer({ storage: storage });
 router.post("/add-file", authenticate, upload.single("file"), postFile);
 router.get("/get-file/:idFile", authenticate, getFile);
 router.delete("/delete-file/:idFile", authenticate, downloadFileDeleteTemp);
+
+router.put("/edit-file", authenticate, editFile);
+router.delete(
+  "/delete-file-db/:companyId/:bucketId/:fileId",
+  authenticate,
+  deleteFile
+);
 
 export default router;

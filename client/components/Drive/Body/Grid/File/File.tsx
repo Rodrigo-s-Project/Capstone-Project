@@ -12,7 +12,10 @@ import axios from "axios";
 import {
   getFile as getFileEndpoint,
   GetFileData,
-  deleteFile
+  deleteFile,
+  editFile,
+  BODY_EDIT_FILE,
+  deleteFileDb
 } from "../../../../../routes/drive.routes";
 import { RESPONSE } from "../../../../../routes/index.routes";
 
@@ -29,12 +32,9 @@ type Props = {
 };
 
 const FileComponent = ({ fileRef }: Props) => {
-  const {
-    setArrayFoldersTimeLine,
-    fetchDocuments,
-    selectedBucket,
-    arrayFoldersTimeLine
-  } = useContext(DriveContext);
+  const { fetchDocuments, selectedBucket, arrayFoldersTimeLine } = useContext(
+    DriveContext
+  );
 
   const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
 
@@ -136,6 +136,105 @@ const FileComponent = ({ fileRef }: Props) => {
     }
   };
 
+  const deleteFileFetch = async () => {
+    try {
+      if (!selectedBucket || !arrayFoldersTimeLine || !selectedCompany) return;
+      setIsLoading(true);
+      const response = await axios.delete(
+        deleteFileDb.url(selectedCompany.id, selectedBucket.id, fileRef.id),
+        {
+          withCredentials: true
+        }
+      );
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      clean();
+
+      // Refetch
+      if (fetchDocuments) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine: arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on deleting the file"
+          },
+          ...prev
+        ]);
+      }
+    }
+  };
+
+  const editFileFetch = async () => {
+    try {
+      if (!selectedBucket || !arrayFoldersTimeLine || !selectedCompany) return;
+
+      setIsLoading(true);
+      const body: BODY_EDIT_FILE = {
+        name: nameFile,
+        fileId: fileRef.id,
+        bucketId: selectedBucket.id,
+        companyId: selectedCompany.id,
+        isProtected: isProtectedFile
+      };
+      const response = await axios.put(editFile.url, body, {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      clean();
+
+      // Refetch
+      if (fetchDocuments) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine: arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error on downloading the file"
+          },
+          ...prev
+        ]);
+      }
+    }
+  };
+
   return (
     <div className={`${styles.file} ${isOpen && styles.file_open}`}>
       <div className={styles.presentation}>
@@ -223,6 +322,7 @@ const FileComponent = ({ fileRef }: Props) => {
                   text="Save changes"
                   callback={() => {
                     if (!isLoading) {
+                      editFileFetch();
                     }
                   }}
                   color="lavender-300"
@@ -232,7 +332,9 @@ const FileComponent = ({ fileRef }: Props) => {
                 />
                 <div
                   onClick={() => {
-                    setIsOnDeleting(true);
+                    if (!isLoading) {
+                      setIsOnDeleting(true);
+                    }
                   }}
                   className={styles.open_container_delete}
                 >
@@ -261,6 +363,7 @@ const FileComponent = ({ fileRef }: Props) => {
                 text="Delete"
                 callback={() => {
                   if (!isLoading) {
+                    deleteFileFetch();
                   }
                 }}
                 color="lavender-300"

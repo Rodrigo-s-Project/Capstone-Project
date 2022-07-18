@@ -111,3 +111,22 @@ export const deleteFile = {
     `${process.env.API_URL}/dashboard/drive/delete-file/${idFile}`,
   method: "delete"
 };
+
+export const deleteFileDb = {
+  url: (companyId: any, bucketId: any, fileId: any) =>
+    `${process.env.API_URL}/dashboard/drive/delete-file-db/${companyId}/${bucketId}/${fileId}`,
+  method: "delete"
+};
+
+export type BODY_EDIT_FILE = {
+  name: string;
+  fileId: number;
+  bucketId: number;
+  companyId: number;
+  isProtected: boolean;
+};
+
+export const editFile = {
+  url: `${process.env.API_URL}/dashboard/drive/edit-file`,
+  method: "put"
+};
