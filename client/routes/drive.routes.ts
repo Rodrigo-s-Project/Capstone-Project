@@ -95,3 +95,19 @@ export const addFile = {
   url: `${process.env.API_URL}/dashboard/drive/add-file`,
   method: "post"
 };
+
+export type GetFileData = {
+  redirectLink: string;
+};
+
+export const getFile = {
+  url: (idFile: any) =>
+    `${process.env.API_URL}/dashboard/drive/get-file/${idFile}`,
+  method: "get"
+};
+
+export const deleteFile = {
+  url: (idFile: any) =>
+    `${process.env.API_URL}/dashboard/drive/delete-file/${idFile}`,
+  method: "delete"
+};

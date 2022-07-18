@@ -2,9 +2,10 @@ import { RESPONSE } from "../../controllers.types";
 import { File } from "../../../models/File";
 import { Folder } from "../../../models/Folder";
 import { createHmac } from "crypto";
+import fs from "fs";
 
 // Types
-import { BODY_UPLOAD_FILE, PostFileData } from "./files.types";
+import { BODY_UPLOAD_FILE, PostFileData, GetFileData } from "./files.types";
 
 // Helpers
 import { isNameRepeatedDocuments } from "../../helpers/index";
@@ -163,7 +164,7 @@ export const postFile = async (req, res) => {
   try {
     const ourFile: any = req.file;
 
-    const { name, type }: BODY_UPLOAD_FILE = req.body;
+    const { type }: BODY_UPLOAD_FILE = req.body;
 
     if (!ourFile) {
       response.message = "You need to upload a file!";
@@ -182,7 +183,6 @@ export const postFile = async (req, res) => {
 
     // Upload file to GCP
     // Create a new blobName
-
     const blobName: string = `${createHmac("sha256", "keys")
       .update(idNewFile.toString())
       .digest("hex")}${type}`;
@@ -233,6 +233,120 @@ export const postFile = async (req, res) => {
     blobStream.end(req.file.buffer);
   } catch (error) {
     console.error(`error in postFile =>`, error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const getFile = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+  try {
+    const idFile = req.params.idFile;
+
+    const fileDB: any = await File.findByPk(idFile);
+
+    if (!fileDB) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    // Success
+    const blobName: string = `${createHmac("sha256", "keys")
+      .update(idFile.toString())
+      .digest("hex")}${fileDB.type}`;
+
+    // Create temp folder
+    const dirPublic = path.join(__dirname + `../../../../public`);
+    await fs.mkdir(dirPublic, () => {});
+
+    const dir = path.join(__dirname + `../../../../public/${fileDB.id}`);
+
+    console.log("dir");
+    console.log(dir);
+
+    console.log("blobName");
+    console.log(blobName);
+
+    const dirWithFile = path.join(
+      __dirname + `../../../../public/${fileDB.id}/${fileDB.name}` // Without hash
+    );
+
+    console.log("dirWithFile");
+    console.log(dirWithFile);
+
+    fs.mkdir(dir, async () => {
+      const downlaodOptions = {
+        destination: dirWithFile
+      };
+
+      bucket
+        .file(blobName)
+        .download(downlaodOptions)
+        .then(() => {
+          const data: GetFileData = {
+            redirectLink: `${process.env.OWN_URL}/public/${fileDB.id}/${fileDB.name}`
+          };
+          response.readMsg = false;
+          response.typeMsg = "success";
+          response.data = data;
+          res.json(response);
+          return;
+        });
+    });
+  } catch (error) {
+    console.error(`error in getFile =>`, error);
+
+    // Send Error
+    response.data = {};
+    response.isAuth = true;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
+export const downloadFileDeleteTemp = async (req, res) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+  try {
+    const idFile = req.params.idFile;
+    const fileDB: any = await File.findByPk(idFile);
+
+    if (!fileDB) {
+      response.message = "Invalid file id.";
+      res.json(response);
+      return;
+    }
+
+    // Delete temp folder
+    const dir = path.join(__dirname + `../../../../public/${fileDB.id}`);
+    fs.rmdir(dir, { recursive: true }, err => {});
+
+    response.readMsg = false;
+    response.typeMsg = "success";
+    res.json(response);
+    return;
+  } catch (error) {
+    console.error(`error in downloadFileDeleteTemp =>`, error);
 
     // Send Error
     response.data = {};

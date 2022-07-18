@@ -10,3 +10,7 @@ export type PostFileData = {
   url: string;
   blobName: string;
 };
+
+export type GetFileData = {
+  redirectLink: string;
+};

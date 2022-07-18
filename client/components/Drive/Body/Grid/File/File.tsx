@@ -3,12 +3,18 @@ import { useContext, useState } from "react";
 import { DOCUMENT_DATA } from "../../../../../routes/drive.routes";
 
 // Icons
-import FolderIcon from "../../../../Svgs/Folder";
-import FolderOpenIcon from "../../../../Svgs/FolderOpen";
 import EditIcon from "../../../../Svgs/Edit";
 import TimesIcon from "../../../../Svgs/Times";
-import LockIcon from "../../../../Svgs/Lock";
-import LockOpenIcon from "../../../../Svgs/LockOpen";
+import FileDownloadIcon from "../../../../Svgs/FileDownload";
+import Loader from "../../../../Loader/Spinner/Spinner";
+
+import axios from "axios";
+import {
+  getFile as getFileEndpoint,
+  GetFileData,
+  deleteFile
+} from "../../../../../routes/drive.routes";
+import { RESPONSE } from "../../../../../routes/index.routes";
 
 // Context
 import { DriveContext } from "../../../Provider";
@@ -56,15 +62,91 @@ const FileComponent = ({ fileRef }: Props) => {
     setIsOnDeleting(false);
   };
 
+  const getFile = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(getFileEndpoint.url(fileRef.id), {
+        withCredentials: true
+      });
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      const dataFetch: GetFileData = data.data;
+      const redirectLink: string = dataFetch.redirectLink;
+
+      setIsLoading(true);
+
+      const responseBlobFetch = await fetch(redirectLink, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      });
+
+      const responseBlob: Blob = await responseBlobFetch.blob();
+
+      setIsLoading(false);
+
+      if (responseBlob != null) {
+        const url = window.URL.createObjectURL(responseBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${fileRef.name}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        await axios.delete(deleteFile.url(fileRef.id), {
+          withCredentials: true
+        });
+      } else {
+        if (setArrayMsgs) {
+          setArrayMsgs(prev => [
+            ...prev,
+            {
+              type: "danger",
+              text: "Error al descargar el archivo"
+            }
+          ]);
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Error al downloading the file"
+          },
+          ...prev
+        ]);
+      }
+    }
+  };
+
   return (
     <div className={`${styles.file} ${isOpen && styles.file_open}`}>
       <div className={styles.presentation}>
         <div
           onClick={() => {
-            if (!isFileEditable()) return;
-            setIsOpen(true);
-            setNameFile(fileRef.name);
-            setIsProtectedFile(fileRef.isProtected);
+            if (!isLoading) {
+              if (!isFileEditable()) return;
+              setIsOpen(true);
+              setNameFile(fileRef.name);
+              setIsProtectedFile(fileRef.isProtected);
+            }
           }}
           className={styles.file_edit}
           title="Edit file"
@@ -74,6 +156,19 @@ const FileComponent = ({ fileRef }: Props) => {
 
         <div className={styles.file_types}>
           <div>{fileRef.type}</div>
+          <div
+            onClick={() => {
+              if (!isLoading) {
+                getFile();
+              }
+            }}
+            className={styles.download}
+          >
+            {!isLoading && <FileDownloadIcon />}
+            {isLoading && (
+              <Loader additionalClass="loader-file" color="lavender-300" />
+            )}
+          </div>
         </div>
         <div className={styles.file_name}>{fileRef.name}</div>
       </div>
@@ -84,7 +179,14 @@ const FileComponent = ({ fileRef }: Props) => {
             <>
               <div className={styles.open_top}>
                 <div className={styles.open_title}>Edit</div>
-                <div onClick={clean} className={styles.open_times}>
+                <div
+                  onClick={() => {
+                    if (!isLoading) {
+                      clean();
+                    }
+                  }}
+                  className={styles.open_times}
+                >
                   <TimesIcon />
                 </div>
               </div>
@@ -104,6 +206,7 @@ const FileComponent = ({ fileRef }: Props) => {
                   <span
                     onClick={() => {
                       if (
+                        !isLoading &&
                         selectedCompany &&
                         (selectedCompany.User_Company.typeUser == "Admin" ||
                           selectedCompany.User_Company.typeUser == "Employee")
@@ -118,7 +221,10 @@ const FileComponent = ({ fileRef }: Props) => {
 
                 <BtnSpinner
                   text="Save changes"
-                  callback={() => {}}
+                  callback={() => {
+                    if (!isLoading) {
+                    }
+                  }}
                   color="lavender-300"
                   border="round_5"
                   additionalClass="btn-edit-file"
@@ -143,7 +249,9 @@ const FileComponent = ({ fileRef }: Props) => {
               <BtnSpinner
                 text="Cancel"
                 callback={() => {
-                  setIsOnDeleting(false);
+                  if (!isLoading) {
+                    setIsOnDeleting(false);
+                  }
                 }}
                 color="gray"
                 border="round_5"
@@ -151,7 +259,10 @@ const FileComponent = ({ fileRef }: Props) => {
               />
               <BtnSpinner
                 text="Delete"
-                callback={() => {}}
+                callback={() => {
+                  if (!isLoading) {
+                  }
+                }}
                 color="lavender-300"
                 border="round_5"
                 additionalClass="btn-ask-file"
