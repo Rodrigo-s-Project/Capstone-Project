@@ -1,0 +1,90 @@
+.notActive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 20px;
+  cursor: pointer;
+  &_svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      width: 180px;
+      height: 180px;
+    }
+  }
+  &_drop {
+    color: var(--gray-800);
+    font-size: 20px;
+    text-align: center;
+  }
+  &_or {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    margin: 15px 0;
+    &_hr {
+      height: 2px;
+      width: 30%;
+      max-width: 120px;
+      background-color: var(--gray-500);
+    }
+    &_o {
+      font-size: 16px;
+      color: var(--gray-600);
+      text-align: center;
+    }
+  }
+  &_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    button[extra-css="btn-upload-files"] {
+      max-width: 260px;
+      width: 100%;
+    }
+  }
+}
+.active {
+  &_svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    &_cloud {
+      width: 180px;
+      height: 180px;
+      clip-path: polygon(
+        0 10px,
+        100% 10px,
+        100% calc(100% - 10px),
+        0 calc(100% - 10px)
+      );
+      transform: scale(1.15);
+    }
+    &_arrow {
+      position: absolute;
+      top: calc(50% - 25px);
+      left: calc(50% - 35px);
+      width: 60px;
+      height: 60px;
+      animation-name: arrow;
+      animation-timing-function: ease-in;
+      animation-duration: 500ms;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+@keyframes arrow {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(10px);
+  }
+}

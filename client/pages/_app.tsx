@@ -29,6 +29,7 @@ import AddFolderModal from "../components/Drive/Modals/AddFolder/AddFolder";
 import EditUsernameProfileModal from "../components/Profile/Modals/Username/ModalUsername";
 import EditPasswordProfileModal from "../components/Profile/Modals/Password/ModalPassword";
 import StripeModal from "../components/Modals/Stripe/Stripe";
+import AddFilesModal from "../components/Drive/Modals/AddFiles/Files";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -250,6 +251,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <JoinCompanyModal />
                   <TaskModal />
                   <AddFolderModal />
+                  <AddFilesModal />
                   <EditSectionModal />
                   <EditUsernameProfileModal />
                   <EditPasswordProfileModal />
