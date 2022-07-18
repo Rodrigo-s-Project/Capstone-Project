@@ -719,32 +719,30 @@ const TaskModal = () => {
                   <div className={styles.task_users}>
                     {allUsersCalendar &&
                       allUsersCalendar.map((userRef: any, index: number) => {
-                        if (user && userRef.id != user.id) {
-                          return (
-                            <div
-                              onClick={() => {
-                                addPersonToArray(userRef.id);
-                              }}
-                              className={styles.task_users_container}
-                              key={index}
-                            >
-                              <div className={styles.task_users_container_img}>
-                                <CameraIcon />
-                                {userRef.profilePictureURL && (
-                                  <img
-                                    src={`${getImage.url(
-                                      userRef.profilePictureURL
-                                    )}`}
-                                    alt={userRef.User_Team.username}
-                                  />
-                                )}
-                              </div>
-                              <div className={styles.task_users_container_name}>
-                                {userRef.User_Team.username}
-                              </div>
+                        return (
+                          <div
+                            onClick={() => {
+                              addPersonToArray(userRef.id);
+                            }}
+                            className={styles.task_users_container}
+                            key={index}
+                          >
+                            <div className={styles.task_users_container_img}>
+                              <CameraIcon />
+                              {userRef.profilePictureURL && (
+                                <img
+                                  src={`${getImage.url(
+                                    userRef.profilePictureURL
+                                  )}`}
+                                  alt={userRef.User_Team.username}
+                                />
+                              )}
                             </div>
-                          );
-                        }
+                            <div className={styles.task_users_container_name}>
+                              {userRef.User_Team.username}
+                            </div>
+                          </div>
+                        );
                       })}
                   </div>
                 )}
