@@ -85,7 +85,7 @@ export const getNewNameForDocument = async (
     );
 
     if (isNameRepeated) {
-      const newName: string = `${originalName}(${iterationCount + 1})`;
+      const newName: string = `(${iterationCount + 1})${originalName}`;
       iterationCount += 1;
 
       return await getNewNameForDocument(
