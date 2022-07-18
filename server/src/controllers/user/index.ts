@@ -7,13 +7,14 @@ export const editUser = async (req, res) => {
     isAuth: true,
     message: "",
     readMsg: false,
-    typeMsg: "success",
+    typeMsg: "danger",
     data: {}
   };
   try {
     const { type, value, confirmVale, oldvalue }: BODY_EDIT_USER = req.body;
 
     if (value.trim() == "") {
+      response.readMsg = true;
       response.message = "Incomplete information";
       res.json(response);
       return;
@@ -22,6 +23,7 @@ export const editUser = async (req, res) => {
     if (type == "password") {
       // Update password
       if (value != confirmVale) {
+        response.readMsg = true;
         response.message = "Passwords don't match";
         res.json(response);
         return;
@@ -30,6 +32,7 @@ export const editUser = async (req, res) => {
       const comparison = await bcrypt.compare(oldvalue, req.user.password);
 
       if (!comparison) {
+        response.readMsg = true;
         response.message = "Incorrect password";
         res.json(response);
         return;
@@ -43,6 +46,9 @@ export const editUser = async (req, res) => {
         password: hashedPassword
       });
 
+      response.readMsg = true;
+      response.typeMsg = "success";
+      response.message = "Password edited successfully!";
       res.json(response);
       return;
     }
@@ -50,6 +56,15 @@ export const editUser = async (req, res) => {
     if (type == "image") {
       await req.user.update({
         profilePictureURL: value
+      });
+
+      res.json(response);
+      return;
+    }
+
+    if (type == "username") {
+      await req.user.update({
+        globalUsername: value
       });
 
       res.json(response);

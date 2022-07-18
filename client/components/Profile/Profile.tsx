@@ -1,6 +1,7 @@
 import styles from "./Profile.module.scss";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../pages/_app";
+import { ProfileContext } from "./Provider";
 import { DATA_GET_USER } from "../../routes/main.routes";
 import { useRouter } from "next/router";
 
@@ -143,8 +144,8 @@ const TopProfile = ({ user }: TopProps) => {
       if (dataResponse.readMsg && setArrayMsgs) {
         setArrayMsgs(prev => [
           {
-            type: "danger",
-            text: data.msg
+            type: dataResponse.typeMsg,
+            text: dataResponse.message
           },
           ...prev
         ]);
@@ -209,9 +210,18 @@ const Profile = () => {
     if (setSelectedTeam) setSelectedTeam(undefined);
   }, [setSelectedTeam, setSelectedCompany]);
 
-  const editGlobalUsername = () => {};
+  const {
+    setModalPopUpProfileUsername,
+    setModalPopUpProfilePassword
+  } = useContext(ProfileContext);
 
-  const editPassword = () => {};
+  const editGlobalUsername = () => {
+    if (setModalPopUpProfileUsername) setModalPopUpProfileUsername(true);
+  };
+
+  const editPassword = () => {
+    if (setModalPopUpProfilePassword) setModalPopUpProfilePassword(true);
+  };
 
   return (
     <div className={styles.profile}>
