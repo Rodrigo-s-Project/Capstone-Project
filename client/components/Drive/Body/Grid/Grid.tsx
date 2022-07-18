@@ -4,6 +4,7 @@ import { useContext, Fragment } from "react";
 import { DOCUMENT_DATA } from "../../../../routes/drive.routes";
 
 import FolderComponent from "./Folder/Folder";
+import FileComponent from "./File/File";
 
 const GridDocuments = () => {
   const { arrayDocuments } = useContext(DriveContext);
@@ -25,11 +26,19 @@ const GridDocuments = () => {
                 </Fragment>
               );
             })}
-          {arrayDocuments.files.map(
-            (document: DOCUMENT_DATA, index: number) => {
-              return <div key={index}>{document.name}</div>;
-            }
-          )}
+          {arrayDocuments.files
+            .sort((a: DOCUMENT_DATA, b: DOCUMENT_DATA) => {
+              if (a.name < b.name) return -1;
+              if (a.name > b.name) return 1;
+              return 0;
+            })
+            .map((documentRef: DOCUMENT_DATA) => {
+              return (
+                <Fragment key={`${documentRef.id}-${documentRef.name}`}>
+                  <FileComponent fileRef={documentRef} />
+                </Fragment>
+              );
+            })}
         </>
       )}
     </div>

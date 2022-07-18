@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 export const app = express();
 
@@ -33,3 +34,6 @@ app.use("/dashboard/controls", controlsDashboardRoutes);
 app.use("/dashboard/calendar", calendarRoutes);
 app.use("/dashboard/drive", driveRoutes);
 app.use("/profile", profileRoutes);
+
+// Static
+app.use("/public", express.static(path.join(__dirname, "public")));

@@ -4,6 +4,7 @@ dotenv.config();
 import { app } from "./server";
 import { setAssociations } from "./associations/index";
 import { sequelize } from "./database/database";
+import { timerPublicFolder } from "./cronos/index";
 
 async function main() {
   try {
@@ -19,3 +20,6 @@ async function main() {
 }
 
 main();
+
+// Cron Jobs
+timerPublicFolder();

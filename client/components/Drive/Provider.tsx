@@ -48,6 +48,8 @@ interface DriveContextApp {
 
   modalPopUpAddFolder: boolean;
   setModalPopUpAddFolder: Dispatch<SetStateAction<boolean>>;
+  modalPopUpAddFiles: boolean;
+  setModalPopUpAddFiles: Dispatch<SetStateAction<boolean>>;
 }
 
 type Props = {
@@ -77,6 +79,7 @@ const Provider = ({ children }: Props) => {
   const [modalPopUpAddFolder, setModalPopUpAddFolder] = useState<boolean>(
     false
   );
+  const [modalPopUpAddFiles, setModalPopUpAddFiles] = useState<boolean>(false);
 
   // Drive
   const [selectedBucket, setSelectedBucket] = useState<BUCKET | undefined>(
@@ -192,7 +195,9 @@ const Provider = ({ children }: Props) => {
         setSelectedBucket,
         fetchDocuments,
         modalPopUpAddFolder,
-        setModalPopUpAddFolder
+        setModalPopUpAddFolder,
+        modalPopUpAddFiles,
+        setModalPopUpAddFiles
       }}
     >
       {children}
