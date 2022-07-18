@@ -7,6 +7,8 @@ import Link from "next/link";
 import { GlobalContext } from "../../../pages/_app";
 import { DriveContext } from "../../../components/Drive/Provider";
 
+import { getImage } from "../../../routes/cdn.routes";
+
 // Animations
 import { fadeVariants } from "../../../animations/fade";
 
@@ -75,6 +77,12 @@ export const DashBoardNavControls = ({ rules }: Props) => {
             >
               <div className={rules.nav_controls_info_user_profile_img}>
                 <Camera />
+                {user && user.profilePictureURL && (
+                  <img
+                    src={`${getImage.url(user.profilePictureURL)}`}
+                    alt="Profile"
+                  />
+                )}
               </div>
               <div
                 title={user ? user.globalUsername : ""}

@@ -1,0 +1,28 @@
+.div {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.label {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+}
+.input {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--lavender-300);
+  border-radius: 3px;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &_checked {
+    background-color: var(--lavender-300);
+  }
+  svg {
+    fill: var(--white);
+    width: 10px;
+    height: 10px;
+  }
+}

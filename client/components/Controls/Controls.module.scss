@@ -1,4 +1,5 @@
 .control {
+  height: 100%;
   button[extra-css="btn-delete-creation"] {
     width: 100%;
     max-width: 200px;
@@ -66,7 +67,7 @@
     border-radius: 10px;
     width: 100%;
     padding: 15px 25px;
-    height: calc(100vh - 230px);
+    height: calc(100% - 80px);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -101,6 +102,7 @@
             top: 0;
             left: 0;
             z-index: 10;
+            object-fit: cover;
           }
           &_svg {
             width: 100%;

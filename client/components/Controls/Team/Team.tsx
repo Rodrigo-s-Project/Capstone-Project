@@ -340,7 +340,9 @@ const TeamSettingsController = () => {
                           </div>
                           {userCompany.profilePictureURL && (
                             <img
-                              src={userCompany.profilePictureURL}
+                              src={`${getImage.url(
+                                userCompany.profilePictureURL
+                              )}`}
                               alt={userCompany.User_Team.username}
                             />
                           )}
