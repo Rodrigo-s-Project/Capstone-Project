@@ -190,21 +190,14 @@ const Buckets = () => {
     arrayBuckets,
     setSelectedBucket,
     fetchDocuments,
-    arrayFoldersTimeLine
+    arrayFoldersTimeLine,
+    setModalPopUpAddBucket
   } = useContext(DriveContext);
 
-  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
+  const { selectedCompany } = useContext(GlobalContext);
 
   const addAWorkspace = () => {
-    // TODO: add a workspace
-    if (setArrayMsgs)
-      setArrayMsgs(prev => [
-        {
-          type: "info",
-          text: "Feature not available..."
-        },
-        ...prev
-      ]);
+    if (setModalPopUpAddBucket) setModalPopUpAddBucket(true);
   };
 
   const clickWorkspace = (bucket: BUCKET) => {

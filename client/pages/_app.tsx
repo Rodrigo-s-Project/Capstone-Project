@@ -30,6 +30,7 @@ import EditUsernameProfileModal from "../components/Profile/Modals/Username/Moda
 import EditPasswordProfileModal from "../components/Profile/Modals/Password/ModalPassword";
 import StripeModal from "../components/Modals/Stripe/Stripe";
 import AddFilesModal from "../components/Drive/Modals/AddFiles/Files";
+import AddBucketModal from "../components/Drive/Modals/AddBucket/AddBucket";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -250,6 +251,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <CreateCompanyModal />
                   <JoinCompanyModal />
                   <TaskModal />
+                  <AddBucketModal />
                   <AddFolderModal />
                   <AddFilesModal />
                   <EditSectionModal />

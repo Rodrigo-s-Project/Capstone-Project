@@ -45,11 +45,15 @@ interface DriveContextApp {
   selectedBucket: BUCKET | undefined;
   setSelectedBucket: Dispatch<SetStateAction<BUCKET | undefined>>;
   fetchDocuments: ({  }: ParamsFetcherDocuments) => any;
+  fetchBuckets: () => any;
 
   modalPopUpAddFolder: boolean;
   setModalPopUpAddFolder: Dispatch<SetStateAction<boolean>>;
   modalPopUpAddFiles: boolean;
   setModalPopUpAddFiles: Dispatch<SetStateAction<boolean>>;
+
+  modalPopUpAddBucket: boolean;
+  setModalPopUpAddBucket: Dispatch<SetStateAction<boolean>>;
 }
 
 type Props = {
@@ -80,6 +84,9 @@ const Provider = ({ children }: Props) => {
     false
   );
   const [modalPopUpAddFiles, setModalPopUpAddFiles] = useState<boolean>(false);
+  const [modalPopUpAddBucket, setModalPopUpAddBucket] = useState<boolean>(
+    false
+  );
 
   // Drive
   const [selectedBucket, setSelectedBucket] = useState<BUCKET | undefined>(
@@ -153,7 +160,7 @@ const Provider = ({ children }: Props) => {
 
         const data: RESPONSE = response.data;
         const dataDocuments: DATA_GET_DOCUMENTS = data.data;
-        
+
         if (setArrayDocuments)
           setArrayDocuments({
             files: dataDocuments.files,
@@ -197,7 +204,10 @@ const Provider = ({ children }: Props) => {
         modalPopUpAddFolder,
         setModalPopUpAddFolder,
         modalPopUpAddFiles,
-        setModalPopUpAddFiles
+        setModalPopUpAddFiles,
+        modalPopUpAddBucket,
+        setModalPopUpAddBucket,
+        fetchBuckets
       }}
     >
       {children}
