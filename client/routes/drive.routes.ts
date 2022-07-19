@@ -130,3 +130,50 @@ export const editFile = {
   url: `${process.env.API_URL}/dashboard/drive/edit-file`,
   method: "put"
 };
+
+// Buckets
+export type BODY_CREATE_BUCKET = {
+  teamId: number;
+  companyId: number;
+  name: string;
+};
+
+export const createBucket = {
+  url: `${process.env.API_URL}/dashboard/drive/bucket/create`,
+  method: "post"
+};
+
+export type BODY_KICK_ADD_USER = {
+  teamId: number;
+  companyId: number;
+  userId: number;
+  bucketId: number;
+};
+
+export const kickUserBucket = {
+  url: `${process.env.API_URL}/dashboard/drive/bucket/kick`,
+  method: "put"
+};
+
+export type BODY_EDIT_BUCKET = {
+  teamId: number;
+  companyId: number;
+  bucketId: number;
+  name: string;
+};
+
+export const editBucket = {
+  url: `${process.env.API_URL}/dashboard/drive/bucket/edit`,
+  method: "put"
+};
+
+export type BODY_DELETE_BUCKET = {
+  teamId: number;
+  companyId: number;
+  bucketId: number;
+};
+
+export const deleteBucket = {
+  url: `${process.env.API_URL}/dashboard/drive/bucket/delete`,
+  method: "put"
+};
