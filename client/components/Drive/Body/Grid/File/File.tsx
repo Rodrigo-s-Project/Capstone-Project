@@ -1,12 +1,16 @@
 import styles from "./File.module.scss";
 import { useContext, useState } from "react";
 import { DOCUMENT_DATA } from "../../../../../routes/drive.routes";
+import { getImage } from "../../../../../routes/cdn.routes";
 
 // Icons
 import EditIcon from "../../../../Svgs/Edit";
 import TimesIcon from "../../../../Svgs/Times";
 import FileDownloadIcon from "../../../../Svgs/FileDownload";
+import LockIcon from "../../../../Svgs/Lock";
+import LockOpenIcon from "../../../../Svgs/LockOpen";
 import Loader from "../../../../Loader/Spinner/Spinner";
+import CameraIcon from "../../../../Svgs/Camera";
 
 import axios from "axios";
 import {
@@ -237,6 +241,40 @@ const FileComponent = ({ fileRef }: Props) => {
 
   return (
     <div className={`${styles.file} ${isOpen && styles.file_open}`}>
+      {/* User read files */}
+      {!isOpen && (
+        <div className={styles.reading}>
+          {fileRef.User_Read_Files &&
+            fileRef.User_Read_Files.slice(0, 5).map(
+              (userRedFile: any, index: number) => {
+                return (
+                  <div
+                    style={
+                      {
+                        "--index-user": (index + 1) * 5
+                      } as React.CSSProperties
+                    }
+                    key={userRedFile.userData.id}
+                  >
+                    <CameraIcon />
+                    {userRedFile.userData.profilePictureURL && (
+                      <img
+                        src={`${getImage.url(
+                          userRedFile.userData.profilePictureURL
+                        )}`}
+                        alt={userRedFile.username}
+                      />
+                    )}
+                    <div extra-css="reading-user-name">
+                      {userRedFile.username}
+                    </div>
+                  </div>
+                );
+              }
+            )}
+        </div>
+      )}
+
       <div className={styles.presentation}>
         <div
           onClick={() => {
@@ -254,6 +292,14 @@ const FileComponent = ({ fileRef }: Props) => {
         </div>
 
         <div className={styles.file_types}>
+          {selectedCompany &&
+            (selectedCompany.User_Company.typeUser == "Admin" ||
+              selectedCompany.User_Company.typeUser == "Employee") && (
+              <div className={styles.protection_file}>
+                {fileRef.isProtected && <LockIcon />}
+                {!fileRef.isProtected && <LockOpenIcon />}
+              </div>
+            )}
           <div>{fileRef.type}</div>
           <div
             onClick={() => {

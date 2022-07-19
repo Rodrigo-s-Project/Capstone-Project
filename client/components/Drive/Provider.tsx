@@ -153,7 +153,7 @@ const Provider = ({ children }: Props) => {
 
         const data: RESPONSE = response.data;
         const dataDocuments: DATA_GET_DOCUMENTS = data.data;
-
+        
         if (setArrayDocuments)
           setArrayDocuments({
             files: dataDocuments.files,
