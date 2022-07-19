@@ -11,6 +11,7 @@ import PlusIcon from "../../Svgs/Plus";
 import ChevronLeftIcon from "../../Svgs/ChevronLeft";
 import CameraIcon from "../../Svgs/Camera";
 import TrashAltIcon from "../../Svgs/TrashAlt";
+import EditIcon from "../../Svgs/Edit";
 
 // Routes
 import { getImage } from "../../../routes/cdn.routes";
@@ -146,7 +147,8 @@ const Teammates = () => {
     setSelectedBucket,
     selectedBucket,
     setArrayFoldersTimeLine,
-    setArrayDocuments
+    setArrayDocuments,
+    setModalPopUpEditBucket
   } = useContext(DriveContext);
 
   const returnToNoWorkspace = () => {
@@ -155,6 +157,10 @@ const Teammates = () => {
       setArrayDocuments({});
       setSelectedBucket(undefined);
     }
+  };
+
+  const editWorkspace = () => {
+    if (setModalPopUpEditBucket) setModalPopUpEditBucket(true);
   };
 
   return (
@@ -171,6 +177,19 @@ const Teammates = () => {
           <div className={styles.aside_array_top_title_text}>
             {selectedBucket && selectedBucket.name}
           </div>
+          {selectedCompany &&
+            (selectedCompany.User_Company.typeUser == "Admin" ||
+              selectedCompany.User_Company.typeUser == "Employee") &&
+            selectedBucket &&
+            selectedBucket.name != "Main directory" && (
+              <div
+                onClick={editWorkspace}
+                title="Edit"
+                className={styles.aside_array_top_title_edit}
+              >
+                <EditIcon />
+              </div>
+            )}
         </div>
       </div>
       {selectedCompany &&

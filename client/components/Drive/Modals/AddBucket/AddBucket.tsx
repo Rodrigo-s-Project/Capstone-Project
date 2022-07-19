@@ -14,7 +14,7 @@ import {
   BODY_CREATE_BUCKET
 } from "../../../../routes/drive.routes";
 
-const AddFolder = () => {
+const AddBucket = () => {
   const { setArrayMsgs, selectedCompany, selectedTeam } = useContext(
     GlobalContext
   );
@@ -124,4 +124,4 @@ const AddFolder = () => {
   );
 };
 
-export default AddFolder;
+export default AddBucket;

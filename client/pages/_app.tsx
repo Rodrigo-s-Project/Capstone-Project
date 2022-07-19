@@ -31,6 +31,7 @@ import EditPasswordProfileModal from "../components/Profile/Modals/Password/Moda
 import StripeModal from "../components/Modals/Stripe/Stripe";
 import AddFilesModal from "../components/Drive/Modals/AddFiles/Files";
 import AddBucketModal from "../components/Drive/Modals/AddBucket/AddBucket";
+import EditBucketModal from "../components/Drive/Modals/EditBucket/EditBucket";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -253,6 +254,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <TaskModal />
                   <AddBucketModal />
                   <AddFolderModal />
+                  <EditBucketModal />
                   <AddFilesModal />
                   <EditSectionModal />
                   <EditUsernameProfileModal />

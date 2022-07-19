@@ -54,6 +54,8 @@ interface DriveContextApp {
 
   modalPopUpAddBucket: boolean;
   setModalPopUpAddBucket: Dispatch<SetStateAction<boolean>>;
+  modalPopUpEditBucket: boolean;
+  setModalPopUpEditBucket: Dispatch<SetStateAction<boolean>>;
 }
 
 type Props = {
@@ -85,6 +87,9 @@ const Provider = ({ children }: Props) => {
   );
   const [modalPopUpAddFiles, setModalPopUpAddFiles] = useState<boolean>(false);
   const [modalPopUpAddBucket, setModalPopUpAddBucket] = useState<boolean>(
+    false
+  );
+  const [modalPopUpEditBucket, setModalPopUpEditBucket] = useState<boolean>(
     false
   );
 
@@ -207,7 +212,9 @@ const Provider = ({ children }: Props) => {
         setModalPopUpAddFiles,
         modalPopUpAddBucket,
         setModalPopUpAddBucket,
-        fetchBuckets
+        fetchBuckets,
+        modalPopUpEditBucket,
+        setModalPopUpEditBucket
       }}
     >
       {children}
