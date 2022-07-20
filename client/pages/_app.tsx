@@ -36,6 +36,7 @@ import AddFilesModal from "../components/Drive/Modals/AddFiles/Files";
 import AddBucketModal from "../components/Drive/Modals/AddBucket/AddBucket";
 import EditBucketModal from "../components/Drive/Modals/EditBucket/EditBucket";
 import ReadersModal from "../components/Reading/Modals/Readers/ReadersModal";
+import AddUsersModal from "../components/Drive/Modals/AddUsers/AddUsers";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -274,6 +275,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <AddFolderModal />
                   <EditBucketModal />
                   <AddFilesModal />
+                  <AddUsersModal />
                   <EditSectionModal />
                   <EditUsernameProfileModal />
                   <EditPasswordProfileModal />

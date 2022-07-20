@@ -114,6 +114,14 @@ const FileComponent = ({ fileRef }: Props) => {
         await axios.delete(deleteFile.url(fileRef.id), {
           withCredentials: true
         });
+
+        // Refetch
+        if (fetchDocuments && selectedBucket && arrayFoldersTimeLine) {
+          fetchDocuments({
+            bucket: selectedBucket,
+            arrayFoldersTimeLine: arrayFoldersTimeLine
+          });
+        }
       } else {
         if (setArrayMsgs) {
           setArrayMsgs(prev => [

@@ -4,7 +4,7 @@
   bottom: 0px;
   left: 5px;
   height: 25px;
-  div {
+  &_user {
     background-color: var(--gray-500);
     width: 20px;
     height: 20px;
@@ -24,7 +24,7 @@
       height: 50%;
       fill: var(--primary);
     }
-    &[extra-css="reading-user-name"] {
+    &_name {
       position: absolute;
       width: fit-content;
       padding: 2.5px 7.5px;
@@ -60,7 +60,7 @@
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         transform: translateY(-10px);
-        div[extra-css="reading-user-name"] {
+        .reading_user_name {
           visibility: visible;
           opacity: 1;
         }

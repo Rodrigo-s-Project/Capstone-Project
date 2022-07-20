@@ -56,6 +56,8 @@ interface DriveContextApp {
   setModalPopUpAddBucket: Dispatch<SetStateAction<boolean>>;
   modalPopUpEditBucket: boolean;
   setModalPopUpEditBucket: Dispatch<SetStateAction<boolean>>;
+  modalPopUpAddUsers: boolean;
+  setModalPopUpAddUsers: Dispatch<SetStateAction<boolean>>;
 }
 
 type Props = {
@@ -92,6 +94,7 @@ const Provider = ({ children }: Props) => {
   const [modalPopUpEditBucket, setModalPopUpEditBucket] = useState<boolean>(
     false
   );
+  const [modalPopUpAddUsers, setModalPopUpAddUsers] = useState<boolean>(false);
 
   // Drive
   const [selectedBucket, setSelectedBucket] = useState<BUCKET | undefined>(
@@ -214,7 +217,9 @@ const Provider = ({ children }: Props) => {
         setModalPopUpAddBucket,
         fetchBuckets,
         modalPopUpEditBucket,
-        setModalPopUpEditBucket
+        setModalPopUpEditBucket,
+        modalPopUpAddUsers,
+        setModalPopUpAddUsers
       }}
     >
       {children}

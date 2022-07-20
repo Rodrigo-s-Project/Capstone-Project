@@ -51,6 +51,7 @@ const UsersRead = ({ usersRead }: Props) => {
             }
             key={userRedFile.userData.id}
             onClick={openModal}
+            className={styles.reading_user}
           >
             <CameraIcon />
             {userRedFile.userData.profilePictureURL && (
@@ -59,8 +60,8 @@ const UsersRead = ({ usersRead }: Props) => {
                 alt={userRedFile.username}
               />
             )}
-            <div extra-css="reading-user-name">
-                {userRedFile.username}
+            <div className={styles.reading_user_name}>
+              {userRedFile.username}
             </div>
           </div>
         );
