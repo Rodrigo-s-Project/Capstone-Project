@@ -263,6 +263,9 @@ export const getFile = async (req, res) => {
       return;
     }
 
+    // Add user read file
+    await req.user.addFile(fileDB);
+
     // Success
     const blobName: string = `${createHmac("sha256", "keys")
       .update(idFile.toString())

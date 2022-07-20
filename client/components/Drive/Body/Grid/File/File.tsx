@@ -1,11 +1,14 @@
 import styles from "./File.module.scss";
 import { useContext, useState } from "react";
 import { DOCUMENT_DATA } from "../../../../../routes/drive.routes";
+import { getImage } from "../../../../../routes/cdn.routes";
 
 // Icons
 import EditIcon from "../../../../Svgs/Edit";
 import TimesIcon from "../../../../Svgs/Times";
 import FileDownloadIcon from "../../../../Svgs/FileDownload";
+import LockIcon from "../../../../Svgs/Lock";
+import LockOpenIcon from "../../../../Svgs/LockOpen";
 import Loader from "../../../../Loader/Spinner/Spinner";
 
 import axios from "axios";
@@ -26,6 +29,7 @@ import { GlobalContext } from "../../../../../pages/_app";
 // Components
 import InputText from "../../../../Input/Text/InputText";
 import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
+import UsersReadComponent from "../../../../Reading/Users/UsersRead";
 
 type Props = {
   fileRef: DOCUMENT_DATA;
@@ -110,13 +114,21 @@ const FileComponent = ({ fileRef }: Props) => {
         await axios.delete(deleteFile.url(fileRef.id), {
           withCredentials: true
         });
+
+        // Refetch
+        if (fetchDocuments && selectedBucket && arrayFoldersTimeLine) {
+          fetchDocuments({
+            bucket: selectedBucket,
+            arrayFoldersTimeLine: arrayFoldersTimeLine
+          });
+        }
       } else {
         if (setArrayMsgs) {
           setArrayMsgs(prev => [
             ...prev,
             {
               type: "danger",
-              text: "Error al descargar el archivo"
+              text: "Error while downloading the file."
             }
           ]);
         }
@@ -237,6 +249,11 @@ const FileComponent = ({ fileRef }: Props) => {
 
   return (
     <div className={`${styles.file} ${isOpen && styles.file_open}`}>
+      {/* User read files */}
+      {!isOpen && (
+        <UsersReadComponent usersRead={fileRef.User_Read_Files || []} />
+      )}
+
       <div className={styles.presentation}>
         <div
           onClick={() => {
@@ -254,6 +271,14 @@ const FileComponent = ({ fileRef }: Props) => {
         </div>
 
         <div className={styles.file_types}>
+          {selectedCompany &&
+            (selectedCompany.User_Company.typeUser == "Admin" ||
+              selectedCompany.User_Company.typeUser == "Employee") && (
+              <div className={styles.protection_file}>
+                {fileRef.isProtected && <LockIcon />}
+                {!fileRef.isProtected && <LockOpenIcon />}
+              </div>
+            )}
           <div>{fileRef.type}</div>
           <div
             onClick={() => {

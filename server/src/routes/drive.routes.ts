@@ -2,7 +2,13 @@ import express from "express";
 const router = express.Router();
 
 import { authenticate } from "../middlewares/auth/index";
-import { getBucketsFromTeam } from "../controllers/drive/buckets/index";
+import {
+  getBucketsFromTeam,
+  createBucket,
+  kickAddUserToBucket,
+  editNameBucket,
+  deleteBucket
+} from "../controllers/drive/buckets/index";
 import {
   createFolder,
   getDocumentsFromBucket,
@@ -49,5 +55,11 @@ router.delete(
   authenticate,
   deleteFile
 );
+
+// Admin and employeez
+router.post("/bucket/create", authenticate, createBucket);
+router.put("/bucket/kick", authenticate, kickAddUserToBucket);
+router.put("/bucket/edit", authenticate, editNameBucket);
+router.put("/bucket/delete", authenticate, deleteBucket);
 
 export default router;
