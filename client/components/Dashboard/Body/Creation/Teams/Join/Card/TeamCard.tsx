@@ -22,7 +22,7 @@ const TeamCard = ({ team }: Props) => {
     <div
       onClick={() => {
         router.replace(
-          `/dashboard/${selectedCompany && selectedCompany.id}/team/${team.id}`
+          `/dashboard/${selectedCompany && selectedCompany.id}/team/${team.id}/drive`
         );
       }}
       title={team.name}

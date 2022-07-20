@@ -9,9 +9,11 @@ import { ownStaggerVariants } from "../../../animations/stagger";
 import Loader from "../../Loader/Spinner/Spinner";
 import PlusIcon from "../../Svgs/Plus";
 import FileIcon from "../../Svgs/File";
+import UsersIcon from "../../Svgs/Users";
 import FolderOpenIcon from "../../Svgs/FolderOpen";
 
 import GridBody from "./Grid/Grid";
+import { GlobalContext } from "../../../pages/_app";
 
 const NotBucket = () => {
   return (
@@ -33,9 +35,12 @@ const NotDocuments = () => {
 
 const AddDocumentsBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { setModalPopUpAddFolder, setModalPopUpAddFiles } = useContext(
-    DriveContext
-  );
+  const {
+    setModalPopUpAddFolder,
+    setModalPopUpAddFiles,
+    setModalPopUpAddUsers
+  } = useContext(DriveContext);
+  const { selectedCompany } = useContext(GlobalContext);
 
   const open = () => {
     setIsOpen(true);
@@ -51,6 +56,10 @@ const AddDocumentsBtn = () => {
 
   const addFiles = () => {
     if (setModalPopUpAddFiles) setModalPopUpAddFiles(true);
+  };
+
+  const addUsers = () => {
+    if (setModalPopUpAddUsers) setModalPopUpAddUsers(true);
   };
 
   return (
@@ -94,6 +103,25 @@ const AddDocumentsBtn = () => {
           </motion.div>
         ) : null}
       </AnimatePresence>
+      {selectedCompany &&
+        (selectedCompany.User_Company.typeUser == "Admin" ||
+          selectedCompany.User_Company.typeUser == "Employee") && (
+          <AnimatePresence exitBeforeEnter>
+            {isOpen ? (
+              <motion.div
+                variants={ownStaggerVariants(0.2)}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                key="btn-add-user"
+                className={`${styles.body_add_user} ${styles.body_add}`}
+                onClick={addUsers}
+              >
+                <UsersIcon />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        )}
     </>
   );
 };

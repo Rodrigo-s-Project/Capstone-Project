@@ -16,6 +16,9 @@ import {
 import Nav from "../components/Nav/Nav";
 import Loader from "../components/Loader/Spinner/Spinner";
 
+// Types
+import { USER_READ } from "../components/Reading/Users/UsersRead";
+
 // Modals
 import Messages, { Message } from "../components/Modals/Messages/Messages";
 import CreateTeamModal from "../components/Dashboard/Body/Creation/Teams/Join/Modals/CreateTeam/CreateTeam";
@@ -30,6 +33,10 @@ import EditUsernameProfileModal from "../components/Profile/Modals/Username/Moda
 import EditPasswordProfileModal from "../components/Profile/Modals/Password/ModalPassword";
 import StripeModal from "../components/Modals/Stripe/Stripe";
 import AddFilesModal from "../components/Drive/Modals/AddFiles/Files";
+import AddBucketModal from "../components/Drive/Modals/AddBucket/AddBucket";
+import EditBucketModal from "../components/Drive/Modals/EditBucket/EditBucket";
+import ReadersModal from "../components/Reading/Modals/Readers/ReadersModal";
+import AddUsersModal from "../components/Drive/Modals/AddUsers/AddUsers";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -74,6 +81,8 @@ interface ValueAppProvider {
   setModalPopUpEditControl: Dispatch<SetStateAction<boolean>>;
   modalPopUpImages: boolean;
   setModalPopUpImages: Dispatch<SetStateAction<boolean>>;
+  modalPopUpUsersRead: boolean;
+  setModalPopUpUsersRead: Dispatch<SetStateAction<boolean>>;
 
   setCompanies: Dispatch<SetStateAction<Array<COMPANY>>>;
   companies: Array<COMPANY>;
@@ -96,6 +105,9 @@ interface ValueAppProvider {
   callBackImages: any;
   modalPopUpStripe: boolean;
   setModalPopUpStripe: Dispatch<SetStateAction<boolean>>;
+
+  arrayUsersRead: Array<USER_READ>;
+  setArrayUsersRead: Dispatch<SetStateAction<Array<USER_READ>>>;
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -145,6 +157,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     false
   );
   const [modalPopUpStripe, setModalPopUpStripe] = useState<boolean>(false);
+  const [modalPopUpUsersRead, setModalPopUpUsersRead] = useState<boolean>(
+    false
+  );
+  const [arrayUsersRead, setArrayUsersRead] = useState<Array<USER_READ>>([]);
 
   // Dashboard menu
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
@@ -197,6 +213,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         setModalPopUpCreateTask,
         modalPopUpEditControl,
         setModalPopUpEditControl,
+        modalPopUpUsersRead,
+        setModalPopUpUsersRead,
         modalPopUpImages,
         setModalPopUpImages,
         companies,
@@ -217,7 +235,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         setControlModalState,
         callBackImages,
         modalPopUpStripe,
-        setModalPopUpStripe
+        setModalPopUpStripe,
+        arrayUsersRead,
+        setArrayUsersRead
       }}
     >
       <ProfileProvider>
@@ -250,8 +270,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <CreateCompanyModal />
                   <JoinCompanyModal />
                   <TaskModal />
+                  <AddBucketModal />
+                  <ReadersModal />
                   <AddFolderModal />
+                  <EditBucketModal />
                   <AddFilesModal />
+                  <AddUsersModal />
                   <EditSectionModal />
                   <EditUsernameProfileModal />
                   <EditPasswordProfileModal />

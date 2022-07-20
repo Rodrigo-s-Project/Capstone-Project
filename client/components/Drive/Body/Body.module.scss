@@ -57,6 +57,22 @@
         visibility: hidden;
       }
     }
+    &_user {
+      background-color: var(--lavender-300);
+      bottom: 220px;
+      &::before {
+        content: "Add users";
+        top: 8px;
+        left: -103px;
+        background-color: var(--gray-300);
+        padding: 3px 10px;
+        position: absolute;
+        z-index: 5;
+        white-space: nowrap;
+        border-radius: 5px;
+        visibility: hidden;
+      }
+    }
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -78,6 +94,9 @@
       }
       &_file {
         bottom: 155px;
+      }
+      &_user {
+        bottom: 200px;
       }
     }
     @media screen and (max-width: 590px) {

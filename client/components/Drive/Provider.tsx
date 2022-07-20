@@ -45,11 +45,19 @@ interface DriveContextApp {
   selectedBucket: BUCKET | undefined;
   setSelectedBucket: Dispatch<SetStateAction<BUCKET | undefined>>;
   fetchDocuments: ({  }: ParamsFetcherDocuments) => any;
+  fetchBuckets: () => any;
 
   modalPopUpAddFolder: boolean;
   setModalPopUpAddFolder: Dispatch<SetStateAction<boolean>>;
   modalPopUpAddFiles: boolean;
   setModalPopUpAddFiles: Dispatch<SetStateAction<boolean>>;
+
+  modalPopUpAddBucket: boolean;
+  setModalPopUpAddBucket: Dispatch<SetStateAction<boolean>>;
+  modalPopUpEditBucket: boolean;
+  setModalPopUpEditBucket: Dispatch<SetStateAction<boolean>>;
+  modalPopUpAddUsers: boolean;
+  setModalPopUpAddUsers: Dispatch<SetStateAction<boolean>>;
 }
 
 type Props = {
@@ -80,6 +88,13 @@ const Provider = ({ children }: Props) => {
     false
   );
   const [modalPopUpAddFiles, setModalPopUpAddFiles] = useState<boolean>(false);
+  const [modalPopUpAddBucket, setModalPopUpAddBucket] = useState<boolean>(
+    false
+  );
+  const [modalPopUpEditBucket, setModalPopUpEditBucket] = useState<boolean>(
+    false
+  );
+  const [modalPopUpAddUsers, setModalPopUpAddUsers] = useState<boolean>(false);
 
   // Drive
   const [selectedBucket, setSelectedBucket] = useState<BUCKET | undefined>(
@@ -197,7 +212,14 @@ const Provider = ({ children }: Props) => {
         modalPopUpAddFolder,
         setModalPopUpAddFolder,
         modalPopUpAddFiles,
-        setModalPopUpAddFiles
+        setModalPopUpAddFiles,
+        modalPopUpAddBucket,
+        setModalPopUpAddBucket,
+        fetchBuckets,
+        modalPopUpEditBucket,
+        setModalPopUpEditBucket,
+        modalPopUpAddUsers,
+        setModalPopUpAddUsers
       }}
     >
       {children}
