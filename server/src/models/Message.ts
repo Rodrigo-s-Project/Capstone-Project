@@ -14,6 +14,14 @@ export const Message = sequelize.define(
     },
     mediaURL: {
       type: DataType.STRING
+    },
+    lat: {
+      type: DataType.DOUBLE,
+      defaultValue: 0.0
+    },
+    lng: {
+      type: DataType.DOUBLE,
+      defaultValue: 0.0
     }
   },
   {
