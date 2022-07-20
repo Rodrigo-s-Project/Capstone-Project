@@ -2,7 +2,6 @@ import express from "express";
 const router = express.Router();
 
 import { authenticate } from "../middlewares/auth/index";
-import { isAdmin } from "../middlewares/admin/index";
 import {
   getTeamFromUser,
   getTeamsFromUser,
@@ -17,9 +16,6 @@ router.get("/get-team/:idCompany/:idTeam", authenticate, getTeamFromUser);
 router.get(
   "/get-team-users/:idCompany/:idTeam",
   authenticate,
-  (req, res, next) => {
-    isAdmin(req, res, next, "idCompany");
-  },
   getTeamUsersFromId
 );
 router.post("/create-team", authenticate, createTeam);

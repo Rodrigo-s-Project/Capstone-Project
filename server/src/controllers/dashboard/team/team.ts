@@ -95,6 +95,26 @@ export const getTeamUsersFromId = async (req, res) => {
       return;
     }
 
+    const companies: Array<any> = await req.user.getCompanies({
+      where: {
+        id: idCompany
+      }
+    });
+
+    if (companies.length == 0) {
+      response.message = "Invalid id.";
+      res.json(response);
+      return;
+    }
+
+    const company: any = companies[0];
+
+    if (company.User_Company.typeUser == "Client") {
+      response.message = "You don't have permission.";
+      res.json(response);
+      return;
+    }
+
     // Get all users
     const allUsers: any = await team[0].getUsers();
     let usersFromRes: any = [];
