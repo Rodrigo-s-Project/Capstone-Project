@@ -12,6 +12,8 @@
   justify-content: flex-start;
   gap: 10px;
   background-color: var(--gray-200);
+  padding: 5px;
+  border-radius: 1000px; // Just a max
   &_name {
     display: block;
     width: calc(100% - 150px);
@@ -47,6 +49,8 @@
       bottom: 0;
       right: 0;
       z-index: 10;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -58,5 +62,10 @@
     overflow-y: auto;
     overflow-x: hidden;
     gap: 10px;
+  }
+  @media (hover: hover) and (pointer:fine) {
+      &:hover {
+        background-color: var(--gray-300);
+      }
   }
 }

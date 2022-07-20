@@ -59,7 +59,9 @@ const UsersRead = ({ usersRead }: Props) => {
                 alt={userRedFile.username}
               />
             )}
-            <div extra-css="reading-user-name">{userRedFile.username}</div>
+            <div extra-css="reading-user-name">
+                {userRedFile.username}
+            </div>
           </div>
         );
       })}

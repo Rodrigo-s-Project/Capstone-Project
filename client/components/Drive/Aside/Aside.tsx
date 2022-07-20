@@ -15,9 +15,24 @@ import EditIcon from "../../Svgs/Edit";
 
 // Routes
 import { getImage } from "../../../routes/cdn.routes";
+import { RESPONSE } from "../../../routes/index.routes";
+
+import axios from "axios";
+import {
+  kickUserBucket,
+  BODY_KICK_ADD_USER
+} from "../../../routes/drive.routes";
 
 const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
-  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
+  const { selectedCompany, setArrayMsgs, selectedTeam } = useContext(
+    GlobalContext
+  );
+  const {
+    selectedBucket,
+    fetchDocuments,
+    arrayFoldersTimeLine,
+    setIsLoadingBody
+  } = useContext(DriveContext);
 
   const canEdit = (): boolean => {
     if (!selectedCompany) return false;
@@ -29,15 +44,58 @@ const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
     );
   };
 
-  const kickUser = () => {
-    if (setArrayMsgs)
-      setArrayMsgs(prev => [
-        {
-          type: "info",
-          text: "Feature not available..."
-        },
-        ...prev
-      ]);
+  const kickUser = async () => {
+    try {
+      if (!selectedCompany || !selectedTeam || !selectedBucket) return;
+
+      if (setIsLoadingBody) setIsLoadingBody(true);
+
+      const body: BODY_KICK_ADD_USER = {
+        teamId: selectedTeam.id,
+        companyId: selectedCompany.id,
+        userId: userRef.id,
+        bucketId: selectedBucket.id
+      };
+
+      const response = await axios.put(kickUserBucket.url, body, {
+        withCredentials: true
+      });
+
+      if (setIsLoadingBody) setIsLoadingBody(false);
+
+      const data: RESPONSE = response.data;
+
+      if (data.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      // Refetch
+      if (fetchDocuments && arrayFoldersTimeLine) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      if (setIsLoadingBody) setIsLoadingBody(false);
+      console.error(error);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
   };
 
   return (

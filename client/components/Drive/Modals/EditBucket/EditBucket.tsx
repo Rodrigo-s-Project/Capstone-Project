@@ -201,7 +201,7 @@ const EditBucket = () => {
               text="Workspace name"
               value={nameBucket}
               setValue={setNameBucket}
-              id="input-bucket-name"
+              id="input-edit-bucket-name"
               name="Workspace name"
               type="text"
             />
