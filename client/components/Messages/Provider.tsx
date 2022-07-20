@@ -32,6 +32,8 @@ interface ChatApp {
   setArrayUsersInConnection: Dispatch<SetStateAction<Array<USER_CONNECTION>>>;
   isLoadingConnections: boolean;
   setIsLoadingConnections: Dispatch<SetStateAction<boolean>>;
+  isLoadingBody: boolean;
+  setIsLoadingBody: Dispatch<SetStateAction<boolean>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -40,6 +42,7 @@ const ProviderChat = ({ children }: Props) => {
   );
 
   const [isLoadingConnections, setIsLoadingConnections] = useState(false);
+  const [isLoadingBody, setIsLoadingBody] = useState(false);
 
   const [selectedConnection, setSelectedConnection] = useState<
     CONNECTION | undefined
@@ -110,7 +113,9 @@ const ProviderChat = ({ children }: Props) => {
         arrayUsersInConnection,
         setArrayUsersInConnection,
         isLoadingConnections,
-        setIsLoadingConnections
+        setIsLoadingConnections,
+        isLoadingBody,
+        setIsLoadingBody
       }}
     >
       {children}

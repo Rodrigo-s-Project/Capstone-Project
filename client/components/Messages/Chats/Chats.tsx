@@ -4,9 +4,13 @@ import { ChatContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 import { CONNECTION } from "../messages.types";
 
+// Components
+import UsersAside from "./User/UserAside";
+
 // Icons
 import ChevronLeftIcon from "../../Svgs/ChevronLeft";
 import EditIcon from "../../Svgs/Edit";
+import Loader from "../../Loader/Spinner/Spinner";
 
 const ArrayConnections = () => {
   const { arrayConnections, setSelectedConnection } = useContext(ChatContext);
@@ -43,13 +47,27 @@ const ArrayConnections = () => {
 
 const TopAside = () => {
   const { selectedConnection, setSelectedConnection } = useContext(ChatContext);
-  const { selectedCompany } = useContext(GlobalContext);
+  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
 
   const returnToGroups = () => {
     if (setSelectedConnection) {
       setSelectedConnection(undefined);
     }
   };
+
+  const editConnection = () => {
+    if (setArrayMsgs) {
+      // TODO: add editConnection
+      setArrayMsgs(prev => [
+        {
+          type: "info",
+          text: "Feature not available..."
+        },
+        ...prev
+      ]);
+    }
+  };
+
   return (
     <>
       {selectedConnection && (
@@ -69,7 +87,11 @@ const TopAside = () => {
           {selectedCompany &&
             (selectedCompany.User_Company.typeUser == "Admin" ||
               selectedCompany.User_Company.typeUser == "Employee") && (
-              <div title="Edit chat" className={styles.chats_connection_edit}>
+              <div
+                onClick={editConnection}
+                title="Edit chat"
+                className={styles.chats_connection_edit}
+              >
                 <EditIcon />
               </div>
             )}
@@ -80,12 +102,23 @@ const TopAside = () => {
 };
 
 const Chats = () => {
-  const { selectedConnection } = useContext(ChatContext);
+  const { selectedConnection, isLoadingConnections } = useContext(ChatContext);
 
   return (
     <div className={styles.chats}>
-      {selectedConnection && <TopAside />}
-      {!selectedConnection && <ArrayConnections />}
+      {isLoadingConnections && (
+        <div className={styles.loader}>
+          <Loader color="lavender-300" />
+        </div>
+      )}
+
+      {!isLoadingConnections && selectedConnection && (
+        <>
+          <TopAside />
+          <UsersAside />
+        </>
+      )}
+      {!isLoadingConnections && !selectedConnection && <ArrayConnections />}
     </div>
   );
 };
