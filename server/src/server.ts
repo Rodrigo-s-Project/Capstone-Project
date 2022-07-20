@@ -26,6 +26,7 @@ import controlsDashboardRoutes from "./routes/dashboard.controls.routes";
 import calendarRoutes from "./routes/calendar.routes";
 import driveRoutes from "./routes/drive.routes";
 import profileRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
 app.use("/dashboard/company", companyDashboardRoutes);
@@ -34,6 +35,7 @@ app.use("/dashboard/controls", controlsDashboardRoutes);
 app.use("/dashboard/calendar", calendarRoutes);
 app.use("/dashboard/drive", driveRoutes);
 app.use("/profile", profileRoutes);
+app.use("/dashboard/chat", chatRoutes);
 
 // Static
 app.use("/public", express.static(path.join(__dirname, "public")));
