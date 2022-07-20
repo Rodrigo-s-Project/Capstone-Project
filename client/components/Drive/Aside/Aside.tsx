@@ -36,8 +36,7 @@ const User = ({ userRef }: { userRef: USER_WORKSPACE_ASIDE }) => {
 
   const canEdit = (): boolean => {
     if (!selectedCompany) return false;
-    if (userRef.typeUser == "Admin" || userRef.typeUser == "Employee")
-      return false;
+    if (userRef.typeUser == "Admin") return false;
     return (
       selectedCompany.User_Company.typeUser == "Admin" ||
       selectedCompany.User_Company.typeUser == "Employee"
