@@ -106,6 +106,12 @@ export const createBucket = async (req, res) => {
       return;
     }
 
+    if (name.trim() == "") {
+      response.message = "Invalid name.";
+      res.json(response);
+      return;
+    }
+
     const teams: Array<any> = await req.user.getTeams({
       where: {
         id: teamId,

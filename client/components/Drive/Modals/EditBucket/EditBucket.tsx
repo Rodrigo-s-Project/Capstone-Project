@@ -32,7 +32,7 @@ const EditBucket = () => {
   } = useContext(DriveContext);
 
   const [nameBucket, setNameBucket] = useState<string>("");
-  const [isDeleting, setSsDeleting] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -180,6 +180,7 @@ const EditBucket = () => {
   const clean = () => {
     setNameBucket("");
     setIsLoading(false);
+    setIsDeleting(false);
   };
 
   return (
@@ -219,9 +220,9 @@ const EditBucket = () => {
             <BtnSpinner
               text="Delete workspace"
               callback={() => {
-                if (!isLoading) setSsDeleting(true);
+                if (!isLoading) setIsDeleting(true);
               }}
-              color="lavender-300"
+              color="gray"
               border="round_5"
               additionalClass="btn-delete-bucket"
               isLoading={isLoading}
@@ -244,7 +245,7 @@ const EditBucket = () => {
             <BtnSpinner
               text="Cancel"
               callback={() => {
-                if (!isLoading) setSsDeleting(false);
+                if (!isLoading) setIsDeleting(false);
               }}
               color="gray"
               border="round_5"

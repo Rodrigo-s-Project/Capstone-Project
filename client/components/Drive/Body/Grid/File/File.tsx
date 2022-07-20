@@ -10,7 +10,6 @@ import FileDownloadIcon from "../../../../Svgs/FileDownload";
 import LockIcon from "../../../../Svgs/Lock";
 import LockOpenIcon from "../../../../Svgs/LockOpen";
 import Loader from "../../../../Loader/Spinner/Spinner";
-import CameraIcon from "../../../../Svgs/Camera";
 
 import axios from "axios";
 import {
@@ -30,6 +29,7 @@ import { GlobalContext } from "../../../../../pages/_app";
 // Components
 import InputText from "../../../../Input/Text/InputText";
 import BtnSpinner from "../../../../Buttons/BtnClick/BtnClick";
+import UsersReadComponent from "../../../../Reading/Users/UsersRead";
 
 type Props = {
   fileRef: DOCUMENT_DATA;
@@ -120,7 +120,7 @@ const FileComponent = ({ fileRef }: Props) => {
             ...prev,
             {
               type: "danger",
-              text: "Error al descargar el archivo"
+              text: "Error while downloading the file."
             }
           ]);
         }
@@ -243,36 +243,7 @@ const FileComponent = ({ fileRef }: Props) => {
     <div className={`${styles.file} ${isOpen && styles.file_open}`}>
       {/* User read files */}
       {!isOpen && (
-        <div className={styles.reading}>
-          {fileRef.User_Read_Files &&
-            fileRef.User_Read_Files.slice(0, 5).map(
-              (userRedFile: any, index: number) => {
-                return (
-                  <div
-                    style={
-                      {
-                        "--index-user": (index + 1) * 5
-                      } as React.CSSProperties
-                    }
-                    key={userRedFile.userData.id}
-                  >
-                    <CameraIcon />
-                    {userRedFile.userData.profilePictureURL && (
-                      <img
-                        src={`${getImage.url(
-                          userRedFile.userData.profilePictureURL
-                        )}`}
-                        alt={userRedFile.username}
-                      />
-                    )}
-                    <div extra-css="reading-user-name">
-                      {userRedFile.username}
-                    </div>
-                  </div>
-                );
-              }
-            )}
-        </div>
+        <UsersReadComponent usersRead={fileRef.User_Read_Files || []} />
       )}
 
       <div className={styles.presentation}>

@@ -17,7 +17,7 @@ const CompanyCard = ({ company }: Props) => {
   return (
     <div
       onClick={() => {
-        router.replace(`/dashboard/${company.id}`);
+        router.replace(`/dashboard/${company.id}/teams`);
       }}
       title={company.name}
       className={styles.creation_grid_join}
