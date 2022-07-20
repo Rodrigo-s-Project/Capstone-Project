@@ -503,7 +503,7 @@ export const deleteBucket = async (req, res) => {
 
     for (let i = 0; i < allFiles.length; i++) {
       // Delete from GCP
-      const blobName: string = `${createHmac("sha256", "keys")
+      const blobName: string = `${createHmac("sha256", "development")
         .update(allFiles[i].id.toString())
         .digest("hex")}${allFiles[i].type}`;
 
