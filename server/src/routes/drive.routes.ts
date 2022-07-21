@@ -22,6 +22,7 @@ import {
   downloadFileDeleteTemp
 } from "../controllers/drive/files/index";
 import { editFile, deleteFile } from "../controllers/drive/files/edits";
+import { deleteFolderAndItsContent } from "../controllers/drive/folders/index";
 
 // Protected route
 router.get("/get-buckets/:companyId/:teamId", authenticate, getBucketsFromTeam);
@@ -37,6 +38,11 @@ router.delete(
   "/delete-folder/:companyId/:bucketId/:folderId",
   authenticate,
   deleteFolder
+);
+router.delete(
+  "/delete-complete-folder/:companyId/:bucketId/:folderId",
+  authenticate,
+  deleteFolderAndItsContent
 );
 
 // Files

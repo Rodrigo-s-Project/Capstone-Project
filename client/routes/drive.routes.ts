@@ -78,6 +78,12 @@ export const deleteFolder = {
   method: "delete"
 };
 
+export const deleteCompleteFolder = {
+  url: (companyId: any, bucketId: any, folderId: any) =>
+    `${process.env.API_URL}/dashboard/drive/delete-complete-folder/${companyId}/${bucketId}/${folderId}`,
+  method: "delete"
+};
+
 export type BODY_UPLOAD_FILE = {
   name: string;
   folderId: number;
