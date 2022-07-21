@@ -23,7 +23,8 @@ import axios from "axios";
 import {
   editFolder,
   BODY_EDIT_FOLDER,
-  deleteFolder
+  deleteFolder,
+  deleteCompleteFolder
 } from "../../../../../routes/drive.routes";
 import { RESPONSE } from "../../../../../routes/index.routes";
 
@@ -184,6 +185,60 @@ const Folder = ({ folderRef }: Props) => {
     }
   };
 
+  const deleteCompleteFolderFetch = async () => {
+    try {
+      if (!selectedBucket || !selectedCompany) return;
+
+      setIsLoading(true);
+
+      const response = await axios.delete(
+        deleteCompleteFolder.url(
+          selectedCompany.id,
+          selectedBucket.id,
+          folderRef.id
+        ),
+        {
+          withCredentials: true
+        }
+      );
+
+      setIsLoading(false);
+
+      const data: RESPONSE = response.data;
+      if (setArrayMsgs && data.readMsg) {
+        setArrayMsgs(prev => [
+          {
+            type: data.typeMsg,
+            text: data.message
+          },
+          ...prev
+        ]);
+      }
+
+      clean();
+
+      if (fetchDocuments && selectedBucket && arrayFoldersTimeLine) {
+        fetchDocuments({
+          bucket: selectedBucket,
+          arrayFoldersTimeLine: arrayFoldersTimeLine
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+
+      // Put a message
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error"
+          },
+          ...prev
+        ]);
+    }
+  };
+
   return (
     <div className={`${styles.folder} ${isOpen && styles.folder_open}`}>
       <div className={styles.presentation}>
@@ -287,8 +342,16 @@ const Folder = ({ folderRef }: Props) => {
                 additionalClass="btn-ask-folder"
               />
               <BtnSpinner
-                text="Delete"
+                text="Delete just folder"
                 callback={deleteFolderFetch}
+                color="lavender-300"
+                border="round_5"
+                additionalClass="btn-ask-folder"
+                isLoading={isLoading}
+              />
+              <BtnSpinner
+                text="Delete all inside"
+                callback={deleteCompleteFolderFetch}
                 color="lavender-300"
                 border="round_5"
                 additionalClass="btn-ask-folder"
