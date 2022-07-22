@@ -152,6 +152,10 @@ export const setAssociations = () => {
   User.belongsToMany(Message, { through: "User_Read_Messages" });
   Message.belongsToMany(User, { through: "User_Read_Messages" });
 
+  // (User) 1:1 (Message)
+  User.hasOne(Message);
+  Message.belongsTo(User);
+
   // (User) 1:1 (Notification)
   User.hasOne(Notification);
   Notification.belongsTo(User);

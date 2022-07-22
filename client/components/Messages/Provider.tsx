@@ -5,17 +5,28 @@ import {
   SetStateAction,
   useContext,
   useCallback,
-  useEffect
+  useEffect,
+  useRef
 } from "react";
 import { CONNECTION, USER_CONNECTION } from "./messages.types";
 import axios from "axios";
+import { useRouter } from "next/router";
 import {
-  getAllConnections,
-  DATA_GET_ALL_CONNECTIONS
+  emitHandshake,
+  getTicketEndpoint,
+  DATA_GET_TICKET,
+  onAccept,
+  onReject,
+  emitGetAllConnections,
+  DATA_GET_ALL_CONNECTIONS,
+  onGetAllConnections
 } from "../../routes/chat.routes";
 import { RESPONSE } from "../../routes/index.routes";
 
 import { GlobalContext } from "../../pages/_app";
+
+// Sockets
+import io from "socket.io-client";
 
 type Props = {
   children: any;
@@ -56,22 +67,21 @@ const ProviderChat = ({ children }: Props) => {
     Array<USER_CONNECTION>
   >([]);
 
+  const ticketRef = useRef<any>(null);
+
   const getAllConnectionsFetch = useCallback(async () => {
     try {
       if (!selectedCompany || !selectedTeam) return;
 
       setIsLoadingConnections(true);
-      const response = await axios.get(
-        getAllConnections.url(selectedCompany.id, selectedTeam.id),
-        {
-          withCredentials: true
-        }
-      );
+      const response = await axios.get(getTicketEndpoint.url, {
+        withCredentials: true
+      });
 
       setIsLoadingConnections(false);
       const data: RESPONSE = response.data;
 
-      const dataFetch: DATA_GET_ALL_CONNECTIONS = data.data;
+      const dataFetch: DATA_GET_TICKET = data.data;
 
       if (data.readMsg && setArrayMsgs) {
         setArrayMsgs(prev => [
@@ -83,7 +93,7 @@ const ProviderChat = ({ children }: Props) => {
         ]);
       }
 
-      setArrayConnections(dataFetch.connections);
+      ticketRef.current = dataFetch.tokenForSockets;
     } catch (error) {
       setIsLoadingConnections(false);
       console.error(error);
@@ -102,6 +112,55 @@ const ProviderChat = ({ children }: Props) => {
   useEffect(() => {
     getAllConnectionsFetch();
   }, [selectedCompany, selectedTeam, getAllConnectionsFetch]);
+
+  // Sockets
+  const socketRef = useRef<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Connect
+    socketRef.current = io(process.env.API_URL || "");
+
+    // Make handshake
+    if (
+      !selectedCompany ||
+      !selectedTeam ||
+      !ticketRef.current ||
+      !router.pathname.includes("/messages")
+    )
+      return;
+
+    socketRef.current.emit(
+      emitHandshake.method,
+      ...emitHandshake.body(
+        ticketRef.current,
+        selectedCompany.id,
+        selectedTeam.id
+      )
+    );
+
+    socketRef.current.on(onAccept, () => {
+      socketRef.current.emit(emitGetAllConnections);
+
+      socketRef.current.on(
+        onGetAllConnections,
+        (dataOnGetAllConnections: DATA_GET_ALL_CONNECTIONS) => {
+          setArrayConnections(dataOnGetAllConnections.connections);
+        }
+      );
+    });
+
+    socketRef.current.on(onReject, () => {
+      if (setArrayMsgs)
+        setArrayMsgs(prev => [
+          {
+            text: "Error connecting to sockets",
+            type: "danger"
+          },
+          ...prev
+        ]);
+    });
+  }, [ticketRef.current, selectedCompany, selectedTeam, router]);
 
   return (
     <ChatContext.Provider
