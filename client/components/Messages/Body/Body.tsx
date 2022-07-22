@@ -1,5 +1,5 @@
 import styles from "./Body.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect, Fragment } from "react";
 import { ChatContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 
@@ -7,10 +7,47 @@ import ChatIconRest from "../../Svgs/ChatRest";
 
 // Components
 import Bar from "./Bar/Bar";
+import Message from "./Message/Message";
+
+// Routes
+import {
+  ontGetMessages,
+  DATA_GET_MESSAGES,
+  emitGetMessages
+} from "../../../routes/chat.routes";
+import { MESSAGE } from "../messages.types";
 
 const BodyChats = () => {
-  const { selectedConnection } = useContext(ChatContext);
+  const {
+    selectedConnection,
+    socketRef,
+    ticketRef,
+    setArrayMessages,
+    arrayMessages
+  } = useContext(ChatContext);
   const { setArrayMsgs } = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (
+      socketRef &&
+      socketRef.current &&
+      ticketRef &&
+      ticketRef.current &&
+      selectedConnection &&
+      setArrayMessages
+    ) {
+      socketRef.current.emit(
+        emitGetMessages.method,
+        ...emitGetMessages.body(selectedConnection.connection.id)
+      );
+      socketRef.current.on(
+        ontGetMessages,
+        (dataOntGetMessages: DATA_GET_MESSAGES) => {
+          setArrayMessages(dataOntGetMessages.messages);
+        }
+      );
+    }
+  }, [socketRef, ticketRef, selectedConnection, setArrayMessages]);
 
   const reloadMsgs = () => {
     if (setArrayMsgs) {
@@ -39,7 +76,16 @@ const BodyChats = () => {
               {selectedConnection.connection.name}
             </div>
           </div>
-          <div className={styles.body_chat_messages}></div>
+          <div className={styles.body_chat_messages}>
+            {arrayMessages &&
+              arrayMessages.map((messageRef: MESSAGE, index: number) => {
+                return (
+                  <Fragment key={index}>
+                    <Message message={messageRef} />
+                  </Fragment>
+                );
+              })}
+          </div>
           <Bar />
         </div>
       )}

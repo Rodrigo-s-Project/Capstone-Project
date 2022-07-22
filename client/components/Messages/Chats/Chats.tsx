@@ -12,11 +12,20 @@ import ChevronLeftIcon from "../../Svgs/ChevronLeft";
 import EditIcon from "../../Svgs/Edit";
 import Loader from "../../Loader/Spinner/Spinner";
 
+// Routes
+import { emitGetMessages } from "../../../routes/chat.routes";
+
 const ArrayConnections = () => {
-  const { arrayConnections, setSelectedConnection } = useContext(ChatContext);
+  const { arrayConnections, setSelectedConnection, socketRef } = useContext(
+    ChatContext
+  );
 
   const selectChat = (connection: CONNECTION) => {
-    if (setSelectedConnection) {
+    if (setSelectedConnection && socketRef && socketRef.current) {
+      socketRef.current.emit(
+        emitGetMessages.method,
+        ...emitGetMessages.body(connection.connection.id)
+      );
       setSelectedConnection(connection);
     }
   };

@@ -55,4 +55,6 @@ export type MESSAGE = {
   lat: number;
   lng: number;
   connectionId: number;
+  createdAt: Date;
+  ownerId: number;
 };

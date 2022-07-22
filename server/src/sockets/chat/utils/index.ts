@@ -73,13 +73,13 @@ export const getCurrConnection = async (
   try {
     if (isNaN(connectionId)) return undefined;
 
-    const refUser: any = await getCurrUser(userId, companyId, teamId);
+    const refUser = await getCurrUser(userId, companyId, teamId);
 
     if (!refUser) return undefined;
 
-    const refConnections: Array<any> = await refUser.getConnections({
+    const refConnections: Array<any> = await refUser.user.getConnections({
       where: {
-        connectionId
+        id: connectionId
       }
     });
 

@@ -22,6 +22,9 @@ export const Message = sequelize.define(
     lng: {
       type: DataType.DOUBLE,
       defaultValue: 0.0
+    },
+    ownerId: {
+      type: DataType.INTEGER
     }
   },
   {

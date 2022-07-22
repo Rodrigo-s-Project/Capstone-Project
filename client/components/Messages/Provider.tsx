@@ -8,7 +8,7 @@ import {
   useEffect,
   useRef
 } from "react";
-import { CONNECTION, USER_CONNECTION } from "./messages.types";
+import { CONNECTION, USER_CONNECTION, MESSAGE } from "./messages.types";
 import axios from "axios";
 import { useRouter } from "next/router";
 import {
@@ -45,6 +45,11 @@ interface ChatApp {
   setIsLoadingConnections: Dispatch<SetStateAction<boolean>>;
   isLoadingBody: boolean;
   setIsLoadingBody: Dispatch<SetStateAction<boolean>>;
+  socketRef: any;
+  ticketRef: any;
+
+  arrayMessages: Array<MESSAGE>;
+  setArrayMessages: Dispatch<SetStateAction<Array<MESSAGE>>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -62,6 +67,8 @@ const ProviderChat = ({ children }: Props) => {
   const [arrayConnections, setArrayConnections] = useState<Array<CONNECTION>>(
     []
   );
+
+  const [arrayMessages, setArrayMessages] = useState<Array<MESSAGE>>([]);
 
   const [arrayUsersInConnection, setArrayUsersInConnection] = useState<
     Array<USER_CONNECTION>
@@ -174,7 +181,11 @@ const ProviderChat = ({ children }: Props) => {
         isLoadingConnections,
         setIsLoadingConnections,
         isLoadingBody,
-        setIsLoadingBody
+        setIsLoadingBody,
+        socketRef,
+        ticketRef,
+        arrayMessages,
+        setArrayMessages
       }}
     >
       {children}

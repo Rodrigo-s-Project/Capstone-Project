@@ -6,4 +6,5 @@ export type SOCKET_ELEMENT = {
   };
   companyId: number;
   teamId: number;
+  connectionId: number
 };

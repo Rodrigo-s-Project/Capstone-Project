@@ -1,5 +1,5 @@
 import { getConnections } from "./connections/index";
-import { getMessagesFromConnection } from "./messages/index";
+import { getMessagesFromConnection, createMessage } from "./messages/index";
 import { getCurrUser } from "./utils/index";
 import { SOCKET_ELEMENT } from "./chat.types";
 
@@ -36,7 +36,8 @@ const initializeConnection = (
           socket, // To communicate
           userId, // To know the user ref
           companyId, // To know on which company it is
-          teamId // To know on which team it is
+          teamId, // To know on which team it is
+          connectionId: 0 // Right now is nothing
         };
 
         SOCKET_LIST[socket.id] = newEl;
@@ -55,11 +56,12 @@ export const manageSocketChat = async (socket: any, SOCKET_LIST: Object) => {
   try {
     // Initialize
     initializeConnection(socket, SOCKET_LIST, () => {
-      // Connections
+      // Get all connections
       getConnections(SOCKET_LIST[socket.id]);
 
-      // Messages
-      getMessagesFromConnection(SOCKET_LIST[socket.id]);
+      // You enter a connection
+      getMessagesFromConnection(SOCKET_LIST, SOCKET_LIST[socket.id]);
+      createMessage(SOCKET_LIST, SOCKET_LIST[socket.id]);
     });
 
     // Disconnect
