@@ -1,13 +1,9 @@
 import express from "express";
 const router = express.Router();
 
+import { getHashToken } from "../controllers/chat/index";
 import { authenticate } from "../middlewares/auth/index";
-import { getArrayConnections } from "../controllers/chat/connections";
 
-router.get(
-  "/connections/get-all-connections/:companyId/:teamId",
-  authenticate,
-  getArrayConnections
-);
+router.get("/generate-ticket", authenticate, getHashToken);
 
 export default router;

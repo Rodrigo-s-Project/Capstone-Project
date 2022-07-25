@@ -37,6 +37,7 @@ export type USER_CONNECTION = {
       userId: number;
     };
   };
+  createdAt?: Date;
 };
 
 export type CONNECTION = {
@@ -46,13 +47,19 @@ export type CONNECTION = {
     teamId: number;
   };
   users: Array<USER_CONNECTION>;
+  totalUnread: number;
 };
 
 export type MESSAGE = {
-  id: number;
-  text: string;
-  mediaURL: string | null;
-  lat: number;
-  lng: number;
-  connectionId: number;
+  users: Array<USER_CONNECTION>;
+  message: {
+    id: number;
+    text: string;
+    mediaURL: string | null;
+    lat: number;
+    lng: number;
+    connectionId: number;
+    createdAt: Date;
+    ownerId: number;
+  };
 };

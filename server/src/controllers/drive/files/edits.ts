@@ -210,7 +210,7 @@ export const deleteFile = async (req, res) => {
     await fileRef.removeUsers();
 
     // Delete from GCP
-    const blobName: string = `${createHmac("sha256", "keys")
+    const blobName: string = `${createHmac("sha256", "development")
       .update(fileRef.id.toString())
       .digest("hex")}${fileRef.type}`;
 

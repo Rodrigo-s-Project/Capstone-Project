@@ -1,0 +1,109 @@
+.container {
+  padding: 0 20px;
+}
+.chat {
+  width: fit-content;
+  padding: 10px 15px;
+  border-radius: 5px;
+  position: relative;
+  max-width: 400px;
+  &_text {
+    color: var(--primary);
+  }
+  &_img {
+    img {
+      width: 100%;
+      height: 100%;
+      max-height: 300px;
+      max-width: 300px;
+      display: inline-block;
+      object-fit: contain;
+    }
+  }
+  &_name {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: bold;
+  }
+  &_reading {
+    margin-top: 20px;
+    width: calc(20px * var(--length-container));
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 7.5px solid transparent;
+    border-bottom: 7.5px solid transparent;
+    bottom: -8.2px;
+  }
+  &_owner {
+    background-color: var(--gray-800);
+    margin-left: auto;
+    margin-right: 30px;
+    text-align: right;
+    &::after {
+      border-right: 12.5px solid transparent;
+      border-left: 12.5px solid var(--gray-800);
+      right: -18px;
+      transform: rotateZ(35deg);
+    }
+  }
+  &_foreign {
+    background-color: var(--lavender-300);
+    margin-right: auto;
+    margin-left: 30px;
+    &::after {
+      border-right: 12.5px solid var(--lavender-300);
+      border-left: 12.5px solid transparent;
+      left: -18px;
+      transform: rotateZ(-35deg);
+    }
+  }
+}
+.user {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  &_reverse {
+    flex-direction: row-reverse;
+  }
+  &_profile {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--gray-400);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      position: absolute;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      object-fit: cover;
+      z-index: 10;
+    }
+    &_camera {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      svg {
+        width: 50%;
+        height: 50%;
+        fill: var(--primary);
+      }
+    }
+  }
+  &_name {
+    color: var(--gray-800);
+  }
+}

@@ -1,7 +1,6 @@
 import styles from "./File.module.scss";
 import { useContext, useState } from "react";
 import { DOCUMENT_DATA } from "../../../../../routes/drive.routes";
-import { getImage } from "../../../../../routes/cdn.routes";
 
 // Icons
 import EditIcon from "../../../../Svgs/Edit";
