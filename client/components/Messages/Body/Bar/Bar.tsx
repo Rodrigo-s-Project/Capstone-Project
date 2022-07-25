@@ -1,7 +1,8 @@
 import styles from "./Bar.module.scss";
 import { ChatContext } from "../../Provider";
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState, useCallback, useEffect } from "react";
 import { GlobalContext } from "../../../../pages/_app";
+import { MapContext } from "../../../Modals/Map/Provider";
 import axios from "axios";
 
 import { emitCreateMessage } from "../../../../routes/chat.routes";
@@ -12,9 +13,11 @@ import PaperPlaneIcon from "../../../Svgs/PaperPlane";
 import KeyboardIcon from "../../../Svgs/Keyboard";
 import TimesIcon from "../../../Svgs/Times";
 import FileImgIcon from "../../../Svgs/FileImg";
+import MapMarkerAltIcon from "../../../Svgs/MapMarkerAlt";
 
 const Bar = () => {
   const { socketRef, ticketRef, selectedConnection } = useContext(ChatContext);
+  const { setModalAskMapLocation, userAddress } = useContext(MapContext);
   const { setArrayMsgs } = useContext(GlobalContext);
 
   const [text, setText] = useState<any>("");
@@ -23,6 +26,12 @@ const Bar = () => {
   const [lat, setLat] = useState<any>(undefined);
   const [lng, setLng] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState<any>(false);
+
+  useEffect(() => {
+    if (userAddress != "") {
+      setText(userAddress);
+    }
+  }, [userAddress]);
 
   const handleChangeFile = (e: any) => {
     e.preventDefault();
@@ -212,6 +221,16 @@ const Bar = () => {
           ) : (
             <TimesIcon />
           )}
+        </div>
+        <div
+          onClick={() => {
+            if (setModalAskMapLocation) {
+              setModalAskMapLocation(true);
+            }
+          }}
+          className={styles.map}
+        >
+          <MapMarkerAltIcon />
         </div>
         <button
           title="Send message"
