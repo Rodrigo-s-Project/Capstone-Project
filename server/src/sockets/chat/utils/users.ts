@@ -1,5 +1,4 @@
 import { Connection } from "../../../models/Connection";
-import { Message } from "../../../models/Message";
 import { getCurrUser } from "./index";
 
 export const isUserOnConnection = async (

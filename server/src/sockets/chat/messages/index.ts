@@ -1,11 +1,11 @@
-import {
-  getCurrConnection,
-  getCurrUser,
-  getAllConnections
-} from "../utils/index";
+import { getCurrConnection, getCurrUser } from "../utils/index";
 import { SOCKET_ELEMENT } from "../chat.types";
 import { Message } from "../../../models/Message";
-import { isUserOnConnection, addReadToTheseMessages } from "../utils/users";
+import { addReadToTheseMessages } from "../utils/users";
+import {
+  getAllMessagesWithUsers,
+  sendMessagesToEveryone
+} from "../utils/messages";
 
 export const getMessagesFromConnection = async (
   SOCKET_LIST: Object,
@@ -30,8 +30,11 @@ export const getMessagesFromConnection = async (
         // Update read
         await addReadToTheseMessages(userId, companyId, teamId, refMessages);
 
-        refMessages = await refConnection.getMessages();
-        // TODO: modify if necessary
+        refMessages = await getAllMessagesWithUsers(
+          refConnection,
+          companyId,
+          teamId
+        );
       }
 
       // Add connectionId
@@ -40,9 +43,15 @@ export const getMessagesFromConnection = async (
         connectionId
       };
 
-      socket.emit("send-messages", {
-        messages: refMessages
-      });
+      // Send updated msgs to everybody
+      await sendMessagesToEveryone(
+        SOCKET_LIST,
+        connectionId,
+        companyId,
+        teamId,
+        refMessages,
+        refConnection
+      );
     });
   } catch (error) {
     console.error(error);
@@ -94,53 +103,18 @@ export const createMessage = async (
           }
 
           refMessages = await refConnection.getMessages();
-          // TODO: modify if necessary
         }
       }
 
-      // Send message to everyone in same connection
-      for (let i = 0; i < Object.keys(SOCKET_LIST).length; i++) {
-        const element: SOCKET_ELEMENT =
-          SOCKET_LIST[Object.keys(SOCKET_LIST)[i]];
-        if (element.connectionId != 0 && element.connectionId == connectionId) {
-          // Update read
-          await addReadToTheseMessages(
-            element.userId,
-            companyId,
-            teamId,
-            refMessages
-          );
-
-          // Get ref
-          refMessages = await refConnection.getMessages();
-          // TODO: modify if necessary
-
-          // Send message
-          element.socket.emit("send-messages", {
-            messages: refMessages
-          });
-        } else if (
-          (await isUserOnConnection(
-            element.userId,
-            companyId,
-            teamId,
-            connectionId
-          )) &&
-          element.connectionId == 0
-        ) {
-          // It is on groups pages
-          // Send update
-          const refConnections: Array<any> = await getAllConnections(
-            element.userId,
-            companyId,
-            teamId
-          );
-
-          element.socket.emit("send-connections", {
-            connections: refConnections
-          });
-        }
-      }
+      // Send msgs to everybody
+      await sendMessagesToEveryone(
+        SOCKET_LIST,
+        connectionId,
+        companyId,
+        teamId,
+        refMessages,
+        refConnection
+      );
     });
   } catch (error) {
     console.error(error);

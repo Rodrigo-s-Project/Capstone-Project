@@ -4,6 +4,7 @@ import { ChatContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 
 import ChatIconRest from "../../Svgs/ChatRest";
+import Loader from "../../Loader/Spinner/Spinner";
 
 // Components
 import Bar from "./Bar/Bar";
@@ -93,6 +94,11 @@ const BodyChats = () => {
             </div>
           </div>
           <div ref={msgsContainer} className={styles.body_chat_messages}>
+            {arrayMessages && arrayMessages.length == 0 && (
+              <div className={styles.loader}>
+                <Loader color="lavender-300" />
+              </div>
+            )}
             {arrayMessages &&
               arrayMessages.map((messageRef: MESSAGE, index: number) => {
                 return (

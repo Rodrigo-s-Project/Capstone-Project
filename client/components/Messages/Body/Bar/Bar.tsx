@@ -4,6 +4,10 @@ import { useContext, useState } from "react";
 
 import { emitCreateMessage } from "../../../../routes/chat.routes";
 
+// Icons
+import PaperPlaneIcon from "../../../Svgs/PaperPlane";
+import KeyboardIcon from "../../../Svgs/Keyboard";
+
 const Bar = () => {
   const { socketRef, ticketRef, selectedConnection } = useContext(ChatContext);
 
@@ -11,6 +15,14 @@ const Bar = () => {
   const [mediaURL, setMediaURL] = useState<any>(undefined);
   const [lat, setLat] = useState<any>(undefined);
   const [lng, setLng] = useState<any>(undefined);
+
+  const canSend = (): boolean => {
+    return (
+      (text && text.trim() != "") ||
+      (mediaURL && mediaURL.trim() != "") ||
+      (!isNaN(lat) && !isNaN(lng))
+    );
+  };
 
   const sendMsg = () => {
     if (
@@ -20,11 +32,7 @@ const Bar = () => {
       ticketRef.current &&
       selectedConnection
     ) {
-      if (
-        (text && text.trim() != "") ||
-        (mediaURL && mediaURL.trim() != "") ||
-        (!isNaN(lat) && !isNaN(lng))
-      ) {
+      if (canSend()) {
         // At least one passes
         socketRef.current.emit(
           emitCreateMessage.method,
@@ -62,7 +70,15 @@ const Bar = () => {
             setText(e.target.value);
           }}
         />
-        <button onClick={sendMsg}>Send</button>
+        <button
+          title="Send message"
+          style={{
+            cursor: canSend() ? "pointer" : "not-allowed"
+          }}
+          onClick={sendMsg}
+        >
+          {canSend() ? <PaperPlaneIcon /> : <KeyboardIcon />}
+        </button>
       </form>
     </div>
   );

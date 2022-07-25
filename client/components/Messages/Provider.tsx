@@ -152,7 +152,6 @@ const ProviderChat = ({ children }: Props) => {
       socketRef.current.on(
         onGetAllConnections,
         (dataOnGetAllConnections: DATA_GET_ALL_CONNECTIONS) => {
-          console.log(dataOnGetAllConnections);
           setArrayConnections(dataOnGetAllConnections.connections);
         }
       );
