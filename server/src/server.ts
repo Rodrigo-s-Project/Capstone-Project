@@ -2,8 +2,18 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import http from "http";
 
 export const app = express();
+
+export const server = http.createServer(app);
+export const io = require("socket.io")(server, {
+  cors: {
+    origin: `${process.env.CLIENT_URL}`,
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    credentials: true
+  }
+});
 
 app.set("port", process.env.PORT);
 
@@ -35,7 +45,16 @@ app.use("/dashboard/controls", controlsDashboardRoutes);
 app.use("/dashboard/calendar", calendarRoutes);
 app.use("/dashboard/drive", driveRoutes);
 app.use("/profile", profileRoutes);
-app.use("/dashboard/chat", chatRoutes);
+app.use("/chat", chatRoutes);
 
 // Static
 app.use("/public", express.static(path.join(__dirname, "public")));
+
+// Socket Io
+import { manageSocketChat } from "./sockets/chat/index";
+
+var SOCKET_LIST: Object = {};
+
+io.on("connection", (socket: any) => {
+  manageSocketChat(socket, SOCKET_LIST);
+});

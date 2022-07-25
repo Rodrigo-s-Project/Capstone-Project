@@ -1,16 +1,70 @@
 import styles from "./Body.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect, Fragment, useRef } from "react";
 import { ChatContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 
 import ChatIconRest from "../../Svgs/ChatRest";
+import Loader from "../../Loader/Spinner/Spinner";
 
 // Components
 import Bar from "./Bar/Bar";
+import Message from "./Message/Message";
+
+// Routes
+import {
+  ontGetMessages,
+  DATA_GET_MESSAGES,
+  emitGetMessages
+} from "../../../routes/chat.routes";
+import { MESSAGE } from "../messages.types";
 
 const BodyChats = () => {
-  const { selectedConnection } = useContext(ChatContext);
+  const {
+    selectedConnection,
+    socketRef,
+    ticketRef,
+    setArrayMessages,
+    arrayMessages
+  } = useContext(ChatContext);
   const { setArrayMsgs } = useContext(GlobalContext);
+
+  const msgsContainer = useRef<any>(null);
+
+  useEffect(() => {
+    if (
+      socketRef &&
+      socketRef.current &&
+      ticketRef &&
+      ticketRef.current &&
+      selectedConnection &&
+      setArrayMessages
+    ) {
+      socketRef.current.emit(
+        emitGetMessages.method,
+        ...emitGetMessages.body(selectedConnection.connection.id)
+      );
+      socketRef.current.on(
+        ontGetMessages,
+        (dataOntGetMessages: DATA_GET_MESSAGES) => {
+          setArrayMessages(dataOntGetMessages.messages);
+        }
+      );
+    }
+  }, [socketRef, ticketRef, selectedConnection, setArrayMessages]);
+
+  const lowerScroll = () => {
+    if (msgsContainer && msgsContainer.current != null) {
+      msgsContainer.current.scroll({
+        top: 10_000_000,
+        left: 0,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  useEffect(() => {
+    lowerScroll();
+  }, [arrayMessages]);
 
   const reloadMsgs = () => {
     if (setArrayMsgs) {
@@ -39,7 +93,21 @@ const BodyChats = () => {
               {selectedConnection.connection.name}
             </div>
           </div>
-          <div className={styles.body_chat_messages}></div>
+          <div ref={msgsContainer} className={styles.body_chat_messages}>
+            {arrayMessages && arrayMessages.length == 0 && (
+              <div className={styles.loader}>
+                <Loader color="lavender-300" />
+              </div>
+            )}
+            {arrayMessages &&
+              arrayMessages.map((messageRef: MESSAGE, index: number) => {
+                return (
+                  <Fragment key={index}>
+                    <Message message={messageRef} />
+                  </Fragment>
+                );
+              })}
+          </div>
           <Bar />
         </div>
       )}
