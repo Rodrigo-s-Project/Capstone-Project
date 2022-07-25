@@ -145,7 +145,11 @@ const TopAside = () => {
 };
 
 const Chats = () => {
-  const { selectedConnection, isLoadingConnections } = useContext(ChatContext);
+  const {
+    selectedConnection,
+    isLoadingConnections,
+    setModalAddUsersConnection
+  } = useContext(ChatContext);
 
   return (
     <div className={styles.chats}>
@@ -159,6 +163,15 @@ const Chats = () => {
         <>
           <TopAside />
           <UsersAside />
+          <div
+            onClick={() => {
+              if (setModalAddUsersConnection) setModalAddUsersConnection(true);
+            }}
+            title="Add users"
+            className={styles.addUsers}
+          >
+            <PlusIcon />
+          </div>
         </>
       )}
       {!isLoadingConnections && !selectedConnection && <ArrayConnections />}

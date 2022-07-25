@@ -39,6 +39,7 @@ import ReadersModal from "../components/Reading/Modals/Readers/ReadersModal";
 import AddUsersModal from "../components/Drive/Modals/AddUsers/AddUsers";
 import CreateConnectionModal from "../components/Messages/Modals/CreateConnection/CreateConnection";
 import EditConnectionModal from "../components/Messages/Modals/EditConnection/EditConnection";
+import AddUsersChatModal from "../components/Messages/Modals/AddUsers/AddUsers";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -282,6 +283,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <AddUsersModal />
                     <EditSectionModal />
                     <EditUsernameProfileModal />
+                    <AddUsersChatModal />
                     <EditConnectionModal />
                     <EditPasswordProfileModal />
                     <CreateConnectionModal />

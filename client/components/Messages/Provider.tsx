@@ -57,6 +57,8 @@ interface ChatApp {
   setRefetchConnections: Dispatch<SetStateAction<boolean>>;
   modalEditConnection: boolean;
   setModalEditConnection: Dispatch<SetStateAction<boolean>>;
+  modalAddUsersConnection: boolean;
+  setModalAddUsersConnection: Dispatch<SetStateAction<boolean>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -68,6 +70,7 @@ const ProviderChat = ({ children }: Props) => {
   const [isLoadingBody, setIsLoadingBody] = useState(false);
   const [modalCreateConnection, setModalCreateConnection] = useState(false);
   const [modalEditConnection, setModalEditConnection] = useState(false);
+  const [modalAddUsersConnection, setModalAddUsersConnection] = useState(false);
   const [refetchConnections, setRefetchConnections] = useState(false);
 
   const [selectedConnection, setSelectedConnection] = useState<
@@ -201,7 +204,9 @@ const ProviderChat = ({ children }: Props) => {
         refetchConnections,
         setRefetchConnections,
         modalEditConnection,
-        setModalEditConnection
+        setModalEditConnection,
+        modalAddUsersConnection,
+        setModalAddUsersConnection
       }}
     >
       {children}
