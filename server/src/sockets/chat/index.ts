@@ -57,7 +57,7 @@ export const manageSocketChat = async (socket: any, SOCKET_LIST: Object) => {
     // Initialize
     initializeConnection(socket, SOCKET_LIST, () => {
       // Get all connections
-      getConnections(SOCKET_LIST[socket.id]);
+      getConnections(SOCKET_LIST, SOCKET_LIST[socket.id]);
 
       // You enter a connection
       getMessagesFromConnection(SOCKET_LIST, SOCKET_LIST[socket.id]);

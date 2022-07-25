@@ -9,7 +9,7 @@ import { timerPublicFolder } from "./cronos/index";
 async function main() {
   try {
     setAssociations();
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log(`Connection has been established successfully`);
 
     await server.listen(app.get("port"));

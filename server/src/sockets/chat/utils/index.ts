@@ -105,7 +105,7 @@ export const getAllConnections = async (
     const current = await getCurrUser(userId, companyId, teamId);
     if (!current) return undefined;
 
-    if (!current.team) return undefined;
+    if (!current.team || !current.user) return undefined;
 
     const allConnections: Array<any> = await current.team.getConnections();
     let connections: Array<any> = [];
@@ -139,9 +139,25 @@ export const getAllConnections = async (
           team: refTeams.length > 0 ? datateam : {}
         });
       }
+      let arrayMsgsCurrUser: Array<any> = await current.user.getMessages();
+      const totalMsgsConnection: number = await allConnections[
+        i
+      ].countMessages();
+      let totalReadMsgs: number = 0;
+      for (let j = 0; j < arrayMsgsCurrUser.length; j++) {
+        const msgReadUser: any = arrayMsgsCurrUser[j];
+
+        // Check if this msgReadUser is from this connection
+        if (msgReadUser.connectionId == allConnections[i].id) {
+          totalReadMsgs += 1;
+        }
+      }
+
+
       connections.push({
         users: allUsers,
-        connection: allConnections[i]
+        connection: allConnections[i],
+        totalUnread: totalMsgsConnection - totalReadMsgs
       });
     }
 

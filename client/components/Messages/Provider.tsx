@@ -76,7 +76,7 @@ const ProviderChat = ({ children }: Props) => {
 
   const ticketRef = useRef<any>(null);
 
-  const getAllConnectionsFetch = useCallback(async () => {
+  const getTicketToStablishConnection = useCallback(async () => {
     try {
       if (!selectedCompany || !selectedTeam) return;
 
@@ -117,8 +117,8 @@ const ProviderChat = ({ children }: Props) => {
   }, [selectedCompany, selectedTeam, setArrayMsgs]);
 
   useEffect(() => {
-    getAllConnectionsFetch();
-  }, [selectedCompany, selectedTeam, getAllConnectionsFetch]);
+    getTicketToStablishConnection();
+  }, [selectedCompany, selectedTeam, getTicketToStablishConnection]);
 
   // Sockets
   const socketRef = useRef<any>(null);
@@ -152,6 +152,7 @@ const ProviderChat = ({ children }: Props) => {
       socketRef.current.on(
         onGetAllConnections,
         (dataOnGetAllConnections: DATA_GET_ALL_CONNECTIONS) => {
+          console.log(dataOnGetAllConnections);
           setArrayConnections(dataOnGetAllConnections.connections);
         }
       );

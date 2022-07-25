@@ -46,6 +46,7 @@ export type CONNECTION = {
     teamId: number;
   };
   users: Array<USER_CONNECTION>;
+  totalUnread: number;
 };
 
 export type MESSAGE = {

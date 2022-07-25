@@ -1,6 +1,11 @@
-import { getCurrConnection, getCurrUser } from "../utils/index";
+import {
+  getCurrConnection,
+  getCurrUser,
+  getAllConnections
+} from "../utils/index";
 import { SOCKET_ELEMENT } from "../chat.types";
 import { Message } from "../../../models/Message";
+import { isUserOnConnection, addReadToTheseMessages } from "../utils/users";
 
 export const getMessagesFromConnection = async (
   SOCKET_LIST: Object,
@@ -20,6 +25,11 @@ export const getMessagesFromConnection = async (
       );
 
       if (refConnection) {
+        refMessages = await refConnection.getMessages();
+
+        // Update read
+        await addReadToTheseMessages(userId, companyId, teamId, refMessages);
+
         refMessages = await refConnection.getMessages();
         // TODO: modify if necessary
       }
@@ -79,7 +89,9 @@ export const createMessage = async (
           await refConnection.addMessage(newMsg);
 
           // Add read
-          await currState.user.addMessage(newMsg);
+          if (!(await currState.user.hasMessage(newMsg))) {
+            await currState.user.addMessage(newMsg);
+          }
 
           refMessages = await refConnection.getMessages();
           // TODO: modify if necessary
@@ -90,10 +102,42 @@ export const createMessage = async (
       for (let i = 0; i < Object.keys(SOCKET_LIST).length; i++) {
         const element: SOCKET_ELEMENT =
           SOCKET_LIST[Object.keys(SOCKET_LIST)[i]];
-
         if (element.connectionId != 0 && element.connectionId == connectionId) {
+          // Update read
+          await addReadToTheseMessages(
+            element.userId,
+            companyId,
+            teamId,
+            refMessages
+          );
+
+          // Get ref
+          refMessages = await refConnection.getMessages();
+          // TODO: modify if necessary
+
+          // Send message
           element.socket.emit("send-messages", {
             messages: refMessages
+          });
+        } else if (
+          (await isUserOnConnection(
+            element.userId,
+            companyId,
+            teamId,
+            connectionId
+          )) &&
+          element.connectionId == 0
+        ) {
+          // It is on groups pages
+          // Send update
+          const refConnections: Array<any> = await getAllConnections(
+            element.userId,
+            companyId,
+            teamId
+          );
+
+          element.socket.emit("send-connections", {
+            connections: refConnections
           });
         }
       }

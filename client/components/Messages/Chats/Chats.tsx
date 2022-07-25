@@ -10,15 +10,21 @@ import UsersAside from "./User/UserAside";
 // Icons
 import ChevronLeftIcon from "../../Svgs/ChevronLeft";
 import EditIcon from "../../Svgs/Edit";
+import PlusIcon from "../../Svgs/Plus";
 import Loader from "../../Loader/Spinner/Spinner";
 
 // Routes
-import { emitGetMessages } from "../../../routes/chat.routes";
+import {
+  emitGetMessages,
+  emitGetAllConnections
+} from "../../../routes/chat.routes";
 
 const ArrayConnections = () => {
   const { arrayConnections, setSelectedConnection, socketRef } = useContext(
     ChatContext
   );
+
+  const { selectedCompany } = useContext(GlobalContext);
 
   const selectChat = (connection: CONNECTION) => {
     if (setSelectedConnection && socketRef && socketRef.current) {
@@ -32,7 +38,16 @@ const ArrayConnections = () => {
 
   return (
     <div className={styles.connections}>
-      <div className={styles.connections_title}>Groups</div>
+      <div className={styles.connections_title}>
+        <div>Groups</div>
+        {selectedCompany &&
+          (selectedCompany.User_Company.typeUser == "Admin" ||
+            selectedCompany.User_Company.typeUser == "Employee") && (
+            <div title="Add a group" className={styles.connections_plus}>
+              <PlusIcon />
+            </div>
+          )}
+      </div>
       <div className={styles.connections_array}>
         {arrayConnections &&
           arrayConnections.map((connection: CONNECTION, index: number) => {
@@ -45,7 +60,12 @@ const ArrayConnections = () => {
                   selectChat(connection);
                 }}
               >
-                {connection.connection.name}
+                <div>{connection.connection.name}</div>
+                {connection.totalUnread > 0 && (
+                  <div className={styles.connections_element_unread}>
+                    {connection.totalUnread}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -55,11 +75,15 @@ const ArrayConnections = () => {
 };
 
 const TopAside = () => {
-  const { selectedConnection, setSelectedConnection } = useContext(ChatContext);
+  const { selectedConnection, setSelectedConnection, socketRef } = useContext(
+    ChatContext
+  );
   const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
 
   const returnToGroups = () => {
-    if (setSelectedConnection) {
+    if (setSelectedConnection && socketRef && socketRef.current) {
+      socketRef.current.emit(emitGetAllConnections);
+
       setSelectedConnection(undefined);
     }
   };

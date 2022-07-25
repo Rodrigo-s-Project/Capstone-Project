@@ -1,20 +1,42 @@
 .chat {
-    &_owner {
-        background-color: var(--gray-800);
-        color: var(--primary);
-        margin-left: auto;
-        width: fit-content;
-        margin-right: 20px;
-        padding: 10px 15px;
-        border-radius: 5px;
+  color: var(--primary);
+  width: fit-content;
+  padding: 10px 15px;
+  border-radius: 5px;
+  position: relative;
+  &_name {
+    font-size: .8rem;
+    font-weight: bold;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 7.5px solid transparent;
+    border-bottom: 7.5px solid transparent;
+    bottom: -8.2px;
+  }
+  &_owner {
+    background-color: var(--gray-800);
+    margin-left: auto;
+    margin-right: 20px;
+    &::after {
+      border-right: 12.5px solid transparent;
+      border-left: 12.5px solid var(--gray-800);
+      right: -18px;
+      transform: rotateZ(35deg);
     }
-    &_foreign {
-        background-color: var(--lavender-300);
-        color: var(--primary);
-        margin-right: auto;
-        width: fit-content;
-        margin-left: 20px;
-        padding: 10px 15px;
-        border-radius: 5px;
+  }
+  &_foreign {
+    background-color: var(--lavender-300);
+    margin-right: auto;
+    margin-left: 20px;
+    &::after {
+      border-right: 12.5px solid var(--lavender-300);
+      border-left: 12.5px solid transparent;
+      left: -18px;
+      transform: rotateZ(-35deg);
     }
+  }
 }
