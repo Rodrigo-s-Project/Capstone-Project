@@ -66,7 +66,18 @@ const Message = ({ message }: Props) => {
             : styles.chat_foreign
         }`}
       >
-        <div className={styles.chat_text}>{message.message.text}</div>
+        <div className={styles.chat_text}>
+          {message.message.mediaURL && (
+            <div className={styles.chat_img}>
+              <img
+                src={`${getImage.url(message.message.mediaURL)}`}
+                alt="Picture"
+              />
+            </div>
+          )}
+          <div></div>
+          {message.message.text}
+        </div>
         <div
           className={`${styles.chat_reading}`}
           style={

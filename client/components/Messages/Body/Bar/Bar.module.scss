@@ -39,3 +39,32 @@
     }
   }
 }
+.upload {
+  width: fit-content;
+  display: flex;
+  input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--gray-900);
+    cursor: pointer;
+  }
+}
+.preview {
+  margin-left: auto;
+  display: flex;
+  margin-right: 10px;
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    background-color: var(--gray-600);
+  }
+}
