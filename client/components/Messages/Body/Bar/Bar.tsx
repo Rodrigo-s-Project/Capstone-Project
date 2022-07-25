@@ -77,6 +77,17 @@ const Bar = () => {
     }
   };
 
+  const canSend = useCallback(
+    (mediaURL: string | undefined = undefined): boolean => {
+      return (
+        (text && text.trim() != "") ||
+        (mediaURL && mediaURL.trim() != "") ||
+        (!isNaN(lat) && !isNaN(lng))
+      );
+    },
+    [lat, lng, text]
+  );
+
   const uploadImageFetch = useCallback(async (): Promise<string> => {
     try {
       if (!imgState || imgState == "" || !canSend()) return "";
@@ -115,15 +126,7 @@ const Bar = () => {
       }
       return "";
     }
-  }, [imgState, setArrayMsgs, text, lat, lng]);
-
-  const canSend = (mediaURL: string | undefined = undefined): boolean => {
-    return (
-      (text && text.trim() != "") ||
-      (mediaURL && mediaURL.trim() != "") ||
-      (!isNaN(lat) && !isNaN(lng))
-    );
-  };
+  }, [imgState, setArrayMsgs, canSend]);
 
   const sendMessage = async () => {
     // Check for files

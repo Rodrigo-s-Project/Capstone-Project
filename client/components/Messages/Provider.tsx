@@ -167,7 +167,7 @@ const ProviderChat = ({ children }: Props) => {
           ...prev
         ]);
     });
-  }, [ticketRef.current, selectedCompany, selectedTeam, router]);
+  }, [selectedCompany, selectedTeam, router, setArrayMsgs]);
 
   return (
     <ChatContext.Provider
