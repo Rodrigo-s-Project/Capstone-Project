@@ -13,6 +13,52 @@ export const getTicketEndpoint = {
   method: "get"
 };
 
+export type BODY_CREATE_CONNECTION = {
+  name: string;
+  teamId: number;
+  companyId: number;
+};
+
+export const createConnection = {
+  url: `${process.env.API_URL}/chat/create-connection`,
+  method: "post"
+};
+
+export type BODY_EDIT_CONNECTION = {
+  name: string;
+  teamId: number;
+  companyId: number;
+  connectionId: number;
+};
+
+export const editConnection = {
+  url: `${process.env.API_URL}/chat/edit-connection`,
+  method: "put"
+};
+
+export type BODY_DELETE_CONNECTION = {
+  teamId: number;
+  companyId: number;
+  connectionId: number;
+};
+
+export const deleteConnection = {
+  url: `${process.env.API_URL}/chat/delete-connection`,
+  method: "put"
+};
+
+export type BODY_ADD_REMOVE_USER_CONNECTION = {
+  teamId: number;
+  companyId: number;
+  connectionId: number;
+  userId: number;
+};
+
+export const addRemoveUserConnection = {
+  url: `${process.env.API_URL}/chat/add-remove-user-connection`,
+  method: "put"
+};
+
 // Emits
 export const emitHandshake = {
   method: "handshake",

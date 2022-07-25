@@ -20,9 +20,12 @@ import {
 } from "../../../routes/chat.routes";
 
 const ArrayConnections = () => {
-  const { arrayConnections, setSelectedConnection, socketRef } = useContext(
-    ChatContext
-  );
+  const {
+    arrayConnections,
+    setSelectedConnection,
+    socketRef,
+    setModalCreateConnection
+  } = useContext(ChatContext);
 
   const { selectedCompany } = useContext(GlobalContext);
 
@@ -36,6 +39,12 @@ const ArrayConnections = () => {
     }
   };
 
+  const addConnection = () => {
+    if (setModalCreateConnection) {
+      setModalCreateConnection(true);
+    }
+  };
+
   return (
     <div className={styles.connections}>
       <div className={styles.connections_title}>
@@ -43,7 +52,11 @@ const ArrayConnections = () => {
         {selectedCompany &&
           (selectedCompany.User_Company.typeUser == "Admin" ||
             selectedCompany.User_Company.typeUser == "Employee") && (
-            <div title="Add a group" className={styles.connections_plus}>
+            <div
+              onClick={addConnection}
+              title="Add a group"
+              className={styles.connections_plus}
+            >
               <PlusIcon />
             </div>
           )}
@@ -75,10 +88,13 @@ const ArrayConnections = () => {
 };
 
 const TopAside = () => {
-  const { selectedConnection, setSelectedConnection, socketRef } = useContext(
-    ChatContext
-  );
-  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
+  const {
+    selectedConnection,
+    setSelectedConnection,
+    socketRef,
+    setModalEditConnection
+  } = useContext(ChatContext);
+  const { selectedCompany } = useContext(GlobalContext);
 
   const returnToGroups = () => {
     if (setSelectedConnection && socketRef && socketRef.current) {
@@ -89,15 +105,8 @@ const TopAside = () => {
   };
 
   const editConnection = () => {
-    if (setArrayMsgs) {
-      // TODO: add editConnection
-      setArrayMsgs(prev => [
-        {
-          type: "info",
-          text: "Feature not available..."
-        },
-        ...prev
-      ]);
+    if (setModalEditConnection) {
+      setModalEditConnection(true);
     }
   };
 
@@ -119,7 +128,8 @@ const TopAside = () => {
           </div>
           {selectedCompany &&
             (selectedCompany.User_Company.typeUser == "Admin" ||
-              selectedCompany.User_Company.typeUser == "Employee") && (
+              selectedCompany.User_Company.typeUser == "Employee") &&
+            selectedConnection.connection.name != "Main chat" && (
               <div
                 onClick={editConnection}
                 title="Edit chat"

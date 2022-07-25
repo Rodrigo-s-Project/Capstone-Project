@@ -37,6 +37,8 @@ import AddBucketModal from "../components/Drive/Modals/AddBucket/AddBucket";
 import EditBucketModal from "../components/Drive/Modals/EditBucket/EditBucket";
 import ReadersModal from "../components/Reading/Modals/Readers/ReadersModal";
 import AddUsersModal from "../components/Drive/Modals/AddUsers/AddUsers";
+import CreateConnectionModal from "../components/Messages/Modals/CreateConnection/CreateConnection";
+import EditConnectionModal from "../components/Messages/Modals/EditConnection/EditConnection";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -280,7 +282,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <AddUsersModal />
                     <EditSectionModal />
                     <EditUsernameProfileModal />
+                    <EditConnectionModal />
                     <EditPasswordProfileModal />
+                    <CreateConnectionModal />
                     <StripeModal />
                     <UploadImageModal
                       callback={data => {

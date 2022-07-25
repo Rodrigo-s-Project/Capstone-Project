@@ -50,6 +50,13 @@ interface ChatApp {
 
   arrayMessages: Array<MESSAGE>;
   setArrayMessages: Dispatch<SetStateAction<Array<MESSAGE>>>;
+
+  modalCreateConnection: boolean;
+  setModalCreateConnection: Dispatch<SetStateAction<boolean>>;
+  refetchConnections: boolean;
+  setRefetchConnections: Dispatch<SetStateAction<boolean>>;
+  modalEditConnection: boolean;
+  setModalEditConnection: Dispatch<SetStateAction<boolean>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -59,6 +66,9 @@ const ProviderChat = ({ children }: Props) => {
 
   const [isLoadingConnections, setIsLoadingConnections] = useState(false);
   const [isLoadingBody, setIsLoadingBody] = useState(false);
+  const [modalCreateConnection, setModalCreateConnection] = useState(false);
+  const [modalEditConnection, setModalEditConnection] = useState(false);
+  const [refetchConnections, setRefetchConnections] = useState(false);
 
   const [selectedConnection, setSelectedConnection] = useState<
     CONNECTION | undefined
@@ -167,7 +177,7 @@ const ProviderChat = ({ children }: Props) => {
           ...prev
         ]);
     });
-  }, [selectedCompany, selectedTeam, router, setArrayMsgs]);
+  }, [selectedCompany, selectedTeam, router, setArrayMsgs, refetchConnections]);
 
   return (
     <ChatContext.Provider
@@ -185,7 +195,13 @@ const ProviderChat = ({ children }: Props) => {
         socketRef,
         ticketRef,
         arrayMessages,
-        setArrayMessages
+        setArrayMessages,
+        modalCreateConnection,
+        setModalCreateConnection,
+        refetchConnections,
+        setRefetchConnections,
+        modalEditConnection,
+        setModalEditConnection
       }}
     >
       {children}
