@@ -75,8 +75,22 @@ const Message = ({ message }: Props) => {
               />
             </div>
           )}
-          <div></div>
-          {message.message.text}
+
+          {message.message.lat && message.message.lng && (
+            <div
+              title="Open on Google Maps"
+              onClick={() => {
+                window.open(
+                  `http://maps.google.com/maps?z=15&t=m&q=loc:${message.message.lat}+${message.message.lng}`,
+                  "_blank"
+                );
+              }}
+              className={styles.maps}
+            >
+              <img src="/maps/Google_Maps_Logo_2020.png" alt="Google Maps" />
+            </div>
+          )}
+          <div>{message.message.text}</div>
         </div>
         <div
           className={`${styles.chat_reading}`}

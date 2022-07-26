@@ -110,6 +110,12 @@ export const getAllConnections = async (
     const allConnections: Array<any> = await current.team.getConnections();
     let connections: Array<any> = [];
     for (let i = 0; i < allConnections.length; i++) {
+      // Check if user on connection
+      const ifOnConnection: boolean = await allConnections[i].hasUser(
+        current.user
+      );
+      if (!ifOnConnection) continue;
+
       const refUsers: Array<any> = await allConnections[i].getUsers();
       let allUsers: Array<any> = [];
       for (let j = 0; j < refUsers.length; j++) {
@@ -152,7 +158,6 @@ export const getAllConnections = async (
           totalReadMsgs += 1;
         }
       }
-
 
       connections.push({
         users: allUsers,

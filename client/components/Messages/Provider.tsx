@@ -50,6 +50,15 @@ interface ChatApp {
 
   arrayMessages: Array<MESSAGE>;
   setArrayMessages: Dispatch<SetStateAction<Array<MESSAGE>>>;
+
+  modalCreateConnection: boolean;
+  setModalCreateConnection: Dispatch<SetStateAction<boolean>>;
+  refetchConnections: boolean;
+  setRefetchConnections: Dispatch<SetStateAction<boolean>>;
+  modalEditConnection: boolean;
+  setModalEditConnection: Dispatch<SetStateAction<boolean>>;
+  modalAddUsersConnection: boolean;
+  setModalAddUsersConnection: Dispatch<SetStateAction<boolean>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -59,6 +68,10 @@ const ProviderChat = ({ children }: Props) => {
 
   const [isLoadingConnections, setIsLoadingConnections] = useState(false);
   const [isLoadingBody, setIsLoadingBody] = useState(false);
+  const [modalCreateConnection, setModalCreateConnection] = useState(false);
+  const [modalEditConnection, setModalEditConnection] = useState(false);
+  const [modalAddUsersConnection, setModalAddUsersConnection] = useState(false);
+  const [refetchConnections, setRefetchConnections] = useState(false);
 
   const [selectedConnection, setSelectedConnection] = useState<
     CONNECTION | undefined
@@ -134,8 +147,9 @@ const ProviderChat = ({ children }: Props) => {
       !selectedTeam ||
       !ticketRef.current ||
       !router.pathname.includes("/messages")
-    )
+    ) {
       return;
+    }
 
     socketRef.current.emit(
       emitHandshake.method,
@@ -167,7 +181,14 @@ const ProviderChat = ({ children }: Props) => {
           ...prev
         ]);
     });
-  }, [ticketRef.current, selectedCompany, selectedTeam, router]);
+  }, [
+    selectedCompany,
+    selectedTeam,
+    router,
+    setArrayMsgs,
+    refetchConnections,
+    isLoadingConnections
+  ]);
 
   return (
     <ChatContext.Provider
@@ -185,7 +206,15 @@ const ProviderChat = ({ children }: Props) => {
         socketRef,
         ticketRef,
         arrayMessages,
-        setArrayMessages
+        setArrayMessages,
+        modalCreateConnection,
+        setModalCreateConnection,
+        refetchConnections,
+        setRefetchConnections,
+        modalEditConnection,
+        setModalEditConnection,
+        modalAddUsersConnection,
+        setModalAddUsersConnection
       }}
     >
       {children}
