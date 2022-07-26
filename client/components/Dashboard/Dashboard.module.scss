@@ -1,0 +1,89 @@
+.dashboard {
+  background-color: var(--gray-200);
+  width: 100%;
+  margin-top: calc(65px - 111px); // Contrast of main-content mt
+  position: relative;
+  height: calc(100vh - 65px);
+  z-index: 5;
+}
+
+.menu_toggle {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: calc(230px - 27px);
+  padding: 3px;
+  border-radius: 5px;
+  background-color: var(--gray-400);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility ease-out 200ms, opacity ease-out 200ms,
+    left ease-out 300ms, padding ease-out 300ms;
+  svg {
+    width: 17px;
+    height: 17px;
+    fill: var(--gray-800);
+    transition: transform ease-out 300ms, width ease-out 300ms,
+      height ease-out 300ms;
+  }
+  &_visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  &::before {
+    content: "Toggle menu";
+    position: absolute;
+    top: calc(50% - 11px);
+    width: 95px;
+    text-align: center;
+    left: 25px;
+    background-color: var(--gray-400);
+    border-radius: 5px; // Just a max
+    font-size: 0.9rem;
+    height: 22px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+  }
+  &_open {
+    visibility: visible;
+    opacity: 1;
+    left: 0;
+    padding: 5px;
+    background-color: var(--gray-200);
+    svg {
+      transform: rotateY(180deg);
+      width: 20px;
+      height: 20px;
+    }
+    &::before {
+      left: 35px;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-500);
+      visibility: visible;
+      opacity: 1;
+      svg {
+        fill: var(--gray-900);
+      }
+      &::before {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+  @media screen and (min-width: 1520px) {
+    visibility: hidden;
+    opacity: 0;
+  }
+  @media screen and (max-width: 1000px) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}

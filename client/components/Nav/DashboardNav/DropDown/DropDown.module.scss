@@ -1,0 +1,40 @@
+.drop {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-20px);
+  position: absolute;
+  top: 35px;
+  right: 15px;
+  border: 1px solid var(--gray-300);
+  background-color: var(--primary);
+  z-index: 10;
+  border-radius: 5px;
+  transition: visibility ease-out 200ms, opacity ease-out 200ms,
+    transform ease-out 200ms;
+  &_open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  &_link {
+    white-space: nowrap;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-300);
+    div {
+      svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+    &:last-child {
+      border: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--gray-300);
+      }
+    }
+  }
+}

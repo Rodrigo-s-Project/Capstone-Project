@@ -1,0 +1,35 @@
+.color {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  &_pill {
+    width: 30px;
+    height: 14px;
+    background-color: var(--lavender-200);
+    border-radius: 100px; // Just a max
+    position: relative;
+    &_circle {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background-color: var(--white);
+      position: absolute;
+      top: calc(50% - 5.5px);
+      transition: left ease-out 300ms;
+    }
+  }
+  &_text {
+    color: var(--lavender-100);
+    font-size: 0.8rem;
+    width: 70px;
+    text-align: center;
+  }
+}
+.dark {
+  left: calc(100% - 12.5px);
+}
+.light {
+  left: 1.5px;
+}

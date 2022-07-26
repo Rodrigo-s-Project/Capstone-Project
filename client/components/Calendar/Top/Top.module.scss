@@ -1,0 +1,100 @@
+.calendar_container_top {
+  height: 60px;
+  padding: 15px 0;
+  background-color: var(--primary);
+  button[extra-css="btn-today-calendar"],
+  button[extra-css="btn-month-calendar"],
+  button[extra-css="btn-week-calendar"],
+  button[extra-css="btn-day-calendar"],
+  button[extra-css="btn-arrow-left-calendar"],
+  button[extra-css="btn-arrow-right-calendar"] {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+  }
+  display: flex;
+  justify-content: space-between;
+  &_left {
+    display: flex;
+    height: 100%;
+    gap: 20px;
+    &_arrows {
+      display: flex;
+      height: 100%;
+      width: 70px;
+      button[extra-css="btn-arrow-left-calendar"],
+      button[extra-css="btn-arrow-right-calendar"] {
+        width: 50%;
+        padding: 0;
+        svg {
+          width: 15px;
+          height: 15px;
+          fill: var(--white);
+        }
+      }
+      button[extra-css="btn-arrow-left-calendar"] {
+        border-radius: 5px 0 0 5px;
+      }
+      button[extra-css="btn-arrow-right-calendar"] {
+        border-radius: 0 5px 5px 0;
+      }
+    }
+  }
+  &_center {
+    display: block;
+    height: 100%;
+    width: 220px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 1.3rem;
+  }
+  &_right {
+    display: flex;
+    height: 100%;
+    gap: 20px;
+  }
+}
+@media screen and (max-width: 760px) {
+  .calendar_container_top {
+    height: 120px;
+    flex-direction: column;
+    &_left,
+    &_right {
+      justify-content: space-between;
+      button[extra-css="btn-month-calendar"],
+      button[extra-css="btn-week-calendar"],
+      button[extra-css="btn-day-calendar"] {
+        width: 30%;
+      }
+    }
+    &_center {
+      width: 100%;
+    }
+  }
+}
+@media screen and (max-width: 360px) {
+  .calendar_container_top {
+    height: 210px;
+    gap: 5px;
+    &_center,
+    &_left {
+      height: 30px;
+    }
+    &_right {
+      flex-direction: column;
+      height: 110px;
+      gap: 10px;
+      button[extra-css="btn-month-calendar"],
+      button[extra-css="btn-week-calendar"],
+      button[extra-css="btn-day-calendar"] {
+        width: 100%;
+      }
+    }
+  }
+}

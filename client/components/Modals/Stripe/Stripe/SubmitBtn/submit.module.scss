@@ -1,0 +1,26 @@
+.btn {
+  font-size: 1.125rem;
+  width: 100%;
+  height: 50px;
+  margin-top: 30px;
+  svg {
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    left: 40px;
+  }
+}
+@media screen and (max-width: 415px) {
+  .btn {
+    svg {
+      left: 20px;
+    }
+  } 
+}
+@media screen and (max-width: 330px) {
+  .btn {
+    svg {
+      left: 15px;
+    }
+  } 
+}

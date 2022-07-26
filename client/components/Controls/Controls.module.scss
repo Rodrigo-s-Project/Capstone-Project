@@ -1,0 +1,293 @@
+.control {
+  height: 100%;
+  button[extra-css="btn-delete-creation"] {
+    width: 100%;
+    max-width: 200px;
+  }
+  &_top {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    h1 {
+      font-size: 2.5rem;
+      color: var(--lavender-200);
+    }
+    &_img {
+      background-color: var(--gray-500);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+
+      &_container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        z-index: 1;
+      }
+
+      &_edit {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility ease-out 300ms, opacity ease-out 300ms;
+      }
+      svg {
+        width: 50%;
+        height: 50%;
+        fill: var(--gray-100);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          .control_top_img_edit {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+  &_container {
+    margin-top: 26px;
+    background-color: var(--primary);
+    border-radius: 10px;
+    width: 100%;
+    padding: 15px 25px;
+    height: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 40px;
+
+    &_users {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      &_row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 7.5px;
+        width: fit-content;
+        &_img {
+          width: 30px;
+          height: 30px;
+          background-color: var(--gray-500);
+          border-radius: 50%;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            object-fit: cover;
+          }
+          &_svg {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            svg {
+              width: 50%;
+              height: 50%;
+              fill: var(--gray-100);
+            }
+          }
+        }
+        &_name {
+          width: 180px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          @media screen and (max-width: 310px) {
+            width: 145px;
+          }
+        }
+        &_trash {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          position: relative;
+          svg {
+            width: 17px;
+            height: 17px;
+            fill: var(--lavender-300);
+          }
+          &::before {
+            content: "Kick user";
+            position: absolute;
+            width: 80px;
+            height: 22px;
+            background-color: var(--gray-300);
+            padding: 0 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            top: -27.5px;
+            border-radius: 100px; // Just a max
+            left: calc(-40px + 17.5px / 2 - 10px);
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility ease-out 300ms, opacity ease-out 300ms;
+          }
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              &::before {
+                visibility: visible;
+                opacity: 1;
+              }
+              svg {
+                fill: var(--lavender-400);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &_title {
+      font-size: 1.7rem;
+      color: var(--lavender-200);
+      margin-top: 10px;
+      &:first-child {
+        margin: 0;
+      }
+    }
+    &_subtitle {
+      font-size: 1.1rem;
+      color: var(--gray-800);
+      margin-top: -10px;
+    }
+    &_row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      .control_container_row {
+        flex-wrap: nowrap;
+      }
+      &_bold {
+        color: var(--lavender-300);
+      }
+      &_data {
+        color: var(--gray-900);
+      }
+      &_edit,
+      &_copy {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        svg {
+          width: 17.5px;
+          height: 17.5px;
+        }
+        &::before {
+          position: absolute;
+          width: 80px;
+          height: 22px;
+          background-color: var(--gray-300);
+          padding: 0 10px;
+          font-size: 0.9rem;
+          text-align: center;
+          top: -27.5px;
+          border-radius: 100px; // Just a max
+          left: calc(-40px + 17.5px / 2 - 10px);
+          visibility: hidden;
+          opacity: 0;
+          transition: visibility ease-out 300ms, opacity ease-out 300ms;
+        }
+      }
+      &_edit {
+        svg {
+          fill: var(--lavender-300);
+        }
+        &::before {
+          content: "Edit section";
+        }
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            &::before {
+              visibility: visible;
+              opacity: 1;
+            }
+            svg {
+              fill: var(--lavender-400);
+            }
+          }
+        }
+      }
+      &_copy {
+        svg {
+          fill: var(--gray-600);
+        }
+        &::before {
+          content: "Copy code";
+        }
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            &::before {
+              visibility: visible;
+              opacity: 1;
+            }
+            svg {
+              fill: var(--gray-500);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.danger {
+  color: var(--red-200);
+}
+@media screen and (max-width: 1000px) {
+  .control_container {
+    height: calc(100vh - 200px);
+  }
+}
+@media screen and (max-width: 589px) {
+  .control {
+    &_container {
+      height: calc(100vh - 250px);
+    }
+    &_top {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+}
+@media screen and (max-width: 300px) {
+  .control {
+    button[extra-css="btn-delete-creation"] {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+}

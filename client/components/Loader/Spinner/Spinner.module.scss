@@ -1,0 +1,33 @@
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    width: 100%;
+    height: 100%;
+    animation: anima-spinner 1000ms linear infinite;
+  }
+}
+
+.lavender-200 svg {
+  fill: var(--lavender-200);
+}
+
+.lavender-300 {
+  fill: var(--lavender-300);
+}
+.primary {
+  fill: var(--primary);
+}
+.dark {
+  fill: var(--gray-900);
+}
+
+@keyframes anima-spinner {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}

@@ -1,0 +1,27 @@
+.settings {
+  height: 100%;
+  h1 {
+    font-size: 2.5rem;
+    color: var(--lavender-200);
+  }
+  &_container {
+    margin-top: 26px;
+    background-color: var(--primary);
+    border-radius: 10px;
+    width: 100%;
+    padding: 15px 25px;
+    height: calc(100% - 80px);
+  }
+}
+@media screen and (max-width: 1000px) {
+  .settings_container {
+    height: calc(100vh - 200px);
+  }
+}
+@media screen and (max-width: 589px) {
+  .settings {
+    h1 {
+      text-align: center;
+    }
+  }
+}

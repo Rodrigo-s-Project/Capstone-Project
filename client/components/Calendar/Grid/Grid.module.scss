@@ -1,0 +1,30 @@
+.grid {
+  display: grid;
+  height: calc(100% - 60px);
+  overflow-y: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 0.5em;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .grid {
+    height: calc(100% - 120px);
+  }
+}
+@media screen and (max-width: 360px) {
+  .grid {
+    height: calc(100% - 210px);
+  }
+}
+.loader {
+  width: 100%;
+  height: 100%;
+  margin-top: 50px;
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}

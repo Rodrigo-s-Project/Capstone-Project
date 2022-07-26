@@ -1,20 +1,16 @@
-.landing {
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    place-content: center;
-    color: var(--gray-800);
-    white-space: nowrap;
-    text-align: center;
+.section {
+  padding: 0 100px;
 }
 
-.landing a {
-    display: grid;
-    place-content: center;
+// Walls
+@media screen and (max-width: 800px) {
+  .section {
+    padding: 0 40px;
+  }
 }
 
-.landing span {
-    font-weight: bold;
-    color: var(--lavender-100);
-    font-size: 2rem;
+@media screen and (max-width: 360px) {
+  .section {
+    padding: 0 15px;
+  }
 }

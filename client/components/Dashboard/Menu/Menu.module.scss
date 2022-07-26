@@ -1,0 +1,151 @@
+.menu {
+  background-color: var(--primary);
+  width: 230px;
+  height: calc(100vh - 65px);
+  position: fixed;
+  top: 65px;
+  left: 0;
+  z-index: 90;
+  padding: 30px;
+  transition: left ease-out 300ms, padding ease-out 300ms;
+  overflow-y: auto;
+
+  &_nav {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+    height: 180px; // Computed height always the same
+    position: absolute;
+    top: 0;
+    left: 10px;
+    right: 10px;
+    border: 1px solid var(--gray-300);
+    padding-top: 15px;
+    border-radius: 5px;
+    &_title {
+      text-align: center;
+      font-size: 1.2rem;
+    }
+  }
+  &_links {
+    transition: margin-top ease-out 300ms;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 25px;
+    margin-top: -10px;
+    &_link {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      border-radius: 100px;
+      cursor: pointer;
+      &_svg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          fill: var(--gray-800);
+          width: 14px;
+          height: 14px;
+        }
+        &.active {
+          svg {
+            fill: var(--lavender-200);
+          }
+        }
+      }
+      &_text {
+        color: var(--gray-800);
+        &.active {
+          color: var(--lavender-200);
+        }
+      }
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background-color: var(--gray-300);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1520px) {
+  .menu {
+    left: calc(50% - 760px);
+  }
+}
+
+@media screen and (max-width: 1520px) and (min-width: 1000px) {
+  .menu_toggled {
+    left: -230px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .menu {
+    left: -230px;
+    padding: 10px;
+    &_links {
+      margin-top: 190px;
+    }
+    &_nav {
+      visibility: visible;
+      opacity: 1;
+    }
+    &_open {
+      left: 0;
+    }
+  }
+}
+
+// Nav
+.nav_controls {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  &_cmd {
+    width: 100%;
+    transform: scale(0.9);
+  }
+  &_info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    &_user {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      background-color: var(--gray-200);
+    }
+  }
+}
+.selected_company {
+  background-color: var(--gray-300);
+  color: var(--gray-900);
+  border-radius: 100px; // Just a max
+  margin: -10px 0;
+  cursor: pointer;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 15px;
+
+  &_active {
+    background-color: var(--lavender-400);
+    color: var(--white);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-500);
+    }
+  }
+}

@@ -3,8 +3,8 @@ import Document, {
   Head,
   Html,
   Main,
-  NextScript,
-} from 'next/document';
+  NextScript
+} from "next/document";
 
 class PortfolioDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -16,7 +16,7 @@ class PortfolioDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel='icon' href='/favicon.ico' />
+          <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />

@@ -1,0 +1,150 @@
+.day {
+  position: relative;
+  width: calc(100% / 7);
+  border: 0.5px solid var(--gray-500);
+  overflow: hidden;
+  &::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--lavender-300);
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--gray-500),
+      transparent
+    );
+    opacity: 0;
+    visibility: hidden;
+    z-index: 100;
+    animation-timing-function: linear;
+    animation-name: anima-loader-day;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+  }
+  &_number {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    &::selection {
+      background-color: transparent;
+      color: inherit;
+    }
+  }
+  &_today {
+    .day_number {
+      color: var(--white);
+      background-color: var(--lavender-400);
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      top: 3.5px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &_anotherMonth {
+    .day_number {
+      color: var(--gray-600);
+    }
+  }
+  &_day {
+    width: 100%;
+  }
+  &_plus {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    cursor: default;
+    border-radius: 50%;
+    background-color: var(--gray-500);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility ease-out 300ms, opacity ease-out 300ms;
+    &::before {
+      content: "Add task";
+      position: absolute;
+      top: calc(50% - 8.5px);
+      width: 70px;
+      text-align: center;
+      left: 25px;
+      background-color: var(--gray-400);
+      border-radius: 100px; // Just a max
+      font-size: 0.8rem;
+      height: 18px;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility ease-out 300ms, opacity ease-out 300ms;
+    }
+    svg {
+      width: 10px;
+      height: 10px;
+      fill: var(--lavender-400);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--gray-700);
+        svg {
+          fill: var(--white);
+        }
+        &::before {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      .day_plus {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+}
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 27.5px;
+  padding-bottom: 10px;
+}
+.loader {
+  &::after {
+    opacity: 0.5;
+    visibility: visible;
+  }
+}
+
+@keyframes anima-loader-day {
+  0% {
+    left: -100%;
+    right: 100%;
+  }
+  100% {
+    left: 100%;
+    right: -100%;
+  }
+}

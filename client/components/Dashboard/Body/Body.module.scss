@@ -1,0 +1,43 @@
+.dashboard {
+  padding: 50px 30px;
+  transition: left ease-out 300ms, padding ease-out 300ms, width ease-out 300ms, max-width ease-out 300ms;
+  position: fixed;
+  z-index: 90;
+  left: 230px;
+  top: 65px;
+  height: calc(100vh - 65px);
+  width: calc(100% - 230px);
+  max-width: calc(1520px - 230px);
+}
+
+@media screen and (min-width: 1520px) {
+  .dashboard {
+    left: calc(50% - 760px + 230px);
+  }
+}
+
+@media screen and (max-width: 1520px) and (min-width: 1000px) {
+  .menu_toggled {
+    max-width: 10000vw; // Just a max
+    left: 0;
+    width: 100%;
+    padding: 30px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .dashboard {
+    padding: 30px;
+    width: calc(100%);
+    left: 0;
+    &_open {
+      left: 230px;
+    }
+  }
+}
+
+@media screen and (max-width: 589px) {
+  .dashboard {
+    padding: 30px 10px;
+  }
+}

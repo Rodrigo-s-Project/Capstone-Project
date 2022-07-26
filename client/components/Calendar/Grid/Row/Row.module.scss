@@ -1,0 +1,66 @@
+.row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+
+  // To prevent overflow on css grid 1fr
+  // min-height: 0px;
+  min-width: 0px;
+
+  &_header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    &_div {
+      width: calc(100% / 7);
+      border: 0.5px solid var(--gray-500);
+      padding: 5px;
+      text-align: right;
+      height: 30px;
+      display: flex;
+      font-size: 0.9rem;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      background-color: var(--gray-200);
+      &_all {
+        width: 100%;
+      }
+    }
+    &_svg {
+      position: absolute;
+      top: 0;
+      left: 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform ease-out 300ms;
+      svg {
+        width: 15px;
+        height: 20px;
+        fill: var(--gray-600);
+      }
+      &_rotate {
+        transform: rotateX(180deg);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          svg {
+            fill: var(--gray-800);
+          }
+        }
+      }
+    }
+  }
+}
+.today {
+  background-color: var(--lavender-400);
+}

@@ -1,0 +1,64 @@
+.msgs {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 90;
+  gap: 10px;
+}
+.msg {
+  width: 325px;
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  position: relative;
+  padding: 5px 10px;
+  border-radius: 5px;
+  button {
+    background-color: transparent;
+  }
+  &_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: calc(100% - 15px);
+  }
+  &_text {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+  @media screen and (max-width: 392px) {
+    width: calc(100vw - 60px);
+  }
+}
+.success {
+  background-color: var(--green-100);
+  color: var(--green-200);
+  svg {
+    fill: var(--green-200);
+  }
+}
+.danger {
+  background-color: var(--red-100);
+  color: var(--red-300);
+  svg {
+    fill: var(--red-300);
+  }
+}
+.info {
+  background-color: var(--lavender-200);
+  color: var(--white);
+  svg {
+    fill: var(--white);
+  }
+}

@@ -1,0 +1,58 @@
+.btn {
+  padding: 12px 24px;
+  text-align: center;
+  height: 45px;
+  display: inline-block;
+  cursor: pointer;
+
+  div[extra-css="spinner-btn"] {
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+  }
+}
+.lavender-200 {
+  background-color: var(--lavender-200);
+  color: var(--white);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--lavender-300);
+    }
+  }
+}
+.lavender-300 {
+  background-color: var(--lavender-300);
+  color: var(--white);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--lavender-400);
+    }
+  }
+}
+.gray {
+  background-color: var(--gray-400);
+  color: var(--black);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--gray-500);
+    }
+  }
+}
+.danger {
+  background-color: var(--red-200);
+  color: #fff;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--red-300);
+    }
+  }
+}
+.complete_rounded {
+  border-radius: 1000px; // Just a max value
+}
+.round_5 {
+  border-radius: 5px;
+}
+.disabled {
+  opacity: 0.8;
+}
