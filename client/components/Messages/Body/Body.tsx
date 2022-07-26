@@ -1,5 +1,5 @@
 import styles from "./Body.module.scss";
-import { useContext, useEffect, Fragment, useRef } from "react";
+import { useContext, useEffect, Fragment, useRef, useState } from "react";
 import { ChatContext } from "../Provider";
 import { GlobalContext } from "../../../pages/_app";
 
@@ -29,6 +29,7 @@ const BodyChats = () => {
   const { setArrayMsgs } = useContext(GlobalContext);
 
   const msgsContainer = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (
@@ -39,6 +40,7 @@ const BodyChats = () => {
       selectedConnection &&
       setArrayMessages
     ) {
+      setIsLoading(true);
       socketRef.current.emit(
         emitGetMessages.method,
         ...emitGetMessages.body(selectedConnection.connection.id)
@@ -47,6 +49,7 @@ const BodyChats = () => {
         ontGetMessages,
         (dataOntGetMessages: DATA_GET_MESSAGES) => {
           setArrayMessages(dataOntGetMessages.messages);
+          setIsLoading(false);
         }
       );
     }
@@ -66,18 +69,6 @@ const BodyChats = () => {
     lowerScroll();
   }, [arrayMessages]);
 
-  const reloadMsgs = () => {
-    if (setArrayMsgs) {
-      setArrayMsgs(prev => [
-        {
-          text: "Feature not available...",
-          type: "info"
-        },
-        ...prev
-      ]);
-    }
-  };
-
   return (
     <div className={styles.body}>
       {!selectedConnection && (
@@ -89,17 +80,17 @@ const BodyChats = () => {
       {selectedConnection && (
         <div className={styles.body_chat}>
           <div className={styles.body_chat_top}>
-            <div onClick={reloadMsgs} title="Reload messages">
+            <div>
               {selectedConnection.connection.name}
             </div>
           </div>
           <div ref={msgsContainer} className={styles.body_chat_messages}>
-            {arrayMessages && arrayMessages.length == 0 && (
+            {isLoading && (
               <div className={styles.loader}>
                 <Loader color="lavender-300" />
               </div>
             )}
-            {arrayMessages &&
+            {!isLoading && arrayMessages &&
               arrayMessages.map((messageRef: MESSAGE, index: number) => {
                 return (
                   <Fragment key={index}>

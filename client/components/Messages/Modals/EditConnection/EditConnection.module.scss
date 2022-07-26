@@ -1,0 +1,19 @@
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  button[extra-css="btn-edit-group"] {
+    width: 100%;
+  }
+}
+.delete {
+  margin: 20px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -9,10 +9,18 @@ import CameraIcon from "../../../Svgs/Camera";
 import TrashAltIcon from "../../../Svgs/TrashAlt";
 
 import { getImage } from "../../../../routes/cdn.routes";
+import axios from "axios";
+import {
+  addRemoveUserConnection,
+  BODY_ADD_REMOVE_USER_CONNECTION
+} from "../../../../routes/chat.routes";
+import { RESPONSE } from "../../../.././routes/index.routes";
 
 const UserChat = ({ userRef }: { userRef: USER_CONNECTION }) => {
-  const { selectedCompany, setArrayMsgs } = useContext(GlobalContext);
-  const {} = useContext(ChatContext);
+  const { selectedCompany, setArrayMsgs, selectedTeam } = useContext(
+    GlobalContext
+  );
+  const { selectedConnection, setSelectedConnection } = useContext(ChatContext);
 
   const canEdit = (): boolean => {
     if (!selectedCompany) return false;
@@ -24,15 +32,60 @@ const UserChat = ({ userRef }: { userRef: USER_CONNECTION }) => {
   };
 
   const kickUser = async () => {
-    if (setArrayMsgs) {
-      // TODO: add kickUser chat
-      setArrayMsgs(prev => [
-        {
-          type: "info",
-          text: "Feature not available..."
-        },
-        ...prev
-      ]);
+    try {
+      if (!selectedCompany || !selectedTeam || !selectedConnection) return;
+
+      const body: BODY_ADD_REMOVE_USER_CONNECTION = {
+        teamId: selectedTeam.id,
+        companyId: selectedCompany.id,
+        connectionId: selectedConnection.connection.id,
+        userId: userRef.user.id
+      };
+
+      const response = await axios.put(addRemoveUserConnection.url, body, {
+        withCredentials: true
+      });
+
+      const dataResponse: RESPONSE = response.data;
+
+      if (dataResponse.readMsg && setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: dataResponse.typeMsg,
+            text: dataResponse.message
+          },
+          ...prev
+        ]);
+      }
+
+      // Clean
+      // Refetch
+      if (setSelectedConnection) {
+        let users: Array<USER_CONNECTION> = [];
+
+        for (let i = 0; i < selectedConnection.users.length; i++) {
+          if (selectedConnection.users[i].user.id != userRef.user.id) {
+            users.push(selectedConnection.users[i]);
+          }
+        }
+
+        setSelectedConnection({
+          ...selectedConnection,
+          users
+        });
+      }
+    } catch (error) {
+      console.error(error);
+
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "danger",
+            text: "Server error!"
+          },
+          ...prev
+        ]);
+      }
     }
   };
 
