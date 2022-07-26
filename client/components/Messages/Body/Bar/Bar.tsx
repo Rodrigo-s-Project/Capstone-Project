@@ -14,10 +14,13 @@ import KeyboardIcon from "../../../Svgs/Keyboard";
 import TimesIcon from "../../../Svgs/Times";
 import FileImgIcon from "../../../Svgs/FileImg";
 import MapMarkerAltIcon from "../../../Svgs/MapMarkerAlt";
+import LoaderSpinner from "../../../Loader/Spinner/Spinner";
 
 const Bar = () => {
   const { socketRef, ticketRef, selectedConnection } = useContext(ChatContext);
-  const { setModalAskMapLocation, userAddress } = useContext(MapContext);
+  const { setModalAskMapLocation, userAddress, userLocation } = useContext(
+    MapContext
+  );
   const { setArrayMsgs } = useContext(GlobalContext);
 
   const [text, setText] = useState<any>("");
@@ -28,10 +31,32 @@ const Bar = () => {
   const [isLoading, setIsLoading] = useState<any>(false);
 
   useEffect(() => {
-    if (userAddress != "") {
-      setText(userAddress);
+    if (userAddress != "" && userLocation) {
+      // When this happens it needs to create a new special msg
+      setText(`This is my address: ${userAddress}`);
+      setLat(userLocation.lat);
+      setLng(userLocation.lng);
+      setImgStateUrl("");
+      setImgState("");
     }
-  }, [userAddress]);
+  }, [userAddress, userLocation]);
+
+  useEffect(() => {
+    if (text == "") {
+      setLat(undefined);
+      setLng(undefined);
+    }
+  }, [text]);
+
+  useEffect(() => {
+    // Restart
+    setText("");
+    setImgState("");
+    setImgStateUrl("");
+    setLat(undefined);
+    setLng(undefined);
+    setIsLoading(false);
+  }, [selectedConnection]);
 
   const handleChangeFile = (e: any) => {
     e.preventDefault();
@@ -88,13 +113,12 @@ const Bar = () => {
 
   const canSend = useCallback(
     (mediaURL: string | undefined = undefined): boolean => {
-      return (
-        (text && text.trim() != "") ||
-        (mediaURL && mediaURL.trim() != "") ||
-        (!isNaN(lat) && !isNaN(lng))
-      );
+      if (text && text.trim() != "") return true;
+      if (mediaURL && mediaURL.trim() != "") return true;
+
+      return false;
     },
-    [lat, lng, text]
+    [text]
   );
 
   const uploadImageFetch = useCallback(async (): Promise<string> => {
@@ -149,33 +173,36 @@ const Bar = () => {
     }
   };
 
-  const sendMsgSocket = (mediaURL: string | undefined = undefined) => {
-    if (
-      socketRef &&
-      socketRef.current &&
-      ticketRef &&
-      ticketRef.current &&
-      selectedConnection
-    ) {
-      if (canSend(mediaURL)) {
-        // At least one passes
-        socketRef.current.emit(
-          emitCreateMessage.method,
-          ...emitCreateMessage.body(
-            selectedConnection.connection.id,
-            text,
-            mediaURL,
-            lat,
-            lng
-          )
-        );
+  const sendMsgSocket = useCallback(
+    (mediaURL: string | undefined = undefined) => {
+      if (
+        socketRef &&
+        socketRef.current &&
+        ticketRef &&
+        ticketRef.current &&
+        selectedConnection
+      ) {
+        if (canSend(mediaURL)) {
+          // At least one passes
+          socketRef.current.emit(
+            emitCreateMessage.method,
+            ...emitCreateMessage.body(
+              selectedConnection.connection.id,
+              text,
+              mediaURL,
+              lat,
+              lng
+            )
+          );
 
-        setText("");
-        setLat(undefined);
-        setLng(undefined);
+          setText("");
+          setLat(undefined);
+          setLng(undefined);
+        }
       }
-    }
-  };
+    },
+    [lat, lng, text]
+  );
 
   return (
     <div className={styles.bar}>
@@ -194,53 +221,64 @@ const Bar = () => {
             setText(e.target.value);
           }}
         />
-        <div className={styles.preview}>
-          {imgStateUrl != "" && <img src={imgStateUrl} alt="Image uploaded" />}
-        </div>
-        <div
-          onClick={() => {
-            if (imgStateUrl != "") {
-              setImgState("");
-              setImgStateUrl("");
-            }
-          }}
-          className={styles.upload}
-        >
-          {imgStateUrl == "" ? (
-            <>
-              <input
-                onChange={handleChangeFile}
-                type="file"
-                name="file"
-                id="upload-image-input-chat"
-              />
-              <label htmlFor="upload-image-input-chat">
-                {imgStateUrl != "" ? <TimesIcon /> : <FileImgIcon />}
-              </label>
-            </>
-          ) : (
-            <TimesIcon />
-          )}
-        </div>
-        <div
-          onClick={() => {
-            if (setModalAskMapLocation) {
-              setModalAskMapLocation(true);
-            }
-          }}
-          className={styles.map}
-        >
-          <MapMarkerAltIcon />
-        </div>
-        <button
-          title="Send message"
-          style={{
-            cursor: canSend() ? "pointer" : "not-allowed"
-          }}
-          onClick={sendMessage}
-        >
-          {canSend() ? <PaperPlaneIcon /> : <KeyboardIcon />}
-        </button>
+        {isLoading && (
+          <div className={styles.loader}>
+            <LoaderSpinner color="lavender-300" />
+          </div>
+        )}
+        {!isLoading && (
+          <>
+            <div className={styles.preview}>
+              {imgStateUrl != "" && (
+                <img src={imgStateUrl} alt="Image uploaded" />
+              )}
+            </div>
+            <div
+              onClick={() => {
+                if (imgStateUrl != "") {
+                  setImgState("");
+                  setImgStateUrl("");
+                }
+              }}
+              className={styles.upload}
+            >
+              {imgStateUrl == "" ? (
+                <>
+                  <input
+                    onChange={handleChangeFile}
+                    type="file"
+                    name="file"
+                    id="upload-image-input-chat"
+                  />
+                  <label htmlFor="upload-image-input-chat">
+                    {imgStateUrl != "" ? <TimesIcon /> : <FileImgIcon />}
+                  </label>
+                </>
+              ) : (
+                <TimesIcon />
+              )}
+            </div>
+            <div
+              onClick={() => {
+                if (setModalAskMapLocation) {
+                  setModalAskMapLocation(true);
+                }
+              }}
+              className={styles.map}
+            >
+              <MapMarkerAltIcon />
+            </div>
+            <button
+              title="Send message"
+              style={{
+                cursor: canSend() ? "pointer" : "not-allowed"
+              }}
+              onClick={sendMessage}
+            >
+              {canSend() ? <PaperPlaneIcon /> : <KeyboardIcon />}
+            </button>
+          </>
+        )}
       </form>
     </div>
   );

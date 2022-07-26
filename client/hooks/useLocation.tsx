@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export type LocationCoordenates = {
   lat: number;
@@ -11,10 +11,11 @@ type Return = {
   reFetch: () => void;
   isLoading: boolean;
   getAddress: (lat: number, lng: number) => Promise<string>;
+  getLocation: () => void;
+  restart: () => void;
 };
 
 export const useLocation = () => {
-  const [conditional, setConditional] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState("");
   const timeOurRef = useRef<any>(null);
@@ -26,6 +27,14 @@ export const useLocation = () => {
   const getUrlForReverseGeoCoding = (lat: number, lng: number) => {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
     return url;
+  };
+
+  const restart = () => {
+    setLocation({
+      lat: 0,
+      lng: 0
+    });
+    setAddress("");
   };
 
   const getAddress = async (lat: number, lng: number): Promise<string> => {
@@ -47,10 +56,10 @@ export const useLocation = () => {
         timeOurRef.current = null;
       }
     } catch {}
-    setConditional(prev => !prev);
+    getLocation();
   };
 
-  useEffect(() => {
+  const getLocation = () => {
     try {
       setIsLoading(true);
       navigator.geolocation.getCurrentPosition(
@@ -93,14 +102,16 @@ export const useLocation = () => {
         reFetch();
       }, 1000);
     }
-  }, [conditional]);
+  };
 
   const returnData: Return = {
     location,
     address,
     reFetch,
     isLoading,
-    getAddress
+    getAddress,
+    getLocation,
+    restart
   };
   return returnData;
 };

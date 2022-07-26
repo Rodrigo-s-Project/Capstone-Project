@@ -1,12 +1,13 @@
 import styles from "./MapModal.module.scss";
 import TimesIcon from "../../Svgs/Times";
 import MapMarker from "../../Svgs/MapMarkerAlt";
-import { useContext, useState, useCallback, useRef } from "react";
+import { useContext, useState, useCallback, useRef, useEffect } from "react";
 import { MapContext } from "../../Modals/Map/Provider";
 import BtnSpinner from "../../Buttons/BtnClick/BtnClick";
 import { useLocation, LocationCoordenates } from "../../../hooks/useLocation";
 import Loader from "../../Loader/Spinner/Spinner";
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
+import { ChatContext } from "../../Messages/Provider";
 
 export default function ContactModal() {
   const {
@@ -15,12 +16,15 @@ export default function ContactModal() {
     setUserLocation,
     setUserAddress
   } = useContext(MapContext);
+  const { selectedConnection } = useContext(ChatContext);
 
   const {
     address,
     isLoading: isLoadingCoordenates,
     location,
-    getAddress
+    getAddress,
+    getLocation,
+    restart
   } = useLocation();
 
   // Phases
@@ -61,6 +65,21 @@ export default function ContactModal() {
     y: -(height + 10)
   });
 
+  useEffect(() => {
+    if (modalAskMapLocation) {
+      // Is on screen
+      getLocation(); // Call fetcher
+    } else {
+      restart(); // Delete prev data
+      if (setUserLocation)
+        setUserLocation({
+          lat: 0,
+          lng: 0
+        });
+      if (setUserAddress) setUserAddress("");
+    }
+  }, [modalAskMapLocation, selectedConnection]);
+
   return (
     <div
       className={`${styles.black} ${!modalAskMapLocation &&
@@ -76,6 +95,7 @@ export default function ContactModal() {
               }
             }}
             className={styles.btn_x}
+            title="Close"
           >
             <TimesIcon className={styles.x} />
           </button>

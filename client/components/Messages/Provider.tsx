@@ -147,8 +147,9 @@ const ProviderChat = ({ children }: Props) => {
       !selectedTeam ||
       !ticketRef.current ||
       !router.pathname.includes("/messages")
-    )
+    ) {
       return;
+    }
 
     socketRef.current.emit(
       emitHandshake.method,
@@ -180,7 +181,14 @@ const ProviderChat = ({ children }: Props) => {
           ...prev
         ]);
     });
-  }, [selectedCompany, selectedTeam, router, setArrayMsgs, refetchConnections]);
+  }, [
+    selectedCompany,
+    selectedTeam,
+    router,
+    setArrayMsgs,
+    refetchConnections,
+    isLoadingConnections
+  ]);
 
   return (
     <ChatContext.Provider

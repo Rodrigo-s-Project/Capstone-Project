@@ -45,7 +45,7 @@ const deleteFile = async (
     await fileRef.removeUsers();
 
     // Delete from GCP
-    const blobName: string = `${createHmac("sha256", "development")
+    const blobName: string = `${createHmac("sha256", "keys")
       .update(fileRef.id.toString())
       .digest("hex")}${fileRef.type}`;
 
