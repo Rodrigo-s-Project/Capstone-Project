@@ -20,6 +20,12 @@ const initializeConnection = (
         companyId: number,
         teamId: number
       ) => {
+        // This function receives the userId (ticket)
+        // The companyId
+        // And the teamId
+
+        // We need this data to know what data to send
+        // To the user
         const current = await getCurrUser(userId, companyId, teamId);
         if (!current) {
           socket.emit("reject", {});
@@ -56,6 +62,9 @@ export const manageSocketChat = async (socket: any, SOCKET_LIST: Object) => {
   try {
     // Initialize
     initializeConnection(socket, SOCKET_LIST, () => {
+      // This functions are only going to work
+      // If the connection was made
+
       // Get all connections
       getConnections(SOCKET_LIST, SOCKET_LIST[socket.id]);
 
@@ -65,6 +74,7 @@ export const manageSocketChat = async (socket: any, SOCKET_LIST: Object) => {
     });
 
     // Disconnect
+    // This will delete the socket from my hash map
     socket.on("disconnect", function() {
       delete SOCKET_LIST[socket.id];
     });

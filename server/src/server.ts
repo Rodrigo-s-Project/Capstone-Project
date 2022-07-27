@@ -53,8 +53,15 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 // Socket Io
 import { manageSocketChat } from "./sockets/chat/index";
 
+// Here I create my Hash Map
+// It is important to have it as "var"
+// Because I want it as a global variable
 var SOCKET_LIST: Object = {};
 
 io.on("connection", (socket: any) => {
+  // Every time a user connects
+  // This function gets a socket object
+  // The id of this socket is always unique
+  // So we call the function of manageSocketsChat()
   manageSocketChat(socket, SOCKET_LIST);
 });

@@ -15,6 +15,9 @@ export const getCurrUser = async (
     }
   | undefined
 > => {
+  // This function helps to get the user if we send
+  // the ticket
+
   try {
     if (isNaN(companyId) || isNaN(teamId)) return undefined;
 
@@ -70,6 +73,9 @@ export const getCurrConnection = async (
   teamId: number,
   connectionId: number
 ): Promise<any> => {
+  // This function helps to get
+  // The current connection (chat group) of a
+  // specific user
   try {
     if (isNaN(connectionId)) return undefined;
 
@@ -101,6 +107,13 @@ export const getAllConnections = async (
   companyId: number,
   teamId: number
 ): Promise<any> => {
+  // This function helps to get all the connections (groups)
+  // That the user is in
+  // This function adds properties to the regular
+  // model of the connection
+  // So on the frontend we don't need to call 
+  // For certain data of a spefici connection
+  // Every time
   try {
     const current = await getCurrUser(userId, companyId, teamId);
     if (!current) return undefined;
