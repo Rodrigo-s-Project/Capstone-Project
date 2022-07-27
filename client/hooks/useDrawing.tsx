@@ -21,7 +21,6 @@ export const useDrawing: PropsDrawingHook = (
     setIsDrawingFinished,
     isCanvasNeedToClear,
     setIsCanvasNeedToClear,
-    setMessagesColor,
     setMessagesText,
     startInterval,
     secondsDrawing,
@@ -79,9 +78,8 @@ export const useDrawing: PropsDrawingHook = (
   }, [rerender, isDrawingFinished, isCanvasNeedToClear, secondsDrawing]);
 
   const updateTime = (): void => {
-    if (setMessagesColor && setMessagesText) {
+    if (setMessagesText) {
       if (secondsDrawing && secondsDrawing >= MAX_TIME) {
-        setMessagesColor("#000");
         setMessagesText(`Limit reached`);
         finishMovement();
       } else if (secondsDrawing !== undefined && !isDrawingFinishedLocal) {
@@ -89,10 +87,8 @@ export const useDrawing: PropsDrawingHook = (
         time = parseInt(time);
         time = MAX_TIME - time;
         if (secondsDrawing === 0) {
-          setMessagesColor("#000");
           setMessagesText(`Draw something :)`);
         } else {
-          setMessagesColor("#000");
           setMessagesText(`Time remaining to draw: ${time}`);
         }
       }
