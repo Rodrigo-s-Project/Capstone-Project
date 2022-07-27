@@ -80,9 +80,7 @@ const BodyChats = () => {
       {selectedConnection && (
         <div className={styles.body_chat}>
           <div className={styles.body_chat_top}>
-            <div>
-              {selectedConnection.connection.name}
-            </div>
+            <div>{selectedConnection.connection.name}</div>
           </div>
           <div ref={msgsContainer} className={styles.body_chat_messages}>
             {isLoading && (
@@ -90,14 +88,22 @@ const BodyChats = () => {
                 <Loader color="lavender-300" />
               </div>
             )}
-            {!isLoading && arrayMessages &&
-              arrayMessages.map((messageRef: MESSAGE, index: number) => {
-                return (
-                  <Fragment key={index}>
-                    <Message message={messageRef} />
-                  </Fragment>
-                );
-              })}
+            {!isLoading &&
+              arrayMessages &&
+              arrayMessages
+                .sort(function(a, b) {
+                  return (
+                    new Date(a.message.createdAt).getTime() -
+                    new Date(b.message.createdAt).getTime()
+                  );
+                })
+                .map((messageRef: MESSAGE, index: number) => {
+                  return (
+                    <Fragment key={index}>
+                      <Message message={messageRef} />
+                    </Fragment>
+                  );
+                })}
           </div>
           <Bar />
         </div>

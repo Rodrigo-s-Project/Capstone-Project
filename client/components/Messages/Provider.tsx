@@ -11,6 +11,7 @@ import {
 import { CONNECTION, USER_CONNECTION, MESSAGE } from "./messages.types";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useInterval } from "../../hooks/useInterval";
 import {
   emitHandshake,
   getTicketEndpoint,
@@ -55,10 +56,36 @@ interface ChatApp {
   setModalCreateConnection: Dispatch<SetStateAction<boolean>>;
   refetchConnections: boolean;
   setRefetchConnections: Dispatch<SetStateAction<boolean>>;
+  modalCanvas: boolean;
+  setModalCanvas: Dispatch<SetStateAction<boolean>>;
   modalEditConnection: boolean;
   setModalEditConnection: Dispatch<SetStateAction<boolean>>;
   modalAddUsersConnection: boolean;
   setModalAddUsersConnection: Dispatch<SetStateAction<boolean>>;
+
+  restartCoordenates: boolean;
+  setRestartCoordenates: Dispatch<SetStateAction<boolean>>;
+  isDrawingFinished: boolean;
+  setIsDrawingFinished: Dispatch<SetStateAction<boolean>>;
+  isCanvasNeedToClear: boolean;
+  setIsCanvasNeedToClear: Dispatch<SetStateAction<boolean>>;
+  messagesColor: string;
+  setMessagesColor: Dispatch<SetStateAction<string>>;
+  messagesText: string;
+  setMessagesText: Dispatch<SetStateAction<string>>;
+  breakInterval: () => void;
+  startInterval: () => void;
+  pauseInterval: () => void;
+  continueInterval: () => void;
+  isCanvasAnimations: boolean;
+  secondsDrawing: number;
+  setSecondsDrawing: Dispatch<SetStateAction<number>>;
+  setIsCanvasAnimations: Dispatch<SetStateAction<boolean>>;
+
+  imgState: string;
+  setImgState: Dispatch<SetStateAction<string>>;
+  imgStateUrl: string;
+  setImgStateUrl: Dispatch<SetStateAction<string>>;
 }
 
 const ProviderChat = ({ children }: Props) => {
@@ -71,7 +98,11 @@ const ProviderChat = ({ children }: Props) => {
   const [modalCreateConnection, setModalCreateConnection] = useState(false);
   const [modalEditConnection, setModalEditConnection] = useState(false);
   const [modalAddUsersConnection, setModalAddUsersConnection] = useState(false);
+  const [modalCanvas, setModalCanvas] = useState(false);
   const [refetchConnections, setRefetchConnections] = useState(false);
+
+  const [imgState, setImgState] = useState<any>("");
+  const [imgStateUrl, setImgStateUrl] = useState<any>("");
 
   const [selectedConnection, setSelectedConnection] = useState<
     CONNECTION | undefined
@@ -80,6 +111,31 @@ const ProviderChat = ({ children }: Props) => {
   const [arrayConnections, setArrayConnections] = useState<Array<CONNECTION>>(
     []
   );
+
+  // Draw
+  const [isDrawingFinished, setIsDrawingFinished] = useState<boolean>(false);
+
+  // To clear canvas
+  const [isCanvasNeedToClear, setIsCanvasNeedToClear] = useState<boolean>(
+    false
+  );
+  // Canvas Messages
+  const [messagesColor, setMessagesColor] = useState<string>("#000");
+  const [messagesText, setMessagesText] = useState<string>("");
+
+  // Time system
+  const [secondsDrawing, setSecondsDrawing] = useState<number>(0);
+  const [
+    breakInterval,
+    startInterval,
+    pauseInterval,
+    continueInterval
+  ] = useInterval(setSecondsDrawing, secondsDrawing, 10);
+  // Coordenates
+  const [restartCoordenates, setRestartCoordenates] = useState<boolean>(false);
+
+  // Is Canvas Animations
+  const [isCanvasAnimations, setIsCanvasAnimations] = useState<boolean>(false);
 
   const [arrayMessages, setArrayMessages] = useState<Array<MESSAGE>>([]);
 
@@ -205,6 +261,8 @@ const ProviderChat = ({ children }: Props) => {
         setIsLoadingBody,
         socketRef,
         ticketRef,
+        modalCanvas,
+        setModalCanvas,
         arrayMessages,
         setArrayMessages,
         modalCreateConnection,
@@ -214,7 +272,29 @@ const ProviderChat = ({ children }: Props) => {
         modalEditConnection,
         setModalEditConnection,
         modalAddUsersConnection,
-        setModalAddUsersConnection
+        restartCoordenates,
+        setRestartCoordenates,
+        isDrawingFinished,
+        setIsDrawingFinished,
+        isCanvasNeedToClear,
+        setIsCanvasNeedToClear,
+        messagesColor,
+        setMessagesColor,
+        messagesText,
+        setMessagesText,
+        breakInterval,
+        startInterval,
+        pauseInterval,
+        continueInterval,
+        isCanvasAnimations,
+        setModalAddUsersConnection,
+        secondsDrawing,
+        setSecondsDrawing,
+        setIsCanvasAnimations,
+        imgState,
+        setImgState,
+        imgStateUrl,
+        setImgStateUrl
       }}
     >
       {children}

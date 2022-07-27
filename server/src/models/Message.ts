@@ -10,7 +10,7 @@ export const Message = sequelize.define(
       autoIncrement: true
     },
     text: {
-      type: DataType.STRING
+      type: DataType.STRING(1000)
     },
     mediaURL: {
       type: DataType.STRING

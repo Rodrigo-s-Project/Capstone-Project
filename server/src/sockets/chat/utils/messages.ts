@@ -7,6 +7,9 @@ export const getAllMessagesWithUsers = async (
   companyId,
   teamId
 ): Promise<Array<any>> => {
+  // This function helps us to get all the messages
+  // of a specific connection with the ussers
+  // That had read those messages
   try {
     const allMessages: Array<any> = await refConnection.getMessages();
     let messages: Array<any> = [];
@@ -64,6 +67,8 @@ export const sendMessagesToEveryone = async (
   refMessages: Array<any>,
   refConnection
 ) => {
+  // This function helps us to send the updated messages
+  // to a list of specific users that are on a group
   try {
     // Send message to everyone in same connection
     for (let i = 0; i < Object.keys(SOCKET_LIST).length; i++) {

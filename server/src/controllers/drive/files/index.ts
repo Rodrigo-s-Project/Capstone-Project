@@ -20,7 +20,7 @@ const StorageAnyType: any = Storage;
 const gc: any = new StorageAnyType({
   keyFilename: path.join(
     __dirname,
-    `../../../config/teamplace-356717-75468db981c2.json`
+    `../../../config/teamplace-356717-46f9610561c9.json`
   ),
   projectId: "teamplace-356717"
 });
@@ -183,7 +183,7 @@ export const postFile = async (req, res) => {
 
     // Upload file to GCP
     // Create a new blobName
-    const blobName: string = `${createHmac("sha256", "keys")
+    const blobName: string = `${createHmac("sha256", "development")
       .update(idNewFile.toString())
       .digest("hex")}${type}`;
     const blob: FileType = bucket.file(blobName);
@@ -267,7 +267,7 @@ export const getFile = async (req, res) => {
     await req.user.addFile(fileDB);
 
     // Success
-    const blobName: string = `${createHmac("sha256", "keys")
+    const blobName: string = `${createHmac("sha256", "development")
       .update(idFile.toString())
       .digest("hex")}${fileDB.type}`;
 

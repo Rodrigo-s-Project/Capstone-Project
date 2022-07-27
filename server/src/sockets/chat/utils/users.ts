@@ -10,6 +10,8 @@ export const isUserOnConnection = async (
   teamId: number,
   connectionId: number
 ): Promise<boolean> => {
+  // This function helps us to know if a user is
+  // on a group chat or not
   try {
     const refConnection: any = await Connection.findByPk(connectionId);
     const refUser = await getCurrUser(userId, companyId, teamId);
@@ -34,6 +36,9 @@ export const addReadToTheseMessages = async (
   teamId: number,
   arrayMsgs: Array<any>
 ): Promise<boolean> => {
+  // This function helps us to add a user
+  // to the joint table of "Users that have read Messages"
+  // of a specific message
   try {
     const refUser = await getCurrUser(userId, companyId, teamId);
     if (!refUser) return false;
