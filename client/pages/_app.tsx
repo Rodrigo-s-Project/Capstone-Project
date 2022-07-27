@@ -40,6 +40,7 @@ import AddUsersModal from "../components/Drive/Modals/AddUsers/AddUsers";
 import CreateConnectionModal from "../components/Messages/Modals/CreateConnection/CreateConnection";
 import EditConnectionModal from "../components/Messages/Modals/EditConnection/EditConnection";
 import AddUsersChatModal from "../components/Messages/Modals/AddUsers/AddUsers";
+import CreateDrawingModal from "../components/Messages/Modals/CreateDrawing/CreateDrawing";
 import MapModal from "../components/Modals/Map/MapModal";
 
 // Animations
@@ -290,6 +291,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                       <AddUsersModal />
                       <EditSectionModal />
                       <EditUsernameProfileModal />
+                      <CreateDrawingModal />
                       <AddUsersChatModal />
                       <EditConnectionModal />
                       <EditPasswordProfileModal />
