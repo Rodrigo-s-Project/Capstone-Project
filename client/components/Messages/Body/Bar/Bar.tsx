@@ -14,18 +14,26 @@ import KeyboardIcon from "../../../Svgs/Keyboard";
 import TimesIcon from "../../../Svgs/Times";
 import FileImgIcon from "../../../Svgs/FileImg";
 import MapMarkerAltIcon from "../../../Svgs/MapMarkerAlt";
+import DrawPolygonIcon from "../../../Svgs/DrawPolygon";
 import LoaderSpinner from "../../../Loader/Spinner/Spinner";
 
 const Bar = () => {
-  const { socketRef, ticketRef, selectedConnection } = useContext(ChatContext);
+  const {
+    socketRef,
+    ticketRef,
+    selectedConnection,
+    setModalCanvas,
+    imgState,
+    imgStateUrl,
+    setImgState,
+    setImgStateUrl
+  } = useContext(ChatContext);
   const { setModalAskMapLocation, userAddress, userLocation } = useContext(
     MapContext
   );
   const { setArrayMsgs } = useContext(GlobalContext);
 
   const [text, setText] = useState<any>("");
-  const [imgState, setImgState] = useState<any>("");
-  const [imgStateUrl, setImgStateUrl] = useState<any>("");
   const [lat, setLat] = useState<any>(undefined);
   const [lng, setLng] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState<any>(false);
@@ -36,10 +44,10 @@ const Bar = () => {
       setText(`This is my address: ${userAddress}`);
       setLat(userLocation.lat);
       setLng(userLocation.lng);
-      setImgStateUrl("");
-      setImgState("");
+      if (setImgStateUrl) setImgStateUrl("");
+      if (setImgState) setImgState("");
     }
-  }, [userAddress, userLocation]);
+  }, [userAddress, userLocation, setImgState, setImgStateUrl]);
 
   useEffect(() => {
     if (text == "") {
@@ -51,12 +59,12 @@ const Bar = () => {
   useEffect(() => {
     // Restart
     setText("");
-    setImgState("");
-    setImgStateUrl("");
+    if (setImgState) setImgState("");
+    if (setImgStateUrl) setImgStateUrl("");
     setLat(undefined);
     setLng(undefined);
     setIsLoading(false);
-  }, [selectedConnection]);
+  }, [selectedConnection, setImgState, setImgStateUrl]);
 
   const handleChangeFile = (e: any) => {
     e.preventDefault();
@@ -81,8 +89,8 @@ const Bar = () => {
         const MAX_MB: number = 100000000;
         if (e.target.files[0].size <= MAX_MB) {
           // GOOD
-          setImgStateUrl(urlImage);
-          setImgState(e.target.files[0]);
+          if (setImgStateUrl) setImgStateUrl(urlImage);
+          if (setImgState) setImgState(e.target.files[0]);
         } else {
           // BAD
           if (setArrayMsgs) {
@@ -139,8 +147,8 @@ const Bar = () => {
       if (!data) {
         return "";
       } else {
-        setImgState("");
-        setImgStateUrl("");
+        if (setImgState) setImgState("");
+        if (setImgStateUrl) setImgStateUrl("");
         // Send msg
         return data.msg;
       }
@@ -159,7 +167,7 @@ const Bar = () => {
       }
       return "";
     }
-  }, [imgState, setArrayMsgs, canSend]);
+  }, [imgState, setArrayMsgs, canSend, setImgState, setImgStateUrl]);
 
   const sendMessage = async () => {
     // Check for files
@@ -236,8 +244,8 @@ const Bar = () => {
             <div
               onClick={() => {
                 if (imgStateUrl != "") {
-                  setImgState("");
-                  setImgStateUrl("");
+                  if (setImgState) setImgState("");
+                  if (setImgStateUrl) setImgStateUrl("");
                 }
               }}
               className={styles.upload}
@@ -267,6 +275,16 @@ const Bar = () => {
               className={styles.map}
             >
               <MapMarkerAltIcon />
+            </div>
+            <div
+              onClick={() => {
+                if (setModalCanvas) {
+                  setModalCanvas(true);
+                }
+              }}
+              className={styles.map}
+            >
+              <DrawPolygonIcon />
             </div>
             <button
               title="Send message"
