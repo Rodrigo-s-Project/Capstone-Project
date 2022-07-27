@@ -139,7 +139,7 @@ const CreateDrawing = () => {
           <canvas
             ref={canvasRef}
             width={widthCanvas}
-            height="400"
+            height="350"
             className={styles.canvas}
             style={{
               backgroundColor
