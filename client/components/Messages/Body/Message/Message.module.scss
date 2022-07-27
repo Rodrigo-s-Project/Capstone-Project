@@ -9,6 +9,9 @@
   max-width: 400px;
   &_text {
     color: var(--primary);
+    &_msg {
+      word-break: break-word;
+    }
   }
   &_img {
     display: flex;

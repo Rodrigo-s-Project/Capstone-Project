@@ -11,7 +11,7 @@ const StorageAnyType: any = Storage;
 const gc: any = new StorageAnyType({
   keyFilename: path.join(
     __dirname,
-    `../../../config/teamplace-356717-75468db981c2.json`
+    `../../../config/teamplace-356717-46f9610561c9.json`
   ),
   projectId: "teamplace-356717"
 });
@@ -45,7 +45,7 @@ const deleteFile = async (
     await fileRef.removeUsers();
 
     // Delete from GCP
-    const blobName: string = `${createHmac("sha256", "keys")
+    const blobName: string = `${createHmac("sha256", "development")
       .update(fileRef.id.toString())
       .digest("hex")}${fileRef.type}`;
 

@@ -90,7 +90,7 @@ const Message = ({ message }: Props) => {
               <img src="/maps/Google_Maps_Logo_2020.png" alt="Google Maps" />
             </div>
           )}
-          <div>{message.message.text}</div>
+          <div className={styles.chat_text_msg}>{message.message.text}</div>
         </div>
         <div
           className={`${styles.chat_reading}`}
