@@ -101,7 +101,7 @@ const DropDown = ({ isOpen }: Props) => {
         }}
         className={styles.drop_link}
       >
-        {isLoading && <Loader color="lavender-200" />}
+        {isLoading && <Loader color="lavender-300" />}
         {!isLoading && "Log Out"}
       </div>
       <div
