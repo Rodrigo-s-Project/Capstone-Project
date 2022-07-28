@@ -10,6 +10,7 @@ export type ModalProps = {
   setIsModal: Dispatch<SetStateAction<boolean>> | undefined;
   children: any;
   extraCss?: string;
+  extraCssContainer?: string;
   callbackClose?: () => any;
 };
 
@@ -18,7 +19,8 @@ const PopUpModal = ({
   setIsModal,
   children,
   extraCss,
-  callbackClose
+  callbackClose,
+  extraCssContainer
 }: ModalProps) => {
   const closeModal = () => {
     if (callbackClose) callbackClose();
@@ -36,7 +38,9 @@ const PopUpModal = ({
         >
           <TimesIcon />
         </button>
-        <div className={styles.modal_card_container}>{children}</div>
+        <div className={`${styles.modal_card_container} ${extraCssContainer}`}>
+          {children}
+        </div>
       </div>
     </div>
   );

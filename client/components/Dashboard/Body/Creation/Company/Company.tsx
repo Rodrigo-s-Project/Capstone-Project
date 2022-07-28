@@ -19,14 +19,17 @@ import CompanyCard from "./CardCompany/Card";
 const Company = () => {
   const {
     setArrayMsgs,
-    setModalPopUpCreateCompany,
+    // setModalPopUpCreateCompany,
     refetchCompanies,
     setCompanies,
-    companies
+    companies,
+    setModalPopUpStripe
   } = useContext(GlobalContext);
 
   const createACompany = () => {
-    if (setModalPopUpCreateCompany) setModalPopUpCreateCompany(true);
+    // if (setModalPopUpCreateCompany) setModalPopUpCreateCompany(true);
+
+    if (setModalPopUpStripe) setModalPopUpStripe(true);
   };
 
   const [isLoading, setIsLoading] = useState(false);
