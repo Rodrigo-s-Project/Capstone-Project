@@ -159,7 +159,7 @@ const StripeModal = () => {
               text="Company name"
               value={name}
               setValue={setName}
-              id="input-code-create-company"
+              id="input-code-create-company-stripe"
               type="text"
             />
           </div>
