@@ -73,7 +73,7 @@ const Cmd = () => {
 
       setSelectedCommand(newValue);
     },
-    [open, selectedCommand]
+    [open, selectedCommand, executeCommand, getCommandsArray]
   );
 
   useEffect(() => {
