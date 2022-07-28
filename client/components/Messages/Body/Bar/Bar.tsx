@@ -229,74 +229,83 @@ const Bar = () => {
             setText(e.target.value);
           }}
         />
-        {isLoading && (
-          <div className={styles.loader}>
-            <LoaderSpinner color="lavender-300" />
-          </div>
-        )}
-        {!isLoading && (
-          <>
-            <div className={styles.preview}>
-              {imgStateUrl != "" && (
-                <img src={imgStateUrl} alt="Image uploaded" />
-              )}
+        <div className={styles.controllers}>
+          {isLoading && (
+            <div className={styles.loader}>
+              <LoaderSpinner color="lavender-300" />
             </div>
-            <div
-              onClick={() => {
-                if (imgStateUrl != "") {
-                  if (setImgState) setImgState("");
-                  if (setImgStateUrl) setImgStateUrl("");
+          )}
+          {!isLoading && (
+            <>
+              <div title="Preview image uploaded" className={styles.preview}>
+                {imgStateUrl != "" && (
+                  <img src={imgStateUrl} alt="Image uploaded" />
+                )}
+              </div>
+              <div
+                onClick={() => {
+                  if (imgStateUrl != "") {
+                    if (setImgState) setImgState("");
+                    if (setImgStateUrl) setImgStateUrl("");
+                  }
+                }}
+                className={styles.upload}
+                title={imgStateUrl == "" ? "Upload image" : "Cancel upload"}
+              >
+                {imgStateUrl == "" ? (
+                  <>
+                    <input
+                      onChange={handleChangeFile}
+                      type="file"
+                      name="file"
+                      id="upload-image-input-chat"
+                    />
+                    <label htmlFor="upload-image-input-chat">
+                      {imgStateUrl != "" ? <TimesIcon /> : <FileImgIcon />}
+                    </label>
+                  </>
+                ) : (
+                  <TimesIcon />
+                )}
+              </div>
+              <div
+                onClick={() => {
+                  if (setModalAskMapLocation) {
+                    setModalAskMapLocation(true);
+                  }
+                }}
+                className={styles.map}
+                title="Get places"
+              >
+                <MapMarkerAltIcon />
+              </div>
+              <div
+                title="Draw"
+                onClick={() => {
+                  if (setModalCanvas) {
+                    setModalCanvas(true);
+                  }
+                }}
+                className={styles.map}
+              >
+                <DrawPolygonIcon />
+              </div>
+              <button
+                title={
+                  canSend()
+                    ? "Send message"
+                    : "You need to write a message first"
                 }
-              }}
-              className={styles.upload}
-            >
-              {imgStateUrl == "" ? (
-                <>
-                  <input
-                    onChange={handleChangeFile}
-                    type="file"
-                    name="file"
-                    id="upload-image-input-chat"
-                  />
-                  <label htmlFor="upload-image-input-chat">
-                    {imgStateUrl != "" ? <TimesIcon /> : <FileImgIcon />}
-                  </label>
-                </>
-              ) : (
-                <TimesIcon />
-              )}
-            </div>
-            <div
-              onClick={() => {
-                if (setModalAskMapLocation) {
-                  setModalAskMapLocation(true);
-                }
-              }}
-              className={styles.map}
-            >
-              <MapMarkerAltIcon />
-            </div>
-            <div
-              onClick={() => {
-                if (setModalCanvas) {
-                  setModalCanvas(true);
-                }
-              }}
-              className={styles.map}
-            >
-              <DrawPolygonIcon />
-            </div>
-            <button
-              title="Send message"
-              style={{
-                cursor: canSend() ? "pointer" : "not-allowed"
-              }}
-              onClick={sendMessage}
-            >
-              {canSend() ? <PaperPlaneIcon /> : <KeyboardIcon />}
-            </button>
-          </>
-        )}
+                style={{
+                  cursor: canSend() ? "pointer" : "not-allowed"
+                }}
+                onClick={sendMessage}
+              >
+                {canSend() ? <PaperPlaneIcon /> : <KeyboardIcon />}
+              </button>
+            </>
+          )}
+        </div>
       </form>
     </div>
   );
