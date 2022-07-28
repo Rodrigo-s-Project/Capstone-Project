@@ -3,6 +3,7 @@
   justify-content: flex-start;
   align-items: center;
   position: relative;
+  z-index: 10;
   &::after {
     content: "";
     position: absolute;
@@ -43,4 +44,34 @@
       left: 0;
     }
   }
+}
+.results_container {
+  background-color: var(--primary);
+  border-radius: 5px;
+  border: 1px solid var(--gray-400);
+  border-top: none;
+  position: absolute;
+  left: 0;
+  top: 45px;
+  width: 100%;
+  height: fit-content;
+  z-index: 9;
+  padding: 10px 5px;
+  &_cmd {
+    cursor: pointer;
+    padding: 10px;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: var(--gray-300);
+      }
+    }
+  }
+}
+.selected {
+  background-color: var(--gray-300);
+}
+.noCommands {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--gray-800);
 }

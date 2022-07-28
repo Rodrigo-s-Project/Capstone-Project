@@ -64,7 +64,7 @@ function StripeCheckout({
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!stripe || !elements) {
-      // No ha cargadi
+      // No ha cargado
       return;
     }
     if (error) return;

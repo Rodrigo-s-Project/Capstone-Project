@@ -13,21 +13,16 @@ const CreateDrawing = () => {
   const {
     modalCanvas,
     setModalCanvas,
-    messagesColor,
     messagesText,
-    isCanvasAnimations,
-    setRestartCoordenates,
     setIsDrawingFinished,
     setIsCanvasNeedToClear,
     setMessagesText,
     setSecondsDrawing,
-    setIsCanvasAnimations,
     setImgState,
     setImgStateUrl
   } = useContext(ChatContext);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasAnimations = useRef<HTMLCanvasElement | null>(null);
   const [widthCanvas, setWidthCanvas] = useState<number>(500);
   const [backgroundColor, setBackgroundColor] = useState<string>("#a2aebe");
   const [pencilColor, setPenciColor] = useState<string>("#ffffff");
@@ -37,38 +32,19 @@ const CreateDrawing = () => {
   useWidth(setWidthCanvas, "75%", 500);
 
   useEffect(() => {
-    if (isCanvasAnimations) {
-      // Nothing
-    } else {
-      // DELETE CANVAS CONTENT
-      if (canvasAnimations.current && canvasRef.current) {
-        var ctx = canvasAnimations.current.getContext("2d"); // Canvas of Vectors
-        var ctx_2 = canvasRef.current.getContext("2d"); // Canvas of green line
-        if (ctx && ctx_2) {
-          ctx.clearRect(
-            0,
-            0,
-            canvasAnimations.current.width,
-            canvasAnimations.current.height
-          );
-          ctx_2.clearRect(
-            0,
-            0,
-            canvasRef.current.width,
-            canvasRef.current.height
-          );
-        }
+    if (canvasRef.current) {
+      var ctx = canvasRef.current.getContext("2d"); // Canvas of green line
+      if (ctx) {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       }
     }
-  }, [isCanvasAnimations]);
+  }, []);
 
   const clean = () => {
-    if (setRestartCoordenates) setRestartCoordenates(true);
     if (setIsDrawingFinished) setIsDrawingFinished(false);
     if (setIsCanvasNeedToClear) setIsCanvasNeedToClear(true);
     if (setMessagesText) setMessagesText("");
     if (setSecondsDrawing) setSecondsDrawing(0);
-    if (setIsCanvasAnimations) setIsCanvasAnimations(false);
     if (setModalCanvas) setModalCanvas(false);
   };
 
@@ -139,7 +115,7 @@ const CreateDrawing = () => {
           <canvas
             ref={canvasRef}
             width={widthCanvas}
-            height="400"
+            height="350"
             className={styles.canvas}
             style={{
               backgroundColor
@@ -151,12 +127,10 @@ const CreateDrawing = () => {
           <BtnSpinner
             text="Clear canvas"
             callback={() => {
-              if (setRestartCoordenates) setRestartCoordenates(true);
               if (setIsDrawingFinished) setIsDrawingFinished(false);
               if (setIsCanvasNeedToClear) setIsCanvasNeedToClear(true);
               if (setMessagesText) setMessagesText("");
               if (setSecondsDrawing) setSecondsDrawing(0);
-              if (setIsCanvasAnimations) setIsCanvasAnimations(false);
             }}
             color="gray"
             border="round_5"

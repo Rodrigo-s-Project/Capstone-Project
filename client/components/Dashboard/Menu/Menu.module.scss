@@ -110,6 +110,8 @@
   &_cmd {
     width: 100%;
     transform: scale(0.9);
+    position: relative;
+    z-index: 10;
   }
   &_info {
     display: flex;

@@ -63,24 +63,18 @@ interface ChatApp {
   modalAddUsersConnection: boolean;
   setModalAddUsersConnection: Dispatch<SetStateAction<boolean>>;
 
-  restartCoordenates: boolean;
-  setRestartCoordenates: Dispatch<SetStateAction<boolean>>;
   isDrawingFinished: boolean;
   setIsDrawingFinished: Dispatch<SetStateAction<boolean>>;
   isCanvasNeedToClear: boolean;
   setIsCanvasNeedToClear: Dispatch<SetStateAction<boolean>>;
-  messagesColor: string;
-  setMessagesColor: Dispatch<SetStateAction<string>>;
   messagesText: string;
   setMessagesText: Dispatch<SetStateAction<string>>;
   breakInterval: () => void;
   startInterval: () => void;
   pauseInterval: () => void;
   continueInterval: () => void;
-  isCanvasAnimations: boolean;
   secondsDrawing: number;
   setSecondsDrawing: Dispatch<SetStateAction<number>>;
-  setIsCanvasAnimations: Dispatch<SetStateAction<boolean>>;
 
   imgState: string;
   setImgState: Dispatch<SetStateAction<string>>;
@@ -120,7 +114,6 @@ const ProviderChat = ({ children }: Props) => {
     false
   );
   // Canvas Messages
-  const [messagesColor, setMessagesColor] = useState<string>("#000");
   const [messagesText, setMessagesText] = useState<string>("");
 
   // Time system
@@ -131,14 +124,8 @@ const ProviderChat = ({ children }: Props) => {
     pauseInterval,
     continueInterval
   ] = useInterval(setSecondsDrawing, secondsDrawing, 10);
-  // Coordenates
-  const [restartCoordenates, setRestartCoordenates] = useState<boolean>(false);
-
-  // Is Canvas Animations
-  const [isCanvasAnimations, setIsCanvasAnimations] = useState<boolean>(false);
 
   const [arrayMessages, setArrayMessages] = useState<Array<MESSAGE>>([]);
-
   const [arrayUsersInConnection, setArrayUsersInConnection] = useState<
     Array<USER_CONNECTION>
   >([]);
@@ -272,25 +259,19 @@ const ProviderChat = ({ children }: Props) => {
         modalEditConnection,
         setModalEditConnection,
         modalAddUsersConnection,
-        restartCoordenates,
-        setRestartCoordenates,
         isDrawingFinished,
         setIsDrawingFinished,
         isCanvasNeedToClear,
         setIsCanvasNeedToClear,
-        messagesColor,
-        setMessagesColor,
         messagesText,
         setMessagesText,
         breakInterval,
         startInterval,
         pauseInterval,
         continueInterval,
-        isCanvasAnimations,
         setModalAddUsersConnection,
         secondsDrawing,
         setSecondsDrawing,
-        setIsCanvasAnimations,
         imgState,
         setImgState,
         imgStateUrl,
