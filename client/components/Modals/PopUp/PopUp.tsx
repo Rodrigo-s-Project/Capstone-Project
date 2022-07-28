@@ -36,7 +36,7 @@ const PopUpModal = ({
         >
           <TimesIcon />
         </button>
-        {children}
+        <div className={styles.modal_card_container}>{children}</div>
       </div>
     </div>
   );
