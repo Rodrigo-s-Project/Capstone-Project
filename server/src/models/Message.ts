@@ -28,7 +28,7 @@ export const Message = sequelize.define(
     },
     language: {
       type: DataType.STRING,
-      defaultValue: "en-US"
+      defaultValue: "en"
     }
   },
   {

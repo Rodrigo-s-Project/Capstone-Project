@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { GlobalContext } from "../../pages/_app";
 import { SettingsContext } from "./Provider";
 import { Element, Group } from "../Profile/Profile";
+import codes from "iso-language-codes";
 
 const Settings = () => {
   const { setSelectedCompany, setSelectedTeam } = useContext(GlobalContext);
@@ -17,14 +18,23 @@ const Settings = () => {
     if (setModalPopUpLang) setModalPopUpLang(true);
   };
 
+  const getNameLang = (language: string) => {
+    const index = codes.findIndex(code => {
+      return code.iso639_1 == language;
+    });
+
+    return codes[index] ? codes[index].name : language;
+  };
+
   const getLangPref = () => {
     const lang: string | null = localStorage.getItem("lang");
-    if (lang) return lang;
+    if (lang) return getNameLang(lang);
 
     const windowEl: any = window;
     let language: any =
       windowEl.navigator.userLanguage || windowEl.navigator.language;
-    return language;
+
+    return getNameLang(language);
   };
 
   return (
