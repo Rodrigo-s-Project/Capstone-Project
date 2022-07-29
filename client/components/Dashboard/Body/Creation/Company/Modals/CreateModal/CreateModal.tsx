@@ -33,7 +33,8 @@ export const CreateCompanyModal = () => {
       setIsLoadingCreate(true);
 
       const body: BODY_CREATE_COMPANY = {
-        name
+        name,
+        type: "Basic"
       };
 
       const response = await axios.post(createCompanyEndpoint.url, body, {

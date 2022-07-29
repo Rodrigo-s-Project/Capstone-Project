@@ -66,7 +66,7 @@ export const createMessage = async (
     const { userId, companyId, teamId, socket } = socketEl;
 
     socket.on("create-message", async (...allMyParams) => {
-      const [connectionId, text, mediaURL, lat, lng] = allMyParams;
+      const [connectionId, text, mediaURL, lat, lng, language] = allMyParams;
 
       const refConnection: any = await getCurrConnection(
         userId,
@@ -91,7 +91,8 @@ export const createMessage = async (
             mediaURL,
             lat,
             lng,
-            ownerId: currState.user.id
+            ownerId: currState.user.id,
+            language
           });
 
           // make association with connection

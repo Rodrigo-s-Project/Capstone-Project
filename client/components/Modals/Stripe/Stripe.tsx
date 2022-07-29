@@ -50,9 +50,10 @@ const StripeModal = () => {
   const createACompanyFetch = async (_: PaymentMethod) => {
     try {
       setIsLoadingCreate(true);
-
+      
       const body: BODY_CREATE_COMPANY = {
-        name
+        name,
+        type: selectedProductStripe.name
       };
 
       const response = await axios.post(createCompanyEndpoint.url, body, {

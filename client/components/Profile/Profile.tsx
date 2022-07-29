@@ -24,7 +24,7 @@ type GroupProps = {
   title: string;
 };
 
-const Group = ({ children, title }: GroupProps) => {
+export const Group = ({ children, title }: GroupProps) => {
   return (
     <div className={styles.profile_group}>
       <h2 className={styles.profile_group_h2}>{title}</h2>
@@ -40,7 +40,7 @@ type ElementProps = {
   show?: boolean;
 };
 
-const Element = ({ callback, title, value, show = true }: ElementProps) => {
+export const Element = ({ callback, title, value, show = true }: ElementProps) => {
   return (
     <div className={styles.profile_element}>
       <div className={styles.profile_element_title}>{title}</div>

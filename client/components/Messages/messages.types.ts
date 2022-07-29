@@ -61,5 +61,6 @@ export type MESSAGE = {
     connectionId: number;
     createdAt: Date;
     ownerId: number;
+    language: string | undefined
   };
 };

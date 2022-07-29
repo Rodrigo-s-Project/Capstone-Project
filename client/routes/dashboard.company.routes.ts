@@ -37,6 +37,7 @@ export const getCompanyEndpoint = {
 
 export type BODY_CREATE_COMPANY = {
   name: string;
+  type: string;
 };
 
 export const createCompanyEndpoint = {

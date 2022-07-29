@@ -42,6 +42,7 @@ import EditConnectionModal from "../components/Messages/Modals/EditConnection/Ed
 import AddUsersChatModal from "../components/Messages/Modals/AddUsers/AddUsers";
 import CreateDrawingModal from "../components/Messages/Modals/CreateDrawing/CreateDrawing";
 import MapModal from "../components/Modals/Map/MapModal";
+import LangModal from "../components/Settings/Modals/Lang/ModalLang";
 
 // Animations
 import { fadeVariantsLongerExit } from "../animations/fade";
@@ -53,6 +54,7 @@ import { BODY_EDIT_SECTION } from "../routes/dashboard.controls.routes";
 import DriveProvider from "../components/Drive/Provider";
 import CalendarProvider from "../components/Calendar/Provider";
 import ProfileProvider from "../components/Profile/Provider";
+import SettingsProvider from "../components/Settings/Provider";
 import ChatProvider from "../components/Messages/Provider";
 import MapProvider from "../components/Modals/Map/Provider";
 
@@ -248,80 +250,83 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <MapProvider>
-        <ProfileProvider>
-          <ChatProvider>
-            <CalendarProvider>
-              <DriveProvider>
-                <Head>
-                  <title>Teamplace</title>
-                </Head>
-                <AnimatePresence
-                  exitBeforeEnter
-                  initial={false}
-                  onExitComplete={() => window.scrollTo(0, 0)}
-                >
-                  {isLoading ? (
-                    <motion.div
-                      variants={fadeVariantsLongerExit}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="app-loader"
-                      key="loader-app-container"
-                    >
-                      <Loader
-                        additionalClass="loader-app"
-                        color="lavender-200"
-                      />
-                    </motion.div>
-                  ) : (
-                    <>
-                      <Nav />
-                      <CreateTeamModal />
-                      <JoinTeamModal />
-                      <CreateCompanyModal />
-                      <JoinCompanyModal />
-                      <TaskModal />
-                      <AddBucketModal />
-                      <ReadersModal />
-                      <MapModal />
-                      <AddFolderModal />
-                      <EditBucketModal />
-                      <AddFilesModal />
-                      <AddUsersModal />
-                      <EditSectionModal />
-                      <EditUsernameProfileModal />
-                      <CreateDrawingModal />
-                      <AddUsersChatModal />
-                      <EditConnectionModal />
-                      <EditPasswordProfileModal />
-                      <CreateConnectionModal />
-                      <StripeModal />
-                      <UploadImageModal
-                        callback={data => {
-                          if (!callBackImages) return;
-                          if (!callBackImages.current) return;
-                          try {
-                            callBackImages.current(data);
-                          } catch (error) {
-                            console.error(error);
-                          }
-                        }}
-                      />
-                      <Messages
-                        arrayMsgs={arrayMsgs}
-                        setArrayMsgs={setArrayMsgs}
-                      />
-                      <main className="main-content">
-                        <Component {...pageProps} />
-                      </main>
-                    </>
-                  )}
-                </AnimatePresence>
-              </DriveProvider>
-            </CalendarProvider>
-          </ChatProvider>
-        </ProfileProvider>
+        <SettingsProvider>
+          <ProfileProvider>
+            <ChatProvider>
+              <CalendarProvider>
+                <DriveProvider>
+                  <Head>
+                    <title>Teamplace</title>
+                  </Head>
+                  <AnimatePresence
+                    exitBeforeEnter
+                    initial={false}
+                    onExitComplete={() => window.scrollTo(0, 0)}
+                  >
+                    {isLoading ? (
+                      <motion.div
+                        variants={fadeVariantsLongerExit}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="app-loader"
+                        key="loader-app-container"
+                      >
+                        <Loader
+                          additionalClass="loader-app"
+                          color="lavender-200"
+                        />
+                      </motion.div>
+                    ) : (
+                      <>
+                        <Nav />
+                        <LangModal />
+                        <CreateTeamModal />
+                        <JoinTeamModal />
+                        <CreateCompanyModal />
+                        <JoinCompanyModal />
+                        <TaskModal />
+                        <AddBucketModal />
+                        <ReadersModal />
+                        <MapModal />
+                        <AddFolderModal />
+                        <EditBucketModal />
+                        <AddFilesModal />
+                        <AddUsersModal />
+                        <EditSectionModal />
+                        <EditUsernameProfileModal />
+                        <CreateDrawingModal />
+                        <AddUsersChatModal />
+                        <EditConnectionModal />
+                        <EditPasswordProfileModal />
+                        <CreateConnectionModal />
+                        <StripeModal />
+                        <UploadImageModal
+                          callback={data => {
+                            if (!callBackImages) return;
+                            if (!callBackImages.current) return;
+                            try {
+                              callBackImages.current(data);
+                            } catch (error) {
+                              console.error(error);
+                            }
+                          }}
+                        />
+                        <Messages
+                          arrayMsgs={arrayMsgs}
+                          setArrayMsgs={setArrayMsgs}
+                        />
+                        <main className="main-content">
+                          <Component {...pageProps} />
+                        </main>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </DriveProvider>
+              </CalendarProvider>
+            </ChatProvider>
+          </ProfileProvider>
+        </SettingsProvider>
       </MapProvider>
     </GlobalContext.Provider>
   );
