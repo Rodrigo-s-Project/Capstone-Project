@@ -23,12 +23,15 @@ const Cmd = () => {
     }
   }, [value, hasClicked]);
 
-  const executeCommand = (rule: string) => {
-    execCmd(rule);
+  const executeCommand = useCallback(
+    (rule: string) => {
+      execCmd(rule);
 
-    setValue("");
-    setSelectedCommand(-1);
-  };
+      setValue("");
+      setSelectedCommand(-1);
+    },
+    [setValue, setSelectedCommand, execCmd]
+  );
 
   const getCommandsArray = useCallback((): Array<string> => {
     if (value == "/") return RULES;

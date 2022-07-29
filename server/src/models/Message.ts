@@ -25,6 +25,10 @@ export const Message = sequelize.define(
     },
     ownerId: {
       type: DataType.INTEGER
+    },
+    language: {
+      type: DataType.STRING,
+      defaultValue: "en-US"
     }
   },
   {

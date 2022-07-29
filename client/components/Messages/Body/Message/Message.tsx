@@ -2,8 +2,9 @@ import styles from "./Message.module.scss";
 import { MESSAGE } from "../../messages.types";
 import { GlobalContext } from "../../../../pages/_app";
 import { ChatContext } from "../../Provider";
-import { useContext, CSSProperties } from "react";
+import { useContext, CSSProperties, useState } from "react";
 import { getImage } from "../../../../routes/cdn.routes";
+import { useTranslate } from "../../../../hooks/useTranslate";
 
 // Icons
 import CameraIcon from "../../../Svgs/Camera";
@@ -17,8 +18,12 @@ type Props = {
 };
 
 const Message = ({ message }: Props) => {
-  const { user } = useContext(GlobalContext);
+  const { user, setArrayMsgs } = useContext(GlobalContext);
   const { selectedConnection } = useContext(ChatContext);
+  const { translate, isLoading: isLoadingTranslate } = useTranslate();
+  const [msgText, setMsgText] = useState(message.message.text);
+  const [msgTextTrans, setMsgTextTrans] = useState("");
+  const [isTranslated, setIsTranslated] = useState(false);
 
   if (message.message.text.trim() == "") return null;
 
@@ -57,6 +62,41 @@ const Message = ({ message }: Props) => {
     return aux;
   };
 
+  const translateThisMessage = async () => {
+    const windowEl: any = window;
+    let language: any =
+      windowEl.navigator.userLanguage || windowEl.navigator.language;
+
+    const fromLang: string = message.message.language
+      ? message.message.language
+      : language;
+
+    if (fromLang == language) {
+      if (setArrayMsgs) {
+        setArrayMsgs(prev => [
+          {
+            type: "info",
+            text: "Same language"
+          },
+          ...prev
+        ]);
+      }
+      return;
+    }
+
+    const transText: string | undefined = await translate(
+      message.message.language ? message.message.language : "en",
+      language,
+      message.message.text
+    );
+
+    if (!transText) return;
+
+    setIsTranslated(transText != message.message.text);
+    setMsgText(transText);
+    setMsgTextTrans(transText);
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -90,7 +130,35 @@ const Message = ({ message }: Props) => {
               <img src="/maps/Google_Maps_Logo_2020.png" alt="Google Maps" />
             </div>
           )}
-          <div className={styles.chat_text_msg}>{message.message.text}</div>
+          {user && user.id != message.message.ownerId && (
+            <div className={`${styles.translate}`}>
+              <button
+                onClick={() => {
+                  if (isTranslated) {
+                    setMsgText(message.message.text);
+                    setIsTranslated(false);
+                  } else {
+                    if (msgTextTrans == "") {
+                      translateThisMessage();
+                    } else {
+                      setMsgText(msgTextTrans);
+                      setIsTranslated(true);
+                    }
+                  }
+                }}
+              >
+                {isTranslated ? "Original msg" : "Translate"}
+              </button>
+              <div className={`${styles.translate_dots}`}>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          )}
+          <div className={styles.chat_text_msg}>
+            {isLoadingTranslate ? "Loading..." : msgText}
+          </div>
         </div>
         <div
           className={`${styles.chat_reading}`}

@@ -86,8 +86,9 @@ export const emitCreateMessage = {
     text: string | undefined,
     mediaURL: string | undefined,
     lat: number | undefined,
-    lng: number | undefined
-  ) => [connectionId, text, mediaURL, lat, lng]
+    lng: number | undefined,
+    language: string | undefined
+  ) => [connectionId, text, mediaURL, lat, lng, language]
 };
 
 // On

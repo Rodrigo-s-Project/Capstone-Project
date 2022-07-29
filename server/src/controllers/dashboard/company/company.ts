@@ -154,7 +154,7 @@ export const createCompany = async (req, res) => {
   };
 
   try {
-    const { name }: BODY_CREATE = req.body;
+    const { name, type: typeCompany }: BODY_CREATE = req.body;
 
     if (name.trim() == "") {
       response.message = "Invalid information.";
@@ -173,7 +173,7 @@ export const createCompany = async (req, res) => {
       accessCodeEmployee: `${name}_${createToken(5)}`,
       accessCodeClient: `${name}_${createToken(6)}`,
       adminId: req.user.id,
-      typeCompany: "Basic" // TODO: change with Stripe
+      typeCompany
     });
 
     // Join itself
@@ -189,7 +189,7 @@ export const createCompany = async (req, res) => {
       through: {
         typeUser: "Admin",
         username: user.globalUsername,
-        typeAccount: "Basic" // TODO: get the payment method
+        typeAccount: typeCompany
       }
     });
 

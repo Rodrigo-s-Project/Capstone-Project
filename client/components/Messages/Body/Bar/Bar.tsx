@@ -181,6 +181,16 @@ const Bar = () => {
     }
   };
 
+  const getLangPref = () => {
+    const lang: string | null = localStorage.getItem("lang");
+    if (lang) return lang;
+
+    const windowEl: any = window;
+    let language: any =
+      windowEl.navigator.userLanguage || windowEl.navigator.language;
+    return language;
+  };
+
   const sendMsgSocket = useCallback(
     (mediaURL: string | undefined = undefined) => {
       if (
@@ -191,6 +201,11 @@ const Bar = () => {
         selectedConnection
       ) {
         if (canSend(mediaURL)) {
+          // Gte language
+          let language: any = getLangPref();
+
+          // TODO: change with user prefs
+
           // At least one passes
           socketRef.current.emit(
             emitCreateMessage.method,
@@ -199,7 +214,8 @@ const Bar = () => {
               text,
               mediaURL,
               lat,
-              lng
+              lng,
+              language
             )
           );
 
