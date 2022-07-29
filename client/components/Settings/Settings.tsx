@@ -34,7 +34,11 @@ const Settings = () => {
     let language: any =
       windowEl.navigator.userLanguage || windowEl.navigator.language;
 
-    return getNameLang(language);
+    return getNameLang(
+      language.substring(0, language.indexOf("-")) != ""
+        ? language.substring(0, language.indexOf("-"))
+        : language
+    );
   };
 
   return (

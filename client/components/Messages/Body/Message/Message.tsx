@@ -62,13 +62,32 @@ const Message = ({ message }: Props) => {
     return aux;
   };
 
-  const translateThisMessage = async () => {
+  const getLangPref = () => {
+    const lang: string | null = localStorage.getItem("lang");
+    if (lang) return lang;
+
     const windowEl: any = window;
     let language: any =
       windowEl.navigator.userLanguage || windowEl.navigator.language;
 
+    return language.substring(0, language.indexOf("-")) != ""
+      ? language.substring(0, language.indexOf("-"))
+      : language;
+  };
+
+  const translateThisMessage = async () => {
+    let language: any = getLangPref();
+
     const fromLang: string = message.message.language
-      ? message.message.language
+      ? message.message.language.substring(
+          0,
+          message.message.language.indexOf("-")
+        ) != ""
+        ? message.message.language.substring(
+            0,
+            message.message.language.indexOf("-")
+          )
+        : message.message.language
       : language;
 
     if (fromLang == language) {
@@ -85,7 +104,7 @@ const Message = ({ message }: Props) => {
     }
 
     const transText: string | undefined = await translate(
-      message.message.language ? message.message.language : "en",
+      fromLang,
       language,
       message.message.text
     );
