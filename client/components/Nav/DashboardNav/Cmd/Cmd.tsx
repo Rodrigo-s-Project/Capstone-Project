@@ -23,15 +23,11 @@ const Cmd = () => {
     }
   }, [value, hasClicked]);
 
-  const executeCommand = useCallback(
-    (rule: string) => {
-      execCmd(rule);
-
-      setValue("");
-      setSelectedCommand(-1);
-    },
-    [setValue, setSelectedCommand, execCmd]
-  );
+  const executeCommand = (rule: string) => {
+    execCmd(rule);
+    setValue("");
+    setSelectedCommand(-1);
+  };
 
   const getCommandsArray = useCallback((): Array<string> => {
     if (value == "/") return RULES;
@@ -43,14 +39,17 @@ const Cmd = () => {
 
   const handleKey = useCallback(
     (event: any) => {
-      if (!open) return;
+      if (!open) {
+        return;
+      }
 
       if (
         event.key != "ArrowDown" &&
         event.key != "ArrowUp" &&
         event.key != "Enter"
-      )
+      ) {
         return;
+      }
 
       event.preventDefault();
 

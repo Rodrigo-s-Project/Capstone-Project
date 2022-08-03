@@ -18,11 +18,12 @@ const editDistance = (s1: string, s2: string) => {
   for (let i = 1; i <= s2.length; i++) {
     for (let j = 1; j <= s1.length; j++) {
       const indicator: 1 | 0 = s1[j - 1] === s2[i - 1] ? 0 : 1;
-      track[i][j] = Math.min(
-        track[i][j - 1] + 1, // deletion
-        track[i - 1][j] + 1, // insertion
-        track[i - 1][j - 1] + indicator // substitution
-      );
+      track[i][j] =
+        Math.min(
+          track[i][j - 1] + 1, // deletion
+          track[i - 1][j] + 1, // insertion
+          track[i - 1][j - 1] // substitution
+        ) + indicator;
     }
   }
 
