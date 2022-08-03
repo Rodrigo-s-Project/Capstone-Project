@@ -143,8 +143,6 @@ const Bot = () => {
         date.setDate(date.getDate() + 1);
       }
 
-      console.log(times);
-
       const body: BODY_CREATE_TASK_BOT = {
         arrayUsers: getArrayUsers(),
         times
