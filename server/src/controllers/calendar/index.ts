@@ -5,7 +5,11 @@ import { Calendar } from "../../models/Calendar";
 import { Tag } from "../../models/Tag";
 import { Team } from "../../models/Team";
 import { Op } from "sequelize";
-import { BODY_CREATE_TASK, BODY_CREATE_TAG } from "./calendar.types";
+import {
+  BODY_CREATE_TASK,
+  BODY_CREATE_TAG,
+  BODY_CREATE_TASK_BOT
+} from "./calendar.types";
 
 export const getAllTasksCalendar = async (req, res) => {
   let response: RESPONSE = {
@@ -163,18 +167,15 @@ export const createTaskCalendarBot = async (req, res, next) => {
     data: {}
   };
   try {
-    const { arrayUsers }: BODY_CREATE_TASK = req.body;
+    const { arrayUsers, year, month, day }: BODY_CREATE_TASK_BOT = req.body;
 
     // Calculate from
     // Loop month
     let times: Array<number> = [];
-    let date: Date = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDay()
-    ); // Start of and today
+    let date: Date = new Date(year, month, day); // Start from this day
 
-    while (date.getMonth() === new Date().getMonth()) {
+    while (date.getMonth() === month) {
+      // Needs to be on the same month
       let thisDate: Date = new Date(date);
       times.push(thisDate.getTime());
       date.setDate(date.getDate() + 1);

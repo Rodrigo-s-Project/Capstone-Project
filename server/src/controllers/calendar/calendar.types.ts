@@ -47,6 +47,13 @@ export type BODY_CREATE_TASK = {
   arrayTags: Array<string>;
 };
 
+export type BODY_CREATE_TASK_BOT = {
+  arrayUsers: Array<string>;
+  year: number;
+  day: number;
+  month: number;
+};
+
 export type BODY_CREATE_TAG = {
   text: string;
   color: string;
