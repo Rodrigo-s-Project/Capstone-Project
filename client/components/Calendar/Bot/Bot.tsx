@@ -39,7 +39,7 @@ const Bot = () => {
   const { selectedCompany, selectedTeam, setArrayMsgs, user } = useContext(
     GlobalContext
   );
-  const { setRefetchTasks } = useContext(CalendarContext);
+  const { setRefetchTasks, month, year } = useContext(CalendarContext);
   const [isLoading, setIsLoading] = useState(false);
   const [usersTeam, setUsersTeam] = useState<Array<USER_TEAM>>([]);
   const [usersTeamSelected, setUsersTeamSelected] = useState<Array<USER_TEAM>>(
@@ -124,10 +124,14 @@ const Bot = () => {
 
   const createTask = async () => {
     try {
-      if (!selectedTeam || !selectedCompany) return;
+      if (!selectedTeam || !selectedCompany || !year || month == undefined)
+        return;
 
       const body: BODY_CREATE_TASK_BOT = {
-        arrayUsers: getArrayUsers()
+        arrayUsers: getArrayUsers(),
+        year: year,
+        day: new Date().getDay(),
+        month: month
       };
 
       // Do fetch
