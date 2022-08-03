@@ -9,7 +9,8 @@ import {
   editTaskCalendar,
   editTagCalendar,
   deleteTagCalendar,
-  deleteTaskCalendar
+  deleteTaskCalendar,
+  createTaskCalendarBot
 } from "../controllers/calendar/index";
 
 // Protected route
@@ -21,6 +22,12 @@ router.get(
 router.post(
   "/create-task/:teamId/:calendarId",
   authenticate,
+  createTaskCalendar
+);
+router.post(
+  "/create-task-bot/:teamId/:calendarId",
+  authenticate,
+  createTaskCalendarBot,
   createTaskCalendar
 );
 router.put(

@@ -1,5 +1,6 @@
 .calendar {
   height: 100%;
+  position: relative;
   h1 {
     font-size: 2.5rem;
     color: var(--lavender-200);
@@ -36,6 +37,30 @@
   .calendar {
     h1 {
       font-size: 10vw;
+    }
+  }
+}
+.bot {
+  position: absolute;
+  bottom: -30px;
+  right: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: var(--lavender-200);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  svg {
+    fill: var(--primary);
+    width: 50%;
+    height: 50%;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--lavender-400);
     }
   }
 }
