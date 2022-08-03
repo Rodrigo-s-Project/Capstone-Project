@@ -95,6 +95,132 @@ export const getAllTasksCalendar = async (req, res) => {
   }
 };
 
+const createBetweenTimes = (
+  fromDate: number,
+  toDate: number
+): Array<number> => {
+  let times: Array<number> = [];
+  let date: Date = new Date(fromDate); // Start of and today
+
+  while (date.getTime() <= toDate) {
+    let thisDate: Date = new Date(date);
+    times.push(thisDate.getTime());
+    date.setDate(date.getDate() + 1);
+  }
+
+  return times;
+};
+
+const checkAvailabilityArrays = async (
+  arrayUsers: Array<any>,
+  index: number,
+  currArray: Array<number>
+): Promise<Array<number>> => {
+  try {
+    let newArr: Array<number> = currArray;
+
+    if (index > arrayUsers.length - 1) return newArr;
+    const userRef: any = await User.findByPk(parseInt(arrayUsers[index]));
+
+    if (!userRef) return newArr;
+
+    // get tasks
+    const arrayTasks: Array<any> = await userRef.getTasks();
+
+    for (let i = 0; i < arrayTasks.length; i++) {
+      // If it is on currArray, delete it
+
+      let arrTimesTasks: Array<number> = createBetweenTimes(
+        parseInt(arrayTasks[i].fromDate),
+        parseInt(arrayTasks[i].toDate)
+      );
+
+      for (let j = 0; j < arrTimesTasks.length; j++) {
+        for (let k = 0; k < currArray.length; k++) {
+          const currAvailableTime: number = currArray[k];
+          const currNotAvailableTime: number = arrTimesTasks[j];
+
+          if (currAvailableTime == currNotAvailableTime) {
+            // Conflict
+            newArr.splice(k, 1);
+          }
+        }
+      }
+    }
+
+    return await checkAvailabilityArrays(arrayUsers, index + 1, newArr);
+  } catch (error) {
+    return [];
+  }
+};
+
+export const createTaskCalendarBot = async (req, res, next) => {
+  let response: RESPONSE = {
+    isAuth: true,
+    message: "",
+    readMsg: true,
+    typeMsg: "danger",
+    data: {}
+  };
+  try {
+    const { arrayUsers }: BODY_CREATE_TASK = req.body;
+
+    // Calculate from
+    // Loop month
+    let times: Array<number> = [];
+    let date: Date = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay()
+    ); // Start of and today
+
+    while (date.getMonth() === new Date().getMonth()) {
+      let thisDate: Date = new Date(date);
+      times.push(thisDate.getTime());
+      date.setDate(date.getDate() + 1);
+    }
+
+    let fromDateBot: any = await checkAvailabilityArrays(
+      [req.user.id, ...arrayUsers],
+      0,
+      times
+    );
+
+    if (fromDateBot.length == 0) {
+      response.typeMsg = "info";
+      response.message = "Not availablity";
+      res.json(response);
+      return;
+    }
+
+    req.body = {
+      name: "Meeting",
+      singleDate: true,
+      fromDate: fromDateBot[0],
+      toDate: fromDateBot[0],
+      description: "Meeting",
+      arrayUsers: arrayUsers,
+      arrayTags: []
+    };
+
+    next();
+  } catch (error) {
+    console.error(error);
+
+    // Send Error
+    response.data = {
+      tasks: [],
+      calendar: {},
+      tagsCalendar: {}
+    };
+    response.isAuth = false;
+    response.message = error.message;
+    response.readMsg = true;
+    response.typeMsg = "danger";
+    res.json(response);
+  }
+};
+
 export const createTaskCalendar = async (req, res) => {
   let response: RESPONSE = {
     isAuth: true,

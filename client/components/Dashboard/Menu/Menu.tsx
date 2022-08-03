@@ -14,6 +14,8 @@ import { DashBoardNavControls } from "../../Nav/DashboardNav/DashboardNav";
 
 // Icons
 import BriefcaseIcon from "../../Svgs/Briefcase";
+import CommentIcon from "../../Svgs/Comment";
+import CalendarAltIcon from "../../Svgs/CalendarAlt";
 import CogIcon from "../../Svgs/Cog";
 import FileInvoiceIcon from "../../Svgs/FileInvoice";
 
@@ -201,7 +203,7 @@ const MenuDashboard = ({
                       );
                   }}
                 >
-                  <BriefcaseIcon />
+                  <CommentIcon />
                 </LinkMenu>
                 <LinkMenu
                   isActive={router.pathname.includes("/calendar")}
@@ -213,7 +215,7 @@ const MenuDashboard = ({
                       );
                   }}
                 >
-                  <BriefcaseIcon />
+                  <CalendarAltIcon />
                 </LinkMenu>
               </>
             ) : null}

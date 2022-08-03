@@ -32,10 +32,6 @@ export const useDrawing: PropsDrawingHook = (
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
   const [rerender, setRerender] = useState<boolean>(false);
 
-  const [isDrawingFinishedLocal, setIsDrawingFinishedLocal] = useState<boolean>(
-    false
-  );
-
   const isDrawing = useRef<boolean>(false);
   const prevX = useRef<number>(0);
   const prevY = useRef<number>(0);
@@ -82,7 +78,7 @@ export const useDrawing: PropsDrawingHook = (
       if (secondsDrawing && secondsDrawing >= MAX_TIME) {
         setMessagesText(`Limit reached`);
         finishMovement();
-      } else if (secondsDrawing !== undefined && !isDrawingFinishedLocal) {
+      } else if (secondsDrawing !== undefined && !isDrawingFinished) {
         var time: number | string = secondsDrawing.toFixed();
         time = parseInt(time);
         time = MAX_TIME - time;
@@ -96,12 +92,12 @@ export const useDrawing: PropsDrawingHook = (
   };
 
   const mouseMove = (e: MouseEvent): void => {
-    if (!isDrawingFinished && !isDrawingFinishedLocal) {
+    if (!isDrawingFinished && !isDrawingFinished) {
       findxy("move", e);
     }
   };
   const mouseDown = (e: MouseEvent): void => {
-    if (!isDrawingFinished && !isDrawingFinishedLocal) {
+    if (!isDrawingFinished && !isDrawingFinished) {
       if (startInterval && continueInterval) {
         updateTime();
         if (secondsDrawing == 0) {
@@ -114,12 +110,12 @@ export const useDrawing: PropsDrawingHook = (
     }
   };
   const mouseUp = (e: MouseEvent): void => {
-    if (!isDrawingFinished && !isDrawingFinishedLocal) {
+    if (!isDrawingFinished && !isDrawingFinished) {
       findxy("up", e);
     }
   };
   const mouseOut = (e: MouseEvent): void => {
-    if (!isDrawingFinished && !isDrawingFinishedLocal) {
+    if (!isDrawingFinished && !isDrawingFinished) {
       findxy("out", e);
     }
   };
@@ -159,7 +155,6 @@ export const useDrawing: PropsDrawingHook = (
       breakInterval();
     }
     if (setIsDrawingFinished) setIsDrawingFinished(true);
-    if (setIsDrawingFinishedLocal) setIsDrawingFinishedLocal(true);
   };
 
   const draw = (): void => {
@@ -178,7 +173,6 @@ export const useDrawing: PropsDrawingHook = (
     if (canvasRef && ctx.current) {
       ctx.current.clearRect(0, 0, canvasRef.width, canvasRef.height);
       if (setIsCanvasNeedToClear && setIsDrawingFinished) {
-        setIsDrawingFinishedLocal(false);
         setIsDrawingFinished(false);
         setIsCanvasNeedToClear(false);
       }

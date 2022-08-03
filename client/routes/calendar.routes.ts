@@ -65,6 +65,16 @@ export const createTask = {
   method: "post"
 };
 
+export type BODY_CREATE_TASK_BOT = {
+  arrayUsers: Array<any>;
+};
+
+export const createTaskBot = {
+  url: (teamId: any, calendarId: any) =>
+    `${process.env.API_URL}/dashboard/calendar/create-task-bot/${teamId}/${calendarId}`,
+  method: "post"
+};
+
 export type BODY_CREATE_TAG = {
   text: string;
   color: string;

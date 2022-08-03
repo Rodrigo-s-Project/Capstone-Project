@@ -38,7 +38,6 @@ const TaskModal = () => {
     setArrayMsgs,
     selectedTeam,
     selectedCompany,
-    user
   } = useContext(GlobalContext);
 
   const {
