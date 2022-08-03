@@ -112,6 +112,9 @@ const createBetweenTimes = (
     date.setDate(date.getDate() + 1);
   }
 
+  console.log("times -> ");
+  console.log(times);
+
   return times;
 };
 
@@ -167,25 +170,18 @@ export const createTaskCalendarBot = async (req, res, next) => {
     data: {}
   };
   try {
-    const { arrayUsers, year, month, day }: BODY_CREATE_TASK_BOT = req.body;
+    const { arrayUsers, times }: BODY_CREATE_TASK_BOT = req.body;
 
     // Calculate from
     // Loop month
-    let times: Array<number> = [];
-    let date: Date = new Date(year, month, day); // Start from this day
-
-    while (date.getMonth() === month) {
-      // Needs to be on the same month
-      let thisDate: Date = new Date(date);
-      times.push(thisDate.getTime());
-      date.setDate(date.getDate() + 1);
-    }
-
     let fromDateBot: any = await checkAvailabilityArrays(
       [req.user.id, ...arrayUsers],
       0,
       times
     );
+
+    console.log("fromDateBot");
+    console.log(fromDateBot);
 
     if (fromDateBot.length == 0) {
       response.typeMsg = "info";
@@ -193,14 +189,13 @@ export const createTaskCalendarBot = async (req, res, next) => {
       res.json(response);
       return;
     }
-
     req.body = {
       name: "Meeting",
       singleDate: true,
       fromDate: fromDateBot[0],
       toDate: fromDateBot[0],
       description: "Meeting",
-      arrayUsers: arrayUsers,
+      arrayUsers: [req.user.id, ...arrayUsers],
       arrayTags: []
     };
 
@@ -268,6 +263,10 @@ export const createTaskCalendar = async (req, res) => {
       return;
     }
 
+    console.log(req.body);
+
+    console.log("\n\n");
+
     // Create task
     const newTask: any = await Task.create({
       name,
@@ -277,11 +276,19 @@ export const createTaskCalendar = async (req, res) => {
       description
     });
 
+    console.log(calendarRef);
     calendarRef.addTask(newTask);
+
+    console.log("\n\n");
+
+    console.log(newTask);
+
+    console.log("\n\n");
 
     // Relate with users
     for (let i = 0; i < arrayUsers.length; i++) {
       const userRef: any = await User.findByPk(arrayUsers[i]);
+      console.log(userRef);
 
       if (!userRef) continue;
 

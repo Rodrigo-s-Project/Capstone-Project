@@ -67,9 +67,7 @@ export const createTask = {
 
 export type BODY_CREATE_TASK_BOT = {
   arrayUsers: Array<any>;
-  year: number;
-  day: number;
-  month: number;
+  times: Array<number>;
 };
 
 export const createTaskBot = {

@@ -127,11 +127,27 @@ const Bot = () => {
       if (!selectedTeam || !selectedCompany || !year || month == undefined)
         return;
 
+      let times: Array<number> = [];
+      let day = new Date().getDay();
+      if (month != new Date().getMonth()) {
+        // We are on a diff view
+        day = 1;
+      }
+
+      let date: Date = new Date(year, month, day); // Start from this day
+
+      while (date.getMonth() === month) {
+        // Needs to be on the same month
+        let thisDate: Date = new Date(date);
+        times.push(thisDate.getTime());
+        date.setDate(date.getDate() + 1);
+      }
+
+      console.log(times);
+
       const body: BODY_CREATE_TASK_BOT = {
         arrayUsers: getArrayUsers(),
-        year: year,
-        day: new Date().getDay(),
-        month: month
+        times
       };
 
       // Do fetch
