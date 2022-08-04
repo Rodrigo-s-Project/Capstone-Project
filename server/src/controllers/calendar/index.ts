@@ -112,9 +112,6 @@ const createBetweenTimes = (
     date.setDate(date.getDate() + 1);
   }
 
-  console.log("times -> ");
-  console.log(times);
-
   return times;
 };
 
@@ -179,9 +176,6 @@ export const createTaskCalendarBot = async (req, res, next) => {
       0,
       times
     );
-
-    console.log("fromDateBot");
-    console.log(fromDateBot);
 
     if (fromDateBot.length == 0) {
       response.typeMsg = "info";
@@ -263,10 +257,6 @@ export const createTaskCalendar = async (req, res) => {
       return;
     }
 
-    console.log(req.body);
-
-    console.log("\n\n");
-
     // Create task
     const newTask: any = await Task.create({
       name,
@@ -276,20 +266,11 @@ export const createTaskCalendar = async (req, res) => {
       description
     });
 
-    console.log(calendarRef);
     calendarRef.addTask(newTask);
-
-    console.log("\n\n");
-
-    console.log(newTask);
-
-    console.log("\n\n");
 
     // Relate with users
     for (let i = 0; i < arrayUsers.length; i++) {
       const userRef: any = await User.findByPk(arrayUsers[i]);
-      console.log(userRef);
-
       if (!userRef) continue;
 
       await newTask.addUser(userRef);

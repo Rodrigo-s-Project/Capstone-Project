@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { ChatContext } from "../components/Messages/Provider";
 
 interface PropsDrawingHook {
@@ -41,7 +41,7 @@ export const useDrawing: PropsDrawingHook = (
   const firstX = useRef<number>(0);
   const firstY = useRef<number>(0);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!rerender) {
       setRerender(true);
     }
@@ -74,19 +74,19 @@ export const useDrawing: PropsDrawingHook = (
   }, [rerender, isDrawingFinished, isCanvasNeedToClear, secondsDrawing]);
 
   const updateTime = (): void => {
-    if (setMessagesText) {
-      if (secondsDrawing && secondsDrawing >= MAX_TIME) {
-        setMessagesText(`Limit reached`);
-        finishMovement();
-      } else if (secondsDrawing !== undefined && !isDrawingFinished) {
-        var time: number | string = secondsDrawing.toFixed();
-        time = parseInt(time);
-        time = MAX_TIME - time;
-        if (secondsDrawing === 0) {
-          setMessagesText(`Draw something :)`);
-        } else {
-          setMessagesText(`Time remaining to draw: ${time}`);
-        }
+    if (!setMessagesText) return;
+
+    if (secondsDrawing && secondsDrawing >= MAX_TIME) {
+      setMessagesText(`Limit reached`);
+      finishMovement();
+    } else if (secondsDrawing !== undefined && !isDrawingFinished) {
+      var time: number | string = secondsDrawing.toFixed();
+      time = parseInt(time);
+      time = MAX_TIME - time;
+      if (secondsDrawing === 0) {
+        setMessagesText(`Draw something :)`);
+      } else {
+        setMessagesText(`Time remaining to draw: ${time}`);
       }
     }
   };
