@@ -54,12 +54,12 @@ export const DashBoardNavControls = ({ rules }: Props) => {
         <Cmd />
       </div>
       <div className={rules.nav_controls_info}>
-        <div
+        {/* <div
           onClick={cleanDrivesChache}
           className={rules.nav_controls_info_bell}
         >
           <Bell />
-        </div>
+        </div> */}
         <div className={rules.nav_controls_info_types}>
           {selectedCompany && selectedCompany.User_Company && (
             <>
